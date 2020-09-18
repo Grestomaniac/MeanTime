@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MeanTime</string>
+
+    <string name="loading_template_error">Error while loading template</string>
+
+    <string name="ids">id = %1$d</string>
+</resources>
