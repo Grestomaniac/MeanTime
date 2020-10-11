@@ -2,6 +2,22 @@
     <string name="app_name">MeanTime</string>
 
     <string name="loading_template_error">Error while loading template</string>
+    <string name="template_is_not_loaded">Template is not loaded yet</string>
+    <string name="zero_tasks">Tasks cannot be zero</string>
+
+    <string name="name_is_empty">Name cannot be empty</string>
+    <string name="duration_is_zero">Duration cannot be zero</string>
 
     <string name="ids">id = %1$d</string>
+    <string name="enter_name">Name:</string>
+    <string name="enter_duration">Duration</string>
+    <string name="with_melody">With melody</string>
+    <string name="melody">Melody</string>
+    <string name="vibration_on">Vibration on</string>
+    <string name="melody_on">Melody on</string>
+    <string name="save">Save</string>
+    <string name="template_editor">Template editor</string>
+    <string name="template_explorer">Template explorer</string>
+    <string name="schema">Schema</string>
+    <string name="main_screen">Main screen</string>
 </resources>

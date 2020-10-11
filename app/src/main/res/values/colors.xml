@@ -3,5 +3,9 @@
     <color name="colorPrimary">#0f4c75</color>
     <color name="colorPrimaryDark">#1b262c</color>
     <color name="colorAccent">#00b7c2</color>
-    <color name="colorItems">#fdcb9e</color>
+
+    <color name="colorItemWaiting">#fdcb9e</color>
+    <color name="colorItemActive">#fdcb9e</color>
+    <color name="colorItemPaused">#fdcb9e</color>
+    <color name="colorItemCompleted">#fdcb9e</color>
 </resources>

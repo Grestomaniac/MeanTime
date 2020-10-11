@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/mainScreenFragment"
+        android:title="@string/main_screen"
+        android:icon="@drawable/ic_android"
+        />
+
+    <item
+        android:id="@+id/edit_template_graph"
+        android:title="@string/template_editor"
+        android:icon="@drawable/ic_android"
+    />
+
+    <item android:id="@+id/explorerFragment"
+        android:title="@string/template_explorer"
+        android:icon="@drawable/ic_android"/>
+
+    <item android:id="@+id/navigate_to_schema"
+        android:title="@string/schema"
+        android:icon="@drawable/ic_android"/>
+
+</menu>

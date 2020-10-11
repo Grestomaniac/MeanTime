@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 data class Scheme(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+    val name: String,
     val orderList: List<Int>
 )

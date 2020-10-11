@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/edit_template_graph"
+    app:startDestination="@id/editTemplateFragment">
+
+    <fragment
+        android:id="@+id/editTemplateFragment"
+        android:name="com.sillyapps.meantime.ui.edittemplatescreen.EditTemplateFragment"
+        android:label="EditTemplateFragment"
+
+        tools:layout="@layout/fragment_edit_template">
+        <argument
+            android:name="templateId"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_editTemplateFragment_to_editTaskFragment"
+            app:destination="@id/editTaskFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editTaskFragment"
+        android:name="com.sillyapps.meantime.ui.edittemplatescreen.EditTaskFragment"
+        android:label="EditTaskFragment"
+
+        tools:layout="@layout/fragment_edit_task" />
+
+</navigation>

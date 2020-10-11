@@ -1,10 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/navigation"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
     app:startDestination="@id/mainScreenFragment">
 
     <fragment
         android:id="@+id/mainScreenFragment"
         android:name="com.sillyapps.meantime.ui.mainscreen.MainScreenFragment"
-        android:label="MainScreenFragment" />
+        android:label="MainScreenFragment"
+
+        tools:layout="@layout/fragment_main_screen">
+
+        <action
+            android:id="@+id/action_mainScreenFragment_to_explorerFragment"
+            app:destination="@id/explorerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/explorerFragment"
+        android:name="com.sillyapps.meantime.ui.explorer.TemplateExplorerFragment"
+        android:label="ExplorerFragment"
+
+        tools:layout="@layout/fragment_explorer">
+        <action
+            android:id="@+id/action_explorerFragment_to_edit_template_graph"
+            app:destination="@id/edit_template_graph">
+            <argument
+                android:name="templateId"
+                android:defaultValue="-1"
+                app:argType="integer"/>
+        </action>
+    </fragment>
+
+    <include app:graph="@navigation/edit_template_graph" />
+
 </navigation>

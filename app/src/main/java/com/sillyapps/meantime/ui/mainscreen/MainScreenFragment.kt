@@ -6,8 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.sillyapps.meantime.databinding.FragmentMainScreenBinding
+import com.sillyapps.meantime.ui.mainscreen.recyclerview.TasksAdapter
+import com.sillyapps.meantime.ui.mainscreen.recyclerview.RecVClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,13 +34,17 @@ class MainScreenFragment: Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
-        setupTemplate()
+
+        setupTasksAdapter()
     }
 
-    private fun setupTemplate() {
-        viewModel.currentTemplate.observe(viewLifecycleOwner, Observer {
+    private fun setupTasksAdapter() {
+        val tasksAdapter = TasksAdapter(RecVClickListener { })
+        viewDataBinding.tasks.adapter = tasksAdapter
+
+        viewModel.currentDay.observe(viewLifecycleOwner, {
+            it.let { tasksAdapter.submitList(it.tasks) }
         })
     }
-
 
 }
