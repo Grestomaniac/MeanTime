@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 import com.sillyapps.meantime.data.Scheme
 import com.sillyapps.meantime.data.Template
 
-@Database(entities = [Template::class, Scheme::class], version = 2, exportSchema = false)
+@Database(entities = [Template::class, Scheme::class], version = 3, exportSchema = false)
 @TypeConverters(AppTypeConverter::class)
 abstract class AppDatabase: RoomDatabase() {
 

@@ -23,7 +23,6 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
     val templateId = savedStateHandle.get<Int>("templateId")!!
     val templateName: MutableLiveData<String> = MutableLiveData("")
     val tasks: MutableLiveData<MutableList<Task>> = MutableLiveData(mutableListOf())
-    var nextStartTime = 0L
 
     val task: PropertyAwareMutableLiveData<EditableTask> = PropertyAwareMutableLiveData()
     val duration: LiveData<String> = task.map { it.editableUiDuration }
@@ -36,7 +35,6 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
                 val template = repository.getTemplate(templateId)
                 templateName.postValue(template!!.name)
                 tasks.postValue(template.activities)
-                nextStartTime = template.nextStartTime
             }
     }
 
@@ -57,11 +55,6 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
 
             if (taskPosition == NEW_ONE) {
                 it.add(newTask)
-                if (newTask.duration != UNCERTAIN)
-                    nextStartTime += newTask.duration
-                else {
-                    nextStartTime = UNCERTAIN
-                }
             }
 
             else {
@@ -78,6 +71,11 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
     }
 
     fun createNewTask() {
+        val nextStartTime = if (tasks.value!!.isNotEmpty()) {
+            tasks.value!!.last().getNextStartTime()
+        }
+        else 0L
+
         task.setValue(EditableTask(nextStartTime))
     }
 
@@ -96,7 +94,7 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
         if (templateName.value == "") {
             return Result(false, R.string.name_is_empty)
         }
-        val template = Template(templateId, templateName.value!!, nextStartTime, tasks.value!!)
+        val template = Template(templateId, templateName.value!!, tasks.value!!)
         viewModelScope.launch {
             repository.insertTemplate(template)
         }
@@ -114,6 +112,7 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
                 it[i].updateStartTime(it[i-1].getNextStartTime())
             }
         }
+
     }
 
     fun notifyTasksSwapped(upperPosition: Int, bottomPosition: Int) {

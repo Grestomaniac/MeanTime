@@ -8,7 +8,6 @@ data class Template(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     var name: String = "",
-    var nextStartTime: Long = 0L,
 
     val activities: MutableList<Task> = mutableListOf()
 )
