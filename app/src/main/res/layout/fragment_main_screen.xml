@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewmodel"
-            type="com.sillyapps.meantime.ui.mainscreen.MainScreenViewModel" />
+            type="com.sillyapps.meantime.ui.mainscreen.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

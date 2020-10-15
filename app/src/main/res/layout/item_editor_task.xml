@@ -7,11 +7,23 @@
         <variable
             name="task"
             type="com.sillyapps.meantime.data.Task"/>
+
+        <variable
+            name="onCLickListener"
+            type="com.sillyapps.meantime.ui.RecVClickListener" />
+
+        <variable
+            name="taskAdapterPosition"
+            type="Integer" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> onCLickListener.onClickItem(taskAdapterPosition)}"
+        android:id="@+id/item_task"
+        >
 
         <TextView
             android:id="@+id/time"

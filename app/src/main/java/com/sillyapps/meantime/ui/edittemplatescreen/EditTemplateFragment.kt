@@ -11,10 +11,8 @@ import com.sillyapps.meantime.ui.edittemplatescreen.recyclerview.TemplateEditorA
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
-import com.sillyapps.meantime.ui.edittemplatescreen.recyclerview.ItemTouchHelperAdapter
-import com.sillyapps.meantime.ui.edittemplatescreen.recyclerview.ItemTouchHelperCallback
-import timber.log.Timber
-import java.text.FieldPosition
+import com.sillyapps.meantime.ui.ItemTouchHelperCallback
+import com.sillyapps.meantime.ui.RecVClickListener
 
 @AndroidEntryPoint
 class EditTemplateFragment : Fragment() {
@@ -59,48 +57,28 @@ class EditTemplateFragment : Fragment() {
         }
 
     private fun setupAdapter() {
-        /*viewModel.populateTasks()*/
-        val templateEditorAdapter = TemplateEditorAdapter()
+        viewModel.populateTasks()
+        val clickListener = object : RecVClickListener {
+            override fun onClickItem(index: Int) {
+                editTask(index)
+            }
+
+            override fun onLongClick(index: Int): Boolean {
+                return true
+            }
+
+        }
+
+        val templateEditorAdapter = TemplateEditorAdapter(viewModel, clickListener)
         viewDataBinding.tasks.adapter = templateEditorAdapter
 
-        val helperAdapter = createHelperAdapter(templateEditorAdapter)
-        val itemTouchHelperCallback = ItemTouchHelperCallback(helperAdapter)
+        val itemTouchHelperCallback = ItemTouchHelperCallback(templateEditorAdapter)
         val touchHelper = ItemTouchHelper(itemTouchHelperCallback)
         touchHelper.attachToRecyclerView(viewDataBinding.tasks)
 
         viewModel.tasks.observe(viewLifecycleOwner, {
             templateEditorAdapter.submitList(it)
         })
-    }
-
-    private fun createHelperAdapter(recViewAdapter: TemplateEditorAdapter): ItemTouchHelperAdapter = object : ItemTouchHelperAdapter {
-        override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
-
-            if (fromPosition > toPosition) {
-                viewModel.notifyTasksSwapped(toPosition, fromPosition)
-            }
-            else {
-                viewModel.notifyTasksSwapped(fromPosition, toPosition)
-            }
-
-            recViewAdapter.notifyItemMoved(fromPosition, toPosition)
-            return true
-        }
-
-        override fun onItemDropped(toPosition: Int) {
-            viewModel.recalculateStartTimes(toPosition)
-            recViewAdapter.notifyItemRangeChanged(toPosition, recViewAdapter.itemCount-toPosition)
-        }
-
-        override fun onItemDismiss(position: Int) {
-            viewModel.notifyTaskRemoved(position)
-            recViewAdapter.notifyItemRemoved(position)
-            recViewAdapter.notifyItemRangeChanged(position, recViewAdapter.itemCount-position)
-        }
-
-        override fun onItemEdit(position: Int) {
-            editTask(position)
-        }
     }
 
     private fun onAddTaskButtonClick() {

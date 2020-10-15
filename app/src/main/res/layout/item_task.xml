@@ -14,7 +14,7 @@
 
         <variable
             name="clickListener"
-            type="com.sillyapps.meantime.ui.mainscreen.recyclerview.RecVClickListener" />
+            type="com.sillyapps.meantime.ui.RecVClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -2,6 +2,7 @@ package com.sillyapps.meantime.data.local
 
 import android.icu.text.SimpleDateFormat
 import androidx.room.TypeConverter
+import com.sillyapps.meantime.data.Day
 import com.sillyapps.meantime.data.Task
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -57,15 +58,23 @@ object AppTypeConverter {
 
     @TypeConverter
     @JvmStatic
-    fun convertMillisToDate(data: Long?): Date? {
+    fun convertStringToDay(data: String?): Day? {
         if (data == null) return null
+        val moshi = Moshi.Builder().build()
 
-        return Date(data)
+        val day = Types.newParameterizedType(Day::class.java)
+        val jsonAdapter: JsonAdapter<Day> = moshi.adapter(day)
+
+        return jsonAdapter.fromJson(data)
     }
 
     @TypeConverter
     @JvmStatic
-    fun convertDateToMillis(date: Date?): Long? {
-        return date?.time
+    fun convertDayToJson(day: Day?): String {
+        val moshi = Moshi.Builder().build()
+        val data = Types.newParameterizedType(Day::class.java)
+        val jsonAdapter: JsonAdapter<Day> = moshi.adapter(data)
+
+        return jsonAdapter.toJson(day)
     }
 }

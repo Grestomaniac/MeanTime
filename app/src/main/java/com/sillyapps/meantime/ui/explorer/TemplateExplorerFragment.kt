@@ -7,9 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.sillyapps.meantime.databinding.FragmentExplorerBinding
+import com.sillyapps.meantime.ui.ItemTouchHelperCallback
+import com.sillyapps.meantime.ui.ItemTouchHelperCallbackNoDrag
 import com.sillyapps.meantime.ui.explorer.recyclerview.ExplorerAdapter
-import com.sillyapps.meantime.ui.mainscreen.recyclerview.RecVClickListener
+import com.sillyapps.meantime.ui.RecVClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -46,11 +49,25 @@ class TemplateExplorerFragment : Fragment() {
     }
 
     private fun setupAdapter() {
-        val explorerAdapter = ExplorerAdapter(RecVClickListener { id ->
-            Timber.d("Navigating to position $id")
-            navigateToEditTemplateFragment(id)
-        })
+        val clickListener = object : RecVClickListener {
+            override fun onClickItem(index: Int) {
+                navigateToEditTemplateFragment(index)
+            }
+
+            override fun onLongClick(index: Int): Boolean {
+                Timber.d("Long click on template with id: $index")
+                viewModel.selectDefaultTemplate(index)
+                return true
+            }
+
+        }
+
+        val explorerAdapter = ExplorerAdapter(viewModel, clickListener)
         viewDataBinding.items.adapter = explorerAdapter
+
+        val itemTouchHelperCallback = ItemTouchHelperCallbackNoDrag(explorerAdapter)
+        val touchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        touchHelper.attachToRecyclerView(viewDataBinding.items)
 
         viewModel.items.observe(viewLifecycleOwner, {
             it.let { explorerAdapter.submitList(it) }

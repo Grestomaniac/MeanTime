@@ -10,15 +10,16 @@
 
         <variable
             name="clickListener"
-            type="com.sillyapps.meantime.ui.mainscreen.recyclerview.RecVClickListener" />
+            type="com.sillyapps.meantime.ui.RecVClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:id="@+id/item_template"
+        app:isDefault="@{template.chosenAsDefault}"
 
-        android:background="@drawable/item_waiting"
         android:onClick="@{() -> clickListener.onClickItem(template.id)}">
 
         <TextView

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.databinding.ItemTaskBinding
+import com.sillyapps.meantime.ui.RecVClickListener
 
 class TasksAdapter(private val clickListener: RecVClickListener): ListAdapter<Task, TasksAdapter.ViewHolder>(
     TasksDiffCallback()

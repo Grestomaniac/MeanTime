@@ -5,16 +5,25 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.sqlite.db.SupportSQLiteDatabase
+import com.sillyapps.meantime.data.ApplicationPreferences
 import com.sillyapps.meantime.data.Scheme
 import com.sillyapps.meantime.data.Template
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import timber.log.Timber
 
-@Database(entities = [Template::class, Scheme::class], version = 3, exportSchema = false)
+@Database(entities = [Template::class, Scheme::class, ApplicationPreferences::class], version = 4, exportSchema = false)
 @TypeConverters(AppTypeConverter::class)
 abstract class AppDatabase: RoomDatabase() {
 
     abstract val templatesDao: TemplateDao
 
     abstract val schemesDao: SchemeDao
+
+    abstract val appPrefDao: ApplicationPreferencesDao
 
     companion object {
         @Volatile
@@ -28,13 +37,27 @@ abstract class AppDatabase: RoomDatabase() {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
                         AppDatabase::class.java,
-                        "forecast_database"
-                    ).fallbackToDestructiveMigration().build()
+                        "app_database")
+                        .addCallback(DatabaseCallback())
+                        .fallbackToDestructiveMigration()
+                        .build()
                     INSTANCE = instance
                 }
 
                 return instance
             }
         }
+    }
+
+    private class DatabaseCallback(): RoomDatabase.Callback() {
+        override fun onCreate(db: SupportSQLiteDatabase) {
+            super.onCreate(db)
+            INSTANCE?.let { appDatabase ->
+                CoroutineScope(Dispatchers.IO).launch {
+                    appDatabase.appPrefDao.insert(ApplicationPreferences())
+                }
+            }
+        }
+
     }
 }

@@ -7,11 +7,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sillyapps.meantime.data.Template
 import com.sillyapps.meantime.databinding.ItemTemplateBinding
-import com.sillyapps.meantime.ui.mainscreen.recyclerview.RecVClickListener
+import com.sillyapps.meantime.ui.ItemTouchHelperAdapterNoDrag
+import com.sillyapps.meantime.ui.explorer.TemplateExplorerViewModel
+import com.sillyapps.meantime.ui.RecVClickListener
 
-class ExplorerAdapter(private val clickListener: RecVClickListener): ListAdapter<Template, ExplorerAdapter.ViewHolder>(
-    TemplateExplorerDiffCallback()
-) {
+class ExplorerAdapter(private val viewModel: TemplateExplorerViewModel, private val clickListener: RecVClickListener): ListAdapter<Template, ExplorerAdapter.ViewHolder>(
+    TemplateExplorerDiffCallback()), ItemTouchHelperAdapterNoDrag {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -22,12 +23,18 @@ class ExplorerAdapter(private val clickListener: RecVClickListener): ListAdapter
         holder.bind(item, position, clickListener)
     }
 
+    override fun onItemDismiss(position: Int) {
+        viewModel.deleteTemplate(position)
+        notifyItemRemoved(position)
+    }
+
     class ViewHolder private constructor(private val binding: ItemTemplateBinding): RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Template, position: Int, clickListener: RecVClickListener) {
             binding.apply {
                 template = item
                 this.clickListener = clickListener
+                binding.itemTemplate.setOnLongClickListener { clickListener.onLongClick(item.id) }
             }
         }
 
@@ -40,6 +47,7 @@ class ExplorerAdapter(private val clickListener: RecVClickListener): ListAdapter
             }
         }
     }
+
 }
 
 class TemplateExplorerDiffCallback: DiffUtil.ItemCallback<Template>() {

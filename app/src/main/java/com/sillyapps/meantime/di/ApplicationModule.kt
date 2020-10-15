@@ -28,6 +28,10 @@ object ApplicationModule {
 
     @Singleton
     @Provides
+    fun provideAppPrefDao(db: AppDatabase) = db.appPrefDao
+
+    @Singleton
+    @Provides
     fun provideIoDispatcher() = Dispatchers.IO
 }
 

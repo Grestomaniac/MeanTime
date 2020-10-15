@@ -1,22 +1,18 @@
-package com.sillyapps.meantime.ui.edittemplatescreen.recyclerview
+package com.sillyapps.meantime.ui
 
 import android.graphics.Canvas
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import timber.log.Timber
 import kotlin.math.abs
 
-class ItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter): ItemTouchHelper.Callback() {
-    val NOT_DRAGGED = -1
-
-    var dragTo = NOT_DRAGGED
+class ItemTouchHelperCallbackNoDrag(private val mAdapter: ItemTouchHelperAdapterNoDrag): ItemTouchHelper.Callback() {
 
     override fun getMovementFlags(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
     ): Int {
-        val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
-        val swipeFlags = ItemTouchHelper.END or ItemTouchHelper.START
+        val dragFlags = 0
+        val swipeFlags = ItemTouchHelper.END
 
         return makeMovementFlags(dragFlags, swipeFlags)
     }
@@ -26,31 +22,11 @@ class ItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter): Ite
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        val targetPosition = target.adapterPosition
-        mAdapter.onItemMove(viewHolder.adapterPosition, targetPosition)
-        dragTo = targetPosition
         return true
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        val position = viewHolder.adapterPosition
-        if (direction == ItemTouchHelper.END)
-            mAdapter.onItemDismiss(position)
-        else
-            mAdapter.onItemEdit(position)
-    }
-
-    override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
-        super.onSelectedChanged(viewHolder, actionState)
-
-        if ((actionState == ItemTouchHelper.ACTION_STATE_IDLE) and (dragTo != NOT_DRAGGED)) {
-            mAdapter.onItemDropped(dragTo)
-            dragTo = NOT_DRAGGED
-        }
-    }
-
-    override fun isLongPressDragEnabled(): Boolean {
-        return true
+        mAdapter.onItemDismiss(viewHolder.adapterPosition)
     }
 
     override fun isItemViewSwipeEnabled(): Boolean {
@@ -81,13 +57,8 @@ class ItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter): Ite
 
 }
 
-interface ItemTouchHelperAdapter {
-
-    fun onItemMove(fromPosition: Int, toPosition: Int): Boolean
-
-    fun onItemDropped(toPosition: Int)
+interface ItemTouchHelperAdapterNoDrag {
 
     fun onItemDismiss(position: Int)
 
-    fun onItemEdit(position: Int)
 }

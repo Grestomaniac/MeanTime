@@ -8,13 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.sillyapps.meantime.databinding.FragmentMainScreenBinding
 import com.sillyapps.meantime.ui.mainscreen.recyclerview.TasksAdapter
-import com.sillyapps.meantime.ui.mainscreen.recyclerview.RecVClickListener
+import com.sillyapps.meantime.ui.RecVClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainScreenFragment: Fragment() {
 
-    private val viewModel by viewModels<MainScreenViewModel>()
+    private val viewModel by viewModels<MainViewModel>()
 
     private lateinit var viewDataBinding: FragmentMainScreenBinding
 
@@ -39,7 +39,17 @@ class MainScreenFragment: Fragment() {
     }
 
     private fun setupTasksAdapter() {
-        val tasksAdapter = TasksAdapter(RecVClickListener { })
+        val clickListener = object : RecVClickListener {
+            override fun onClickItem(index: Int) {
+
+            }
+
+            override fun onLongClick(index: Int): Boolean {
+                return true
+            }
+
+        }
+        val tasksAdapter = TasksAdapter(clickListener)
         viewDataBinding.tasks.adapter = tasksAdapter
 
         viewModel.currentDay.observe(viewLifecycleOwner, {

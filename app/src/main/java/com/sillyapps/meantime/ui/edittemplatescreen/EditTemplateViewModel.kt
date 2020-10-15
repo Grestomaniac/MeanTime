@@ -20,7 +20,7 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
                                                          @Assisted private val savedStateHandle: SavedStateHandle): ViewModel() {
     private val NEW_ONE = -1
 
-    val templateId = savedStateHandle.get<Int>("templateId")!!
+    var templateId = savedStateHandle.get<Int>("templateId")!!
     val templateName: MutableLiveData<String> = MutableLiveData("")
     val tasks: MutableLiveData<MutableList<Task>> = MutableLiveData(mutableListOf())
 
@@ -94,10 +94,13 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
         if (templateName.value == "") {
             return Result(false, R.string.name_is_empty)
         }
-        val template = Template(templateId, templateName.value!!, tasks.value!!)
+
+        val template = Template(templateId, templateName.value!!, false, tasks.value!!)
         viewModelScope.launch {
-            repository.insertTemplate(template)
+            //TODO dangerous code
+            templateId = repository.insertTemplate(template).toInt()
         }
+
         return Result(true)
     }
 

@@ -24,9 +24,15 @@ interface TemplateDao {
     @Update
     suspend fun updateTemplate(template: Template)
 
+    @Query("update templates_table set chosen_as_default = :isDefault where id = :templateId")
+    suspend fun setTemplateDefault(templateId: Int, isDefault: Boolean)
+
     @Delete
     suspend fun deleteTemplate(template: Template)
 
     @Query("delete from templates_table")
     suspend fun deleteAll()
+
+    @Query("select * from templates_table order by id asc limit 1")
+    suspend fun getFirstExistingTemplate(): Template?
 }

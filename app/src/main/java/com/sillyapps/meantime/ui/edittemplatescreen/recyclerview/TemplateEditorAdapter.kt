@@ -7,9 +7,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.databinding.ItemEditorTaskBinding
-import java.util.*
+import com.sillyapps.meantime.ui.ItemTouchHelperAdapter
+import com.sillyapps.meantime.ui.edittemplatescreen.EditTemplateViewModel
+import com.sillyapps.meantime.ui.RecVClickListener
 
-class TemplateEditorAdapter(): ListAdapter<Task, TemplateEditorAdapter.ViewHolder>(TemplateExplorerDiffCallback()) {
+class TemplateEditorAdapter(private val viewModel: EditTemplateViewModel, private val onClickListener: RecVClickListener): ListAdapter<Task, TemplateEditorAdapter.ViewHolder>(TemplateExplorerDiffCallback()), ItemTouchHelperAdapter {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -17,13 +19,38 @@ class TemplateEditorAdapter(): ListAdapter<Task, TemplateEditorAdapter.ViewHolde
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item, position)
+        holder.bind(item, position, onClickListener)
+    }
+
+    override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
+        if (fromPosition > toPosition) {
+            viewModel.notifyTasksSwapped(toPosition, fromPosition)
+        }
+        else {
+            viewModel.notifyTasksSwapped(fromPosition, toPosition)
+        }
+
+        notifyItemMoved(fromPosition, toPosition)
+        return true
+    }
+
+    override fun onItemDropped(toPosition: Int) {
+        viewModel.recalculateStartTimes(toPosition)
+        notifyItemRangeChanged(toPosition, itemCount-toPosition)
+    }
+
+    override fun onItemDismiss(position: Int) {
+        viewModel.notifyTaskRemoved(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, itemCount-position)
     }
 
     class ViewHolder private constructor(private val binding: ItemEditorTaskBinding): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Task, position: Int) {
+        fun bind(item: Task, position: Int, onClickListener: RecVClickListener) {
             binding.task = item
+            binding.taskAdapterPosition = position
+            binding.onCLickListener = onClickListener
         }
 
         companion object {
