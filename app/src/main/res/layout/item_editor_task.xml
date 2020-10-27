@@ -10,7 +10,7 @@
 
         <variable
             name="onCLickListener"
-            type="com.sillyapps.meantime.ui.RecVClickListener" />
+            type="com.sillyapps.meantime.ui.ItemClickListener" />
 
         <variable
             name="taskAdapterPosition"

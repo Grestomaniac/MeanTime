@@ -9,9 +9,9 @@ import com.sillyapps.meantime.data.Template
 import com.sillyapps.meantime.databinding.ItemTemplateBinding
 import com.sillyapps.meantime.ui.ItemTouchHelperAdapterNoDrag
 import com.sillyapps.meantime.ui.explorer.TemplateExplorerViewModel
-import com.sillyapps.meantime.ui.RecVClickListener
+import com.sillyapps.meantime.ui.ItemClickListener
 
-class ExplorerAdapter(private val viewModel: TemplateExplorerViewModel, private val clickListener: RecVClickListener): ListAdapter<Template, ExplorerAdapter.ViewHolder>(
+class ExplorerAdapter(private val viewModel: TemplateExplorerViewModel, private val clickListener: ItemClickListener): ListAdapter<Template, ExplorerAdapter.ViewHolder>(
     TemplateExplorerDiffCallback()), ItemTouchHelperAdapterNoDrag {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -30,7 +30,7 @@ class ExplorerAdapter(private val viewModel: TemplateExplorerViewModel, private 
 
     class ViewHolder private constructor(private val binding: ItemTemplateBinding): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Template, position: Int, clickListener: RecVClickListener) {
+        fun bind(item: Template, position: Int, clickListener: ItemClickListener) {
             binding.apply {
                 template = item
                 this.clickListener = clickListener

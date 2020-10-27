@@ -3,11 +3,9 @@ package com.sillyapps.meantime.data
 import android.annotation.SuppressLint
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
-import com.sillyapps.meantime.BR
-import com.sillyapps.meantime.UNCERTAIN
+import com.sillyapps.meantime.*
 import timber.log.Timber
 import java.text.SimpleDateFormat
-import java.util.*
 
 data class Task(
     var startTime: Long = 0L,
@@ -19,10 +17,6 @@ data class Task(
     val sound: String
 ) {
     var uiStartTime: String = convertMillisToStringFormat(startTime)
-
-    fun addCurrentDayOffset(currentTime: Long) {
-        uiStartTime = formatter.format(Date(startTime + currentTime))
-    }
 
     fun updateUI() {
         uiStartTime = convertMillisToStringFormat(startTime)
@@ -43,9 +37,6 @@ data class Task(
     }
 
     companion object {
-        @SuppressLint("SimpleDateFormat")
-        val formatter = SimpleDateFormat("HH:mm")
-
         fun createFromEditableTask(editableTask: EditableTask): Task {
             editableTask.apply {
                 return Task(
@@ -104,24 +95,147 @@ class EditableTask(
     }
 }
 
-fun convertMillisToStringFormat(millis: Long): String {
-    val overallMinutes = millis / 60000
-    val minutes = overallMinutes % 60
-    val overallHours = overallMinutes / 60
-    val hours = overallHours % 24
+class RunningTask(
+    startTime: Long,
 
-    return formatIfNeeded(hours.toInt(), minutes.toInt())
-}
+    var name: String = "",
+    private val originalDuration: Long = 0L,
 
-fun formatIfNeeded(hours: Int, minutes: Int): String {
-    var stringHours = hours.toString()
-    var stringMinutes = minutes.toString()
+    private val originalVibrationOn: Boolean,
+    private val originalSoundOn: Boolean,
+    val sound: String
+): BaseObservable() {
+    var startTime: Long = startTime
+        set(value) {
+            field = value
+            uiStartTime = convertMillisToStringFormat(value)
+        }
 
-    if (hours < 10) {
-        stringHours = "0$hours"
+    @Bindable
+    var uiStartTime: String = convertMillisToStringFormat(startTime)
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.uiStartTime)
+        }
+
+    var duration: Long = originalDuration
+        set(value) {
+            field = value
+        }
+
+    var soundOn = originalSoundOn
+    var vibrationOn = originalVibrationOn
+
+    var state: State = State.WAITING
+        set(value) {
+            field = value
+            notifyChange()
+        }
+    var muffled: Boolean = false
+    var stateBit: Byte = 0b00000001
+
+    // TODO disable calculation of uiProgress then it's not showing on ui
+    var progress: Long = 0L
+        set(value) {
+            field = value
+            uiProgress = convertMillisToStringFormatWithSeconds(value)
+        }
+    var uiProgress: String = convertMillisToStringFormatWithSeconds(progress)
+        set(value) {
+            field = value
+            notifyChange()
+        }
+
+    var timePaused: Long = 0L
+    var timeRemain: String = convertMillisToStringFormat(duration)
+
+    enum class State {
+        WAITING, ACTIVE, COMPLETED, DISABLED
     }
-    if (minutes < 10) {
-        stringMinutes = "0$minutes"
+
+    fun resetStartTime(time: Long = 0L) {
+        startTime = time
     }
-    return "$stringHours:$stringMinutes"
+
+    fun getNextStartTime(): Long {
+        return if (duration == UNCERTAIN || startTime == UNCERTAIN) {
+            UNCERTAIN
+        }
+        else {
+            startTime + duration
+        }
+    }
+
+    fun addPausedOffset(pausedTime: Long) {
+        timePaused = pausedTime
+    }
+
+    fun continueTask(): Long {
+        val currentTime = System.currentTimeMillis()
+        val dt = currentTime - lastSystemTime
+        progress += dt * 1000
+        lastSystemTime = currentTime
+
+        return duration - progress
+    }
+
+    fun start() {
+        state = State.ACTIVE
+    }
+
+    fun disable() {
+        when (state) {
+            State.COMPLETED, State.ACTIVE -> return
+            State.DISABLED -> {
+                state = State.WAITING
+                duration = originalDuration
+            }
+            State.WAITING -> {
+                state = State.DISABLED
+                duration = 0L
+            }
+        }
+    }
+
+    fun stop() {
+        state = State.COMPLETED
+        duration = progress
+    }
+
+    fun complete() {
+        state = State.COMPLETED
+    }
+
+    fun muffle() {
+        if (muffled) {
+            vibrationOn = originalVibrationOn
+            soundOn = originalSoundOn
+            muffled = false
+        }
+        else {
+            vibrationOn = false
+            soundOn = false
+            muffled = true
+        }
+    }
+
+    fun notSwappable(): Boolean {
+        return ((state == State.COMPLETED) or (state == State.ACTIVE))
+    }
+
+    companion object {
+        val waiting = 0b00000001
+        val active = 0b00000010
+        val completed = 0b00000100
+        val disabled = 0b00001000
+        val muffled = 0b00010000
+
+        var lastSystemTime = 0L
+
+        fun copyFromExistingTask(task: Task): RunningTask {
+            task.apply {
+                return RunningTask(task.startTime, name, duration, vibrationOn, soundOn, sound)
+            }
+        }
+    }
 }

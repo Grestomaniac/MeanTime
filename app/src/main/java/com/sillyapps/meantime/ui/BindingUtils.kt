@@ -1,12 +1,9 @@
 package com.sillyapps.meantime.ui
 
-import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
-import androidx.databinding.ObservableBoolean
 import com.sillyapps.meantime.R
-import timber.log.Timber
-import kotlin.math.roundToInt
+import com.sillyapps.meantime.data.RunningTask
 
 @BindingAdapter("isDefault")
 fun ConstraintLayout.setDefault(isDefault: Boolean) {
@@ -16,6 +13,19 @@ fun ConstraintLayout.setDefault(isDefault: Boolean) {
         }
         else {
             R.drawable.item_active
+        }
+
+    setBackgroundResource(backgroundResource)
+}
+
+@BindingAdapter("taskState")
+fun ConstraintLayout.updateState(state: RunningTask.State) {
+    val backgroundResource =
+        when (state) {
+            RunningTask.State.WAITING -> R.drawable.item_waiting
+            RunningTask.State.COMPLETED -> R.drawable.item_completed
+            RunningTask.State.DISABLED -> R.drawable.item_disabled
+            RunningTask.State.ACTIVE -> R.drawable.item_active
         }
 
     setBackgroundResource(backgroundResource)

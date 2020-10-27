@@ -9,10 +9,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.sillyapps.meantime.databinding.FragmentExplorerBinding
-import com.sillyapps.meantime.ui.ItemTouchHelperCallback
 import com.sillyapps.meantime.ui.ItemTouchHelperCallbackNoDrag
 import com.sillyapps.meantime.ui.explorer.recyclerview.ExplorerAdapter
-import com.sillyapps.meantime.ui.RecVClickListener
+import com.sillyapps.meantime.ui.ItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -49,7 +48,7 @@ class TemplateExplorerFragment : Fragment() {
     }
 
     private fun setupAdapter() {
-        val clickListener = object : RecVClickListener {
+        val clickListener = object : ItemClickListener {
             override fun onClickItem(index: Int) {
                 navigateToEditTemplateFragment(index)
             }

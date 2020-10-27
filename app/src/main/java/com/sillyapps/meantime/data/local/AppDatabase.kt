@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-@Database(entities = [Template::class, Scheme::class, ApplicationPreferences::class], version = 4, exportSchema = false)
+@Database(entities = [Template::class, Scheme::class, ApplicationPreferences::class], version = 5, exportSchema = false)
 @TypeConverters(AppTypeConverter::class)
 abstract class AppDatabase: RoomDatabase() {
 
@@ -53,8 +53,20 @@ abstract class AppDatabase: RoomDatabase() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
             INSTANCE?.let { appDatabase ->
-                CoroutineScope(Dispatchers.IO).launch {
+                CoroutineScope(Dispatchers.Main).launch {
                     appDatabase.appPrefDao.insert(ApplicationPreferences())
+                }
+            }
+        }
+
+        override fun onOpen(db: SupportSQLiteDatabase) {
+            super.onOpen(db)
+            INSTANCE?.let { appDatabase ->
+                CoroutineScope(Dispatchers.Default).launch {
+                    val appPref = appDatabase.appPrefDao.getApplicationPref()
+                    if (appPref == null) {
+                        appDatabase.appPrefDao.insert(ApplicationPreferences())
+                    }
                 }
             }
         }

@@ -4,12 +4,16 @@ import androidx.databinding.BaseObservable
 import androidx.databinding.Observable
 import androidx.lifecycle.MutableLiveData
 
-class PropertyAwareMutableLiveData<T: BaseObservable>: MutableLiveData<T>() {
+class PropertyAwareMutableLiveData<T: BaseObservable?>: MutableLiveData<T>() {
 
     override fun setValue(value: T) {
         super.setValue(value)
 
-        value.addOnPropertyChangedCallback(callback)
+        value?.addOnPropertyChangedCallback(callback)
+    }
+
+    fun update() {
+        setValue(value!!)
     }
 
     private val callback = object : Observable.OnPropertyChangedCallback() {

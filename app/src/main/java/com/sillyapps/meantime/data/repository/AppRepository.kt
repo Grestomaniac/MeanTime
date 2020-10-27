@@ -1,11 +1,7 @@
 package com.sillyapps.meantime.data.repository
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import com.sillyapps.meantime.data.ApplicationPreferences
 import com.sillyapps.meantime.data.Day
-import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.data.Template
 import com.sillyapps.meantime.data.local.ApplicationPreferencesDao
 import com.sillyapps.meantime.data.local.SchemeDao
@@ -20,11 +16,6 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
                                         private val schemeDao: SchemeDao,
                                         private val appPrefDao: ApplicationPreferencesDao,
                                         private val ioDispatcher: CoroutineDispatcher) {
-
-    private val _currentDay: MutableLiveData<Day> = MutableLiveData()
-    val currentDay: LiveData<Day>
-        get() = _currentDay
-
     private val appPref = appPrefDao.observeApplicationPref()
 
     init {
@@ -43,7 +34,7 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
     }
 
     suspend fun updateAppPref(templateId: Int) {
-        val lastDefaultTemplateId = appPref.value!!.defaultTemplateId
+        val lastDefaultTemplateId = appPrefDao.getDefaultTemplateId()
         if (lastDefaultTemplateId == templateId) return
 
         if (lastDefaultTemplateId != 0) {
@@ -55,6 +46,10 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
     }
 
     suspend fun insertTemplate(template: Template): Long {
+        Timber.d("defaulttemplateid = ${appPrefDao.getDefaultTemplateId()}")
+        if (appPrefDao.getDefaultTemplateId() == 0)
+            appPrefDao.setDefaultTemplate(template.id)
+
         return templateDao.insertTemplate(template)
     }
 
@@ -82,18 +77,22 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
 
     suspend fun getNextTemplate(): Template? {
         // TODO get template from scheme
-
-        return templateDao.getTemplate(appPref.value!!.defaultTemplateId)
+        val defaultTemplateId = appPrefDao.getDefaultTemplateId()
+        return templateDao.getTemplate(defaultTemplateId)
     }
 
     suspend fun getCurrentDay(): Day? {
-        val day = appPref.value?.day
+        val day = appPrefDao.getDay()
 
         if (day == null) {
-            appPrefDao.setCurrentDay(Day.fromTemplate(getNextTemplate()))
+            setNewDay()
         }
 
-        return appPref.value?.day
+        return appPrefDao.getDay()
+    }
+
+    suspend fun setNewDay() {
+        appPrefDao.setCurrentDay(Day.fromTemplate(getNextTemplate()))
     }
 
 }

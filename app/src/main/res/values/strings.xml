@@ -20,4 +20,7 @@
     <string name="template_explorer">Template explorer</string>
     <string name="schema">Schema</string>
     <string name="main_screen">Main screen</string>
+    <string name="no_templates">No templates, go to editor?</string>
+    <string name="no_templates_found">No templates found, create new?</string>
+    <string name="time_remain">Time remain:</string>
 </resources>

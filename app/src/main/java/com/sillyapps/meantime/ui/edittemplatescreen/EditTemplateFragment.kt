@@ -12,7 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.sillyapps.meantime.ui.ItemTouchHelperCallback
-import com.sillyapps.meantime.ui.RecVClickListener
+import com.sillyapps.meantime.ui.ItemClickListener
 
 @AndroidEntryPoint
 class EditTemplateFragment : Fragment() {
@@ -58,7 +58,7 @@ class EditTemplateFragment : Fragment() {
 
     private fun setupAdapter() {
         viewModel.populateTasks()
-        val clickListener = object : RecVClickListener {
+        val clickListener = object : ItemClickListener {
             override fun onClickItem(index: Int) {
                 editTask(index)
             }
@@ -66,7 +66,6 @@ class EditTemplateFragment : Fragment() {
             override fun onLongClick(index: Int): Boolean {
                 return true
             }
-
         }
 
         val templateEditorAdapter = TemplateEditorAdapter(viewModel, clickListener)

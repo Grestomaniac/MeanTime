@@ -9,9 +9,9 @@ import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.databinding.ItemEditorTaskBinding
 import com.sillyapps.meantime.ui.ItemTouchHelperAdapter
 import com.sillyapps.meantime.ui.edittemplatescreen.EditTemplateViewModel
-import com.sillyapps.meantime.ui.RecVClickListener
+import com.sillyapps.meantime.ui.ItemClickListener
 
-class TemplateEditorAdapter(private val viewModel: EditTemplateViewModel, private val onClickListener: RecVClickListener): ListAdapter<Task, TemplateEditorAdapter.ViewHolder>(TemplateExplorerDiffCallback()), ItemTouchHelperAdapter {
+class TemplateEditorAdapter(private val viewModel: EditTemplateViewModel, private val onClickListener: ItemClickListener): ListAdapter<Task, TemplateEditorAdapter.ViewHolder>(TemplateExplorerDiffCallback()), ItemTouchHelperAdapter {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -47,7 +47,7 @@ class TemplateEditorAdapter(private val viewModel: EditTemplateViewModel, privat
 
     class ViewHolder private constructor(private val binding: ItemEditorTaskBinding): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Task, position: Int, onClickListener: RecVClickListener) {
+        fun bind(item: Task, position: Int, onClickListener: ItemClickListener) {
             binding.task = item
             binding.taskAdapterPosition = position
             binding.onCLickListener = onClickListener

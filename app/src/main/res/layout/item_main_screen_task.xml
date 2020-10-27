@@ -6,7 +6,7 @@
     <data>
         <variable
             name="task"
-            type="com.sillyapps.meantime.data.Task" />
+            type="com.sillyapps.meantime.data.RunningTask" />
 
         <variable
             name="taskAdapterPosition"
@@ -14,14 +14,14 @@
 
         <variable
             name="clickListener"
-            type="com.sillyapps.meantime.ui.RecVClickListener" />
+            type="com.sillyapps.meantime.ui.ItemClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/item_waiting"
         android:layout_marginTop="16dp"
+        app:taskState="@{task.state}"
 
         android:onClick="@{() -> clickListener.onClickItem(taskAdapterPosition)}">
 
@@ -31,18 +31,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:text="@{task.uiStartTime}"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/enter_name"
-            app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-
-            android:text="@{task.uiStartTime}"
-            tools:text="17:00"/>
+            tools:text="17:00" />
 
         <TextView
             android:id="@+id/enter_name"
@@ -50,15 +48,28 @@
             android:layout_height="wrap_content"
 
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/time"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/time"
-            app:layout_constraintTop_toTopOf="@+id/time"
+            android:layout_marginEnd="8dp"
 
             android:text="@{task.name}"
+            app:layout_constraintBottom_toBottomOf="@+id/time"
+            app:layout_constraintEnd_toStartOf="@+id/progress"
+            app:layout_constraintStart_toEndOf="@+id/time"
+            app:layout_constraintTop_toTopOf="@+id/time"
             tools:text="Свободное время" />
+
+        <TextView
+            android:id="@+id/progress"
+            style="@style/TimeItemStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginEnd="8dp"
+
+            android:text="@{task.uiProgress}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/enter_name"
+            app:layout_constraintTop_toTopOf="@+id/time"
+            tools:text="01:00" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

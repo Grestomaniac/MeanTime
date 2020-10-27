@@ -10,7 +10,7 @@
 
         <variable
             name="clickListener"
-            type="com.sillyapps.meantime.ui.RecVClickListener" />
+            type="com.sillyapps.meantime.ui.ItemClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
