@@ -57,7 +57,6 @@ class EditTemplateFragment : Fragment() {
         }
 
     private fun setupAdapter() {
-        viewModel.populateTasks()
         val clickListener = object : ItemClickListener {
             override fun onClickItem(index: Int) {
                 editTask(index)
@@ -97,7 +96,8 @@ class EditTemplateFragment : Fragment() {
 
     private fun onSaveButtonClick() {
         val result = viewModel.saveTemplate()
-        if (!result.success) showInfoToUser(result.messageId)
+        if (result.success) showInfoToUser(R.string.template_saved)
+        else showInfoToUser(result.messageId)
     }
 
     private fun showInfoToUser(messageId: Int) {

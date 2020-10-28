@@ -18,7 +18,8 @@
 
         <action
             android:id="@+id/action_mainScreenFragment_to_edit_template_graph"
-            app:destination="@id/edit_template_graph" >
+            app:destination="@id/edit_template_graph"
+            >
             <argument
                 android:name="templateId"
                 android:defaultValue="0"

@@ -59,17 +59,5 @@ abstract class AppDatabase: RoomDatabase() {
             }
         }
 
-        override fun onOpen(db: SupportSQLiteDatabase) {
-            super.onOpen(db)
-            INSTANCE?.let { appDatabase ->
-                CoroutineScope(Dispatchers.Default).launch {
-                    val appPref = appDatabase.appPrefDao.getApplicationPref()
-                    if (appPref == null) {
-                        appDatabase.appPrefDao.insert(ApplicationPreferences())
-                    }
-                }
-            }
-        }
-
     }
 }

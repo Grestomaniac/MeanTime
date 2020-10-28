@@ -126,7 +126,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/play_button"
 
-            android:onClick="@{() -> viewmodel.stop()}"/>
+            android:onClick="@{() -> viewmodel.getNextTask()}"/>
 
         <ImageButton
             android:id="@+id/play_button"

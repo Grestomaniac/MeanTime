@@ -1,5 +1,6 @@
 package com.sillyapps.meantime.ui.mainscreen
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import com.sillyapps.meantime.ui.mainscreen.recyclerview.RunningTasksAdapter
 import com.sillyapps.meantime.ui.ItemClickListener
 import com.sillyapps.meantime.ui.ItemTouchHelperCallback
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainScreenFragment: Fragment() {
@@ -27,26 +29,38 @@ class MainScreenFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewModel.preInitialize()
         viewDataBinding = FragmentMainScreenBinding.inflate(inflater, container, false).apply {
-            viewmodel = viewModel
+            this.viewmodel = viewModel
         }
 
+        Timber.d("onCreateView()")
         return viewDataBinding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
+        viewDataBinding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel.currentTask.observe(this.viewLifecycleOwner) {}
+        viewModel.currentTask.observe(viewLifecycleOwner) {}
 
         setupNoTemplateLayout()
         setupTasksAdapter()
-
+        Timber.d("onActivityCreated()")
     }
 
     private fun setupNoTemplateLayout() {
+        viewModel.noTemplate.observe(viewLifecycleOwner) { noTemplate ->
+            if (noTemplate) {
+                Timber.d("No template")
+                viewModel.let {
+                    it.currentTask.removeObservers(viewLifecycleOwner)
+                    it.tasks.removeObservers(viewLifecycleOwner)
+                    it.currentDay.removeObservers(viewLifecycleOwner)
+                }
+            }
+        }
         viewDataBinding.buttonNavigateToEditor.setOnClickListener { navigateToEditor() }
     }
 
@@ -73,13 +87,17 @@ class MainScreenFragment: Fragment() {
 
         viewModel.tasks.observe(viewLifecycleOwner, {
             it.let { adapter.submitList(it) }
-
         })
 
     }
 
     private fun navigateToEditor() {
         findNavController().navigate(MainScreenFragmentDirections.actionMainScreenFragmentToEditTemplateGraph())
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+//        viewModelStore.clear()
     }
 
 }

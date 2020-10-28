@@ -1,10 +1,13 @@
 <resources>
     <string name="app_name">MeanTime</string>
 
+    <!--TemplateEditor-->
     <string name="loading_template_error">Error while loading template</string>
     <string name="template_is_not_loaded">Template is not loaded yet</string>
     <string name="zero_tasks">Tasks cannot be zero</string>
+    <string name="template_saved">Template saved</string>
 
+    <!--TaskEditor-->
     <string name="name_is_empty">Name cannot be empty</string>
     <string name="duration_is_zero">Duration cannot be zero</string>
 
@@ -15,11 +18,15 @@
     <string name="melody">Melody</string>
     <string name="vibration_on">Vibration on</string>
     <string name="melody_on">Melody on</string>
+
+    <!--NavDrawer-->
     <string name="save">Save</string>
     <string name="template_editor">Template editor</string>
     <string name="template_explorer">Template explorer</string>
     <string name="schema">Schema</string>
     <string name="main_screen">Main screen</string>
+
+    <!--MainScreen-->
     <string name="no_templates">No templates, go to editor?</string>
     <string name="no_templates_found">No templates found, create new?</string>
     <string name="time_remain">Time remain:</string>

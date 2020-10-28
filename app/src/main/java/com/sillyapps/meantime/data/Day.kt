@@ -2,6 +2,7 @@ package com.sillyapps.meantime.data
 
 import androidx.databinding.BaseObservable
 import com.sillyapps.meantime.getLocalCurrentTimeMillis
+import java.util.*
 
 class Day(var tasks: MutableList<RunningTask>,
           var state: DayState = DayState.WAITING,
@@ -25,19 +26,18 @@ class Day(var tasks: MutableList<RunningTask>,
         notifyChange()
     }
 
-    fun selectNextTask() {
-        if (currentTaskPos == tasks.lastIndex) {
-            endDay()
-            return
+    fun selectNextTask(stop: Boolean = false) {
+        if (stop) {
+            getCurrentTask().stop()
+            updateTasks(currentTaskPos)
         }
-        currentTaskPos++
-        getCurrentTask().start()
-    }
+        else getCurrentTask().complete()
 
-    fun stop() {
-        getCurrentTask().stop()
-        updateTasks(currentTaskPos)
-        selectNextTask()
+        currentTaskPos++
+        getCurrentTask().let {
+            it.start()
+            recalculateStartTimes(currentTaskPos+1)
+        }
     }
 
     fun endDay() {
@@ -74,6 +74,30 @@ class Day(var tasks: MutableList<RunningTask>,
         for (i in from+1 until tasks.size) {
             tasks[i].startTime = tasks[i-1].getNextStartTime()
         }
+    }
+
+    fun recalculateStartTimes(position: Int) {
+        var pos = position
+        if (pos == 0) {
+            tasks[pos].resetStartTime()
+            pos++
+        }
+        for (i in pos until tasks.size) {
+            tasks[i].resetStartTime(tasks[i-1].getNextStartTime())
+        }
+    }
+
+    fun notifyTaskDisabled(position: Int) {
+        tasks[position].disable()
+        recalculateStartTimes(position)
+    }
+
+    fun notifyTasksSwapped(upperPosition: Int, bottomPosition: Int) {
+        Collections.swap(tasks, upperPosition, bottomPosition)
+    }
+
+    fun atLastTask(): Boolean {
+        return currentTaskPos == tasks.lastIndex
     }
 
     enum class DayState {

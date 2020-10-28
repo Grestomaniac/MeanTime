@@ -181,6 +181,7 @@ class RunningTask(
 
     fun start() {
         state = State.ACTIVE
+        startTime = getLocalCurrentTimeMillis()
     }
 
     fun disable() {

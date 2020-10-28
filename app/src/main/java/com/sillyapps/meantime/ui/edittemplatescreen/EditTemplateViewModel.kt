@@ -98,7 +98,7 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
         val template = Template(templateId, templateName.value!!, false, tasks.value!!)
         viewModelScope.launch {
             //TODO dangerous code
-            templateId = repository.insertTemplate(template).toInt()
+            templateId = repository.insertTemplate(template)
         }
 
         return Result(true)

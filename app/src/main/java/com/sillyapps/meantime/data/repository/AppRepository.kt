@@ -45,12 +45,14 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
         appPrefDao.setDefaultTemplate(templateId)
     }
 
-    suspend fun insertTemplate(template: Template): Long {
+    suspend fun insertTemplate(template: Template): Int {
         Timber.d("defaulttemplateid = ${appPrefDao.getDefaultTemplateId()}")
-        if (appPrefDao.getDefaultTemplateId() == 0)
-            appPrefDao.setDefaultTemplate(template.id)
+        val templateId = templateDao.insertTemplate(template).toInt()
 
-        return templateDao.insertTemplate(template)
+        if (appPrefDao.getDefaultTemplateId() == 0)
+            appPrefDao.setDefaultTemplate(templateId)
+
+        return templateId
     }
 
     suspend fun getTemplate(templateId: Int): Template? {

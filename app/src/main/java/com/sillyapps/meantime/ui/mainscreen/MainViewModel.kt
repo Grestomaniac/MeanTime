@@ -8,17 +8,17 @@ import com.sillyapps.meantime.data.PropertyAwareMutableLiveData
 import com.sillyapps.meantime.data.RunningTask
 import com.sillyapps.meantime.data.repository.AppRepository
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.*
+import timber.log.Timber
 
 class MainViewModel @ViewModelInject constructor(private val repository: AppRepository): ViewModel() {
 
     val currentDay: PropertyAwareMutableLiveData<Day> = PropertyAwareMutableLiveData()
     val tasks: LiveData<MutableList<RunningTask>> = currentDay.map { it.tasks }
-    val currentTask: LiveData<RunningTask> = currentDay.map { currentTaskPos = it.currentTaskPos
-                                                              it.tasks[it.currentTaskPos] }
-    var currentTaskPos: Int = 0
+    val currentTask: LiveData<RunningTask> = currentDay.map { it.getCurrentTask() }
+    var running: Boolean = false
 
     private val timeRemain: MutableLiveData<Long> = MutableLiveData(0)
     val uiTimeRemain: LiveData<String> = timeRemain.map {
@@ -27,16 +27,27 @@ class MainViewModel @ViewModelInject constructor(private val repository: AppRepo
     private val _noTemplate: MutableLiveData<Boolean> = MutableLiveData(false)
     val noTemplate: LiveData<Boolean> = _noTemplate
 
+
+
     private var timerJob: Job? = null
 
-    init {
+    override fun onCleared() {
+        super.onCleared()
+        Timber.d("ViewModel cleared")
+    }
+
+    fun preInitialize() {
+        if (running) return
+
         viewModelScope.launch {
+            Timber.d("ViewModel launched")
             val day = repository.getCurrentDay()
             currentDay.postValue(day)
 
             if (day == null) {
                 //No templates show navigate to templateEditor
                 _noTemplate.value = true
+                Timber.d("No template, removing observers")
             }
         }
     }
@@ -69,20 +80,12 @@ class MainViewModel @ViewModelInject constructor(private val repository: AppRepo
             while (true) {
                 val timeRemained = currentTask.value!!.continueTask()
                 if (timeRemained < 0) {
-                    currentTask.value!!.complete()
                     getNextTask()
                 }
-
-                updateTimeRemained(timeRemained)
+                else
+                    updateTimeRemained(timeRemained)
                 delay(1000)
             }
-        }
-    }
-
-    private fun getNextTask() {
-        currentDay.value!!.apply {
-            selectNextTask()
-            updateTimeRemained(currentTask.value!!.duration)
         }
     }
 
@@ -91,16 +94,23 @@ class MainViewModel @ViewModelInject constructor(private val repository: AppRepo
         currentDay.value!!.pause()
     }
 
-    fun stop() {
-        if (currentTaskPos == tasks.value!!.lastIndex) {
-            timerJob?.cancel()
-            updateTimeRemained(0)
-            currentDay.value!!.endDay()
-            return
-        }
-        currentDay.value!!.stop()
+    fun getNextTask() {
+        currentDay.value!!.let {
+            if (it.atLastTask()) {
+                resetDay()
+                return
+            }
 
-        updateTimeRemained(currentTask.value!!.duration)
+            currentDay.value!!.selectNextTask(true)
+            updateTimeRemained(currentTask.value!!.duration)
+        }
+    }
+
+    private fun resetDay() {
+        timerJob?.cancel()
+        currentDay.value!!.endDay()
+        updateTimeRemained(0)
+        return
     }
 
     private fun updateTimeRemained(time: Long) {
@@ -108,26 +118,15 @@ class MainViewModel @ViewModelInject constructor(private val repository: AppRepo
     }
 
     fun recalculateStartTimes(position: Int) {
-        tasks.value?.let {
-            var pos = position
-            if (pos == 0) {
-                it[pos].resetStartTime()
-                pos++
-            }
-            for (i in pos until it.size) {
-                it[i].resetStartTime(it[i-1].getNextStartTime())
-            }
-        }
-
+        currentDay.value!!.recalculateStartTimes(position)
     }
 
     fun notifyTasksSwapped(upperPosition: Int, bottomPosition: Int) {
-        Collections.swap(tasks.value!!, upperPosition, bottomPosition)
+        currentDay.value!!.notifyTasksSwapped(upperPosition, bottomPosition)
     }
 
     fun notifyTaskDisabled(position: Int) {
-        tasks.value!![position].disable()
-        recalculateStartTimes(position)
+        currentDay.value!!.notifyTaskDisabled(position)
     }
 
 }
