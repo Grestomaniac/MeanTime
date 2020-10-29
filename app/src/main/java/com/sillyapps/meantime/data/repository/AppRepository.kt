@@ -2,6 +2,7 @@ package com.sillyapps.meantime.data.repository
 
 import androidx.lifecycle.LiveData
 import com.sillyapps.meantime.data.Day
+import com.sillyapps.meantime.data.PropertyAwareMutableLiveData
 import com.sillyapps.meantime.data.Template
 import com.sillyapps.meantime.data.local.ApplicationPreferencesDao
 import com.sillyapps.meantime.data.local.SchemeDao
@@ -16,11 +17,6 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
                                         private val schemeDao: SchemeDao,
                                         private val appPrefDao: ApplicationPreferencesDao,
                                         private val ioDispatcher: CoroutineDispatcher) {
-    private val appPref = appPrefDao.observeApplicationPref()
-
-    init {
-        appPref.observeForever {}
-    }
 
     private suspend fun findNewDefaultTemplate() {
         appPrefDao.setDefaultTemplate(0)

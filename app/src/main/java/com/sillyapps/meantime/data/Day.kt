@@ -8,11 +8,22 @@ class Day(var tasks: MutableList<RunningTask>,
           var state: DayState = DayState.WAITING,
           var dayStartTime: Long = 0L,
           currentTaskPos: Int = 0,
-          var previousTaskPos: Int = -1): BaseObservable() {
+          ): BaseObservable() {
 
     var currentTaskPos: Int = currentTaskPos
         set(value) {
-            previousTaskPos = currentTaskPos
+            field = value
+            notifyChange()
+        }
+
+    var timeRemain: Long = 0L
+        set(value) {
+            field = value
+            notifyChange()
+        }
+
+    var running: Boolean = false
+        set(value) {
             field = value
             notifyChange()
         }
@@ -22,6 +33,7 @@ class Day(var tasks: MutableList<RunningTask>,
         state = DayState.ACTIVE
         resetTasks()
         tasks[currentTaskPos].start()
+        timeRemain = getCurrentTask().duration
 
         notifyChange()
     }
@@ -30,6 +42,7 @@ class Day(var tasks: MutableList<RunningTask>,
         if (stop) {
             getCurrentTask().stop()
             updateTasks(currentTaskPos)
+            timeRemain = getCurrentTask().duration
         }
         else getCurrentTask().complete()
 
@@ -45,6 +58,7 @@ class Day(var tasks: MutableList<RunningTask>,
         state = DayState.COMPLETED
         getCurrentTask().complete()
         resetTasks()
+        timeRemain = 0L
 
         notifyChange()
     }
@@ -61,6 +75,10 @@ class Day(var tasks: MutableList<RunningTask>,
 
     fun getCurrentTask(): RunningTask {
         return tasks[currentTaskPos]
+    }
+
+    fun updateTimeRemained(newTime: Long = getCurrentTask().duration) {
+        timeRemain = newTime
     }
 
     private fun resetTasks() {

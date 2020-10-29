@@ -108,14 +108,7 @@ class RunningTask(
     var startTime: Long = startTime
         set(value) {
             field = value
-            uiStartTime = convertMillisToStringFormat(value)
-        }
-
-    @Bindable
-    var uiStartTime: String = convertMillisToStringFormat(startTime)
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.uiStartTime)
+            notifyChange()
         }
 
     var duration: Long = originalDuration
@@ -134,20 +127,13 @@ class RunningTask(
     var muffled: Boolean = false
     var stateBit: Byte = 0b00000001
 
-    // TODO disable calculation of uiProgress then it's not showing on ui
     var progress: Long = 0L
-        set(value) {
-            field = value
-            uiProgress = convertMillisToStringFormatWithSeconds(value)
-        }
-    var uiProgress: String = convertMillisToStringFormatWithSeconds(progress)
         set(value) {
             field = value
             notifyChange()
         }
 
     var timePaused: Long = 0L
-    var timeRemain: String = convertMillisToStringFormat(duration)
 
     enum class State {
         WAITING, ACTIVE, COMPLETED, DISABLED

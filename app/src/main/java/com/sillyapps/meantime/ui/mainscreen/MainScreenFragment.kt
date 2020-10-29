@@ -1,6 +1,5 @@
 package com.sillyapps.meantime.ui.mainscreen
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
-import com.sillyapps.meantime.NOT_ASSIGNED
 import com.sillyapps.meantime.databinding.FragmentMainScreenBinding
 import com.sillyapps.meantime.ui.mainscreen.recyclerview.RunningTasksAdapter
 import com.sillyapps.meantime.ui.ItemClickListener
@@ -29,12 +27,10 @@ class MainScreenFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel.preInitialize()
         viewDataBinding = FragmentMainScreenBinding.inflate(inflater, container, false).apply {
             this.viewmodel = viewModel
         }
 
-        Timber.d("onCreateView()")
         return viewDataBinding.root
     }
 
@@ -43,21 +39,18 @@ class MainScreenFragment: Fragment() {
 
         viewDataBinding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel.currentTask.observe(viewLifecycleOwner) {}
-
         setupNoTemplateLayout()
         setupTasksAdapter()
-        Timber.d("onActivityCreated()")
+        setupService()
     }
 
     private fun setupNoTemplateLayout() {
         viewModel.noTemplate.observe(viewLifecycleOwner) { noTemplate ->
             if (noTemplate) {
-                Timber.d("No template")
                 viewModel.let {
-                    it.currentTask.removeObservers(viewLifecycleOwner)
                     it.tasks.removeObservers(viewLifecycleOwner)
-                    it.currentDay.removeObservers(viewLifecycleOwner)
+                    it.uiTimeRemain.removeObservers(viewLifecycleOwner)
+                    it.serviceRunning.removeObservers(viewLifecycleOwner)
                 }
             }
         }
@@ -83,21 +76,21 @@ class MainScreenFragment: Fragment() {
         val touchHelper = ItemTouchHelper(itemTouchHelperCallback)
         touchHelper.attachToRecyclerView(viewDataBinding.tasks)
 
-        viewModel.tasks.observe(viewLifecycleOwner) {}
-
         viewModel.tasks.observe(viewLifecycleOwner, {
             it.let { adapter.submitList(it) }
         })
 
     }
 
+    private fun setupService() {
+        viewModel.noTemplate.observe(viewLifecycleOwner) {
+
+        }
+    }
+
     private fun navigateToEditor() {
         findNavController().navigate(MainScreenFragmentDirections.actionMainScreenFragmentToEditTemplateGraph())
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-//        viewModelStore.clear()
-    }
 
 }

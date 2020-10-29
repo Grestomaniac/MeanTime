@@ -34,12 +34,13 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="@{task.uiStartTime}"
 
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/enter_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+
+            app:time="@{task.startTime}"
             tools:text="17:00" />
 
         <TextView
@@ -65,10 +66,11 @@
 
             android:layout_marginEnd="8dp"
 
-            android:text="@{task.uiProgress}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/enter_name"
             app:layout_constraintTop_toTopOf="@+id/time"
+
+            app:timeWithSeconds="@{task.progress}"
             tools:text="01:00" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
