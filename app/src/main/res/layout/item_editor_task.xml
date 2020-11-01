@@ -41,7 +41,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
 
-            android:text="@{task.uiStartTime}"
+            app:time="@{task.startTime}"
             tools:text="17:00"/>
 
         <TextView

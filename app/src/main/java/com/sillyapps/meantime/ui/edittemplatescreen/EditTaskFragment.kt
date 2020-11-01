@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.sillyapps.meantime.R
-import com.sillyapps.meantime.data.EditableTask
+import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.databinding.FragmentEditTaskBinding
 import com.sillyapps.meantime.ui.TimePickerFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,9 +28,9 @@ class EditTaskFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewDataBinding = FragmentEditTaskBinding.inflate(inflater, container, false).apply {
-            viewmodel = viewModel
-        }
+        viewDataBinding = FragmentEditTaskBinding.inflate(inflater, container, false)
+        viewDataBinding.viewModel = viewModel
+
         return viewDataBinding.root
     }
 
@@ -40,10 +40,6 @@ class EditTaskFragment : Fragment() {
         viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
         viewDataBinding.duration.setOnClickListener { showTimePickerDialog() }
         viewDataBinding.okFab.setOnClickListener { validateData() }
-
-        viewModel.task.observe(viewLifecycleOwner, {
-            Timber.d("Task had been changed")
-        })
     }
 
     private fun showTimePickerDialog() {
@@ -52,9 +48,9 @@ class EditTaskFragment : Fragment() {
 
     private fun validateData() {
         when(viewModel.isTaskDataValid()) {
-            EditableTask.WhatIsWrong.NOTHING -> saveTask()
-            EditableTask.WhatIsWrong.NAME -> showInfoToUser(R.string.name_is_empty)
-            EditableTask.WhatIsWrong.DURATION -> showInfoToUser(R.string.duration_is_zero)
+            Task.WhatIsWrong.NOTHING -> saveTask()
+            Task.WhatIsWrong.NAME -> showInfoToUser(R.string.name_is_empty)
+            Task.WhatIsWrong.DURATION -> showInfoToUser(R.string.duration_is_zero)
         }
     }
 

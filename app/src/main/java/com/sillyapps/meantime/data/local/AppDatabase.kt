@@ -53,7 +53,7 @@ abstract class AppDatabase: RoomDatabase() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
             INSTANCE?.let { appDatabase ->
-                CoroutineScope(Dispatchers.Main).launch {
+                CoroutineScope(Dispatchers.IO).launch {
                     appDatabase.appPrefDao.insert(ApplicationPreferences())
                 }
             }

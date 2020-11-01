@@ -2,9 +2,6 @@ package com.sillyapps.meantime
 
 import java.util.*
 
-const val UNCERTAIN = -2L
-const val NOT_ASSIGNED = -1
-
 fun getLocalCurrentTimeMillis(): Long {
     val tz = TimeZone.getDefault()
     val currentTimeInUTC = System.currentTimeMillis()
@@ -13,8 +10,8 @@ fun getLocalCurrentTimeMillis(): Long {
     return currentTimeInUTC + offsetFromUTC
 }
 
-fun convertToMillis(hours: Int, minutes: Int): Long {
-    return (hours*60L + minutes)*60000L
+fun convertToMillis(hours: Int, minutes: Int, seconds: Int = 0): Long {
+    return ((hours*60L + minutes)*60 + seconds)*1000L
 }
 
 fun convertMillisToStringFormat(millis: Long): String {

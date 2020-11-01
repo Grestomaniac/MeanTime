@@ -1,97 +1,51 @@
 package com.sillyapps.meantime.data
 
-import android.annotation.SuppressLint
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.sillyapps.meantime.*
-import timber.log.Timber
-import java.text.SimpleDateFormat
 
-data class Task(
-    var startTime: Long = 0L,
+class Task(
+    startTime: Long = 0L,
 
-    val name: String = "",
-    val duration: Long = 0L,
-    val vibrationOn: Boolean,
-    val soundOn: Boolean,
-    val sound: String
-) {
-    var uiStartTime: String = convertMillisToStringFormat(startTime)
+    var name: String = "",
+    duration: Long = 0L,
+    var vibrationOn: Boolean = true,
+    var soundOn: Boolean = true,
+    var sound: String = AppConstants.DEFAULT_RINGTONE
+): BaseObservable() {
 
-    fun updateUI() {
-        uiStartTime = convertMillisToStringFormat(startTime)
-    }
+    @Bindable
+    var startTime: Long = startTime
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.startTime)
+        }
+
+    @Bindable
+    var duration: Long = duration
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.duration)
+        }
 
     fun getNextStartTime(): Long {
-        return if (duration == UNCERTAIN || startTime == UNCERTAIN) {
-            UNCERTAIN
+        return if (duration == AppConstants.UNCERTAIN || startTime == AppConstants.UNCERTAIN) {
+            AppConstants.UNCERTAIN
         }
         else {
             startTime + duration
         }
     }
 
-    fun updateStartTime(time: Long) {
-        startTime = time
-        updateUI()
-    }
-
-    companion object {
-        fun createFromEditableTask(editableTask: EditableTask): Task {
-            editableTask.apply {
-                return Task(
-                    startTime, editableName,
-                    editableDuration, editableVibrationOn,
-                    editableSoundOn, editableSound) }
-        }
-    }
-}
-
-class EditableTask(
-    var startTime: Long = 0L,
-    var editableName: String = "",
-    var editableDuration: Long = 0L,
-    var editableVibrationOn: Boolean = true,
-    var editableSoundOn: Boolean = true,
-    sound: String = "default"): BaseObservable() {
-
-    @Bindable
-    var editableUiDuration: String = convertMillisToStringFormat(editableDuration)
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.editableUiDuration)
-        }
-
-    @Bindable
-    var editableSound: String = sound
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.editableSound)
-        }
-
-    fun setDuration(hours: Int, minutes: Int) {
-        editableDuration = (hours*60L + minutes)*60000L
-        editableUiDuration = formatIfNeeded(hours, minutes)
-    }
-
-
     fun isDataValid(): WhatIsWrong {
-        if (editableName == "") return WhatIsWrong.NAME
-        if (editableDuration == 0L) return WhatIsWrong.DURATION
+        if (name == "") return WhatIsWrong.NAME
+        if (duration == 0L) return WhatIsWrong.DURATION
 
         return WhatIsWrong.NOTHING
     }
 
     enum class WhatIsWrong {
         NAME, DURATION, NOTHING
-    }
-
-    companion object {
-        fun copyFromExistingTask(task: Task): EditableTask {
-            task.apply {
-                return EditableTask(task.startTime, name, duration, vibrationOn, soundOn, sound)
-            }
-        }
     }
 }
 
@@ -144,8 +98,8 @@ class RunningTask(
     }
 
     fun getNextStartTime(): Long {
-        return if (duration == UNCERTAIN || startTime == UNCERTAIN) {
-            UNCERTAIN
+        return if (duration == AppConstants.UNCERTAIN || startTime == AppConstants.UNCERTAIN) {
+            AppConstants.UNCERTAIN
         }
         else {
             startTime + duration

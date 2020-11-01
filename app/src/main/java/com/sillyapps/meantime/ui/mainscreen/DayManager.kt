@@ -1,9 +1,6 @@
 package com.sillyapps.meantime.ui.mainscreen
 
-import androidx.databinding.BaseObservable
-import androidx.lifecycle.viewModelScope
 import com.sillyapps.meantime.data.Day
-import com.sillyapps.meantime.data.PropertyAwareMutableLiveData
 import com.sillyapps.meantime.data.RunningTask
 import com.sillyapps.meantime.data.repository.AppRepository
 import kotlinx.coroutines.*
@@ -18,6 +15,12 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     private var timerJob: Job? = null
 
     suspend fun loadCurrentDay(): Boolean {
+        thisDay?.let {
+            if (it.runningState) {
+                return false
+            }
+        }
+
         repository.setNewDay()
         val day = repository.getCurrentDay()
             ?: //No templates found
@@ -40,14 +43,14 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
         thisDay!!.pause()
     }
 
-    fun getNextTask() {
+    fun getNextTask(stop: Boolean = false) {
         thisDay!!.let {
             if (it.atLastTask()) {
-                resetDay()
+                resetDay(stop)
                 return
             }
 
-            it.selectNextTask(true)
+            it.selectNextTask(stop)
         }
     }
 
@@ -89,9 +92,9 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
         startTimer()
     }
 
-    private fun resetDay() {
+    private fun resetDay(stop: Boolean) {
         timerJob?.cancel()
-        thisDay!!.endDay()
+        thisDay!!.endDay(stop)
         return
     }
 

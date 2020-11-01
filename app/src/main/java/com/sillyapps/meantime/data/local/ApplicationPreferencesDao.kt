@@ -7,6 +7,7 @@ import com.sillyapps.meantime.data.Day
 
 @Dao
 interface ApplicationPreferencesDao {
+
     @Query("select * from app_pref_table where id = 1")
     fun observeApplicationPref(): LiveData<ApplicationPreferences>
 

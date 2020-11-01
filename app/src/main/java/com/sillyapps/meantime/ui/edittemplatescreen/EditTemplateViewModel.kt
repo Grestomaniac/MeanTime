@@ -1,12 +1,13 @@
 package com.sillyapps.meantime.ui.edittemplatescreen
 
+import androidx.databinding.Observable
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import com.sillyapps.meantime.AppBR
+import com.sillyapps.meantime.BR
 import com.sillyapps.meantime.R
-import com.sillyapps.meantime.UNCERTAIN
 import com.sillyapps.meantime.convertToMillis
-import com.sillyapps.meantime.data.EditableTask
 import com.sillyapps.meantime.data.PropertyAwareMutableLiveData
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.data.Template
@@ -24,8 +25,7 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
     val templateName: MutableLiveData<String> = MutableLiveData("")
     val tasks: MutableLiveData<MutableList<Task>> = MutableLiveData(mutableListOf())
 
-    val task: PropertyAwareMutableLiveData<EditableTask> = PropertyAwareMutableLiveData()
-    val duration: LiveData<String> = task.map { it.editableUiDuration }
+    val task: PropertyAwareMutableLiveData<Task> = PropertyAwareMutableLiveData()
 
     var taskPosition = NEW_ONE
 
@@ -38,20 +38,21 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
             }
     }
 
-    fun populateTasks() {
+    fun populate() {
         for (i in 0 until 5) {
             createNewTask()
             task.value?.let { task ->
-                task.editableDuration = convertToMillis(1, 0)
-                task.editableName = "Task$i"
+                task.duration = convertToMillis(1, 0)
+                task.name = "Task$i"
             }
             addCreatedTask()
         }
+        templateName.value = "Default"
     }
 
     fun addCreatedTask() {
         tasks.value!!.let {
-            val newTask = Task.createFromEditableTask(task.value!!)
+            val newTask = task.value!!
 
             if (taskPosition == NEW_ONE) {
                 it.add(newTask)
@@ -62,28 +63,28 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
                 recalculateStartTimes(taskPosition)
             }
         }
+        tasks.value = tasks.value
         taskPosition = -1
     }
 
     fun editTask(position: Int) {
         taskPosition = position
-        task.setValue(EditableTask.copyFromExistingTask(tasks.value!![position]))
+        task.setValue(tasks.value!![position])
     }
 
     fun createNewTask() {
         val nextStartTime = if (tasks.value!!.isNotEmpty()) {
             tasks.value!!.last().getNextStartTime()
-        }
-        else 0L
+        } else 0L
 
-        task.setValue(EditableTask(nextStartTime))
+        task.setValue(Task(nextStartTime))
     }
 
-    fun setDuration(hours: Int, minutes: Int) {
-        task.value!!.setDuration(hours, minutes)
+    fun setTaskDuration(duration: Long) {
+        task.value!!.duration = duration
     }
 
-    fun isTaskDataValid(): EditableTask.WhatIsWrong {
+    fun isTaskDataValid(): Task.WhatIsWrong {
         return task.value!!.isDataValid()
     }
 
@@ -108,18 +109,18 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
         tasks.value?.let {
             var pos = position
             if (pos == 0) {
-                it[pos].updateStartTime(0L)
+                it[pos].startTime = 0L
                 pos++
             }
             for (i in pos until it.size) {
-                it[i].updateStartTime(it[i-1].getNextStartTime())
+                it[i].startTime = it[i-1].getNextStartTime()
             }
         }
 
     }
 
     fun notifyTasksSwapped(upperPosition: Int, bottomPosition: Int) {
-        Collections.swap(tasks.value!!, upperPosition, bottomPosition)
+        Collections.swap(tasks.value!!, bottomPosition, upperPosition)
     }
 
     fun notifyTaskRemoved(position: Int) {

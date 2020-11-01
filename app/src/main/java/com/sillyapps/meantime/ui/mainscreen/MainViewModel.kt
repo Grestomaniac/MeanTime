@@ -1,15 +1,12 @@
 package com.sillyapps.meantime.ui.mainscreen
 
+import androidx.databinding.Observable
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.sillyapps.meantime.convertMillisToStringFormatWithSeconds
+import com.sillyapps.meantime.BR
 import com.sillyapps.meantime.data.Day
 import com.sillyapps.meantime.data.PropertyAwareMutableLiveData
 import com.sillyapps.meantime.data.RunningTask
-import com.sillyapps.meantime.data.repository.AppRepository
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -18,21 +15,26 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
     private val currentDay: PropertyAwareMutableLiveData<Day> = PropertyAwareMutableLiveData()
 
     val tasks: LiveData<MutableList<RunningTask>> = currentDay.map { it.tasks }
-    val uiTimeRemain: LiveData<Long> = currentDay.map { it.timeRemain }
-    val serviceRunning: LiveData<Boolean> = currentDay.map { it.running }
+    private val _uiTimeRemain: MutableLiveData<Long> = MutableLiveData(0)
+    val uiTimeRemain: LiveData<Long> = _uiTimeRemain
+    private val _serviceRunning: MutableLiveData<Boolean> = MutableLiveData(false)
+    val serviceRunning: LiveData<Boolean> = _serviceRunning
 
     private val _noTemplate: MutableLiveData<Boolean> = MutableLiveData(false)
     val noTemplate: LiveData<Boolean> = _noTemplate
 
-    init {
+    fun loadDay() {
         viewModelScope.launch {
             // No template
-            if (dayManager.loadCurrentDay())
+            if (dayManager.loadCurrentDay()) {
                 _noTemplate.value = true
-            else {
-                currentDay.postValue(dayManager.thisDay)
             }
-
+            else {
+                currentDay.setValue(dayManager.thisDay!!)
+                _serviceRunning.value = currentDay.value!!.runningState
+                _noTemplate.value = false
+                dayManager.thisDay!!.addOnPropertyChangedCallback(dataUpdateCallback)
+            }
         }
     }
 
@@ -45,7 +47,7 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
     }
 
     fun stopButtonPressed() {
-        dayManager.getNextTask()
+        dayManager.getNextTask(true)
     }
 
     fun recalculateStartTimes(position: Int) {
@@ -58,6 +60,24 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
 
     fun notifyTaskDisabled(position: Int) {
         dayManager.notifyTaskDisabled(position)
+    }
+
+    override fun onCleared() {
+        dayManager.thisDay?.removeOnPropertyChangedCallback(dataUpdateCallback)
+        super.onCleared()
+    }
+
+    private val dataUpdateCallback = object : Observable.OnPropertyChangedCallback() {
+        override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+            when (propertyId) {
+                BR.timeRemain -> {
+                    _uiTimeRemain.value = currentDay.value!!.timeRemain
+                }
+                BR.runningState -> {
+                    _serviceRunning.value = currentDay.value!!.runningState
+                }
+            }
+        }
     }
 
 }

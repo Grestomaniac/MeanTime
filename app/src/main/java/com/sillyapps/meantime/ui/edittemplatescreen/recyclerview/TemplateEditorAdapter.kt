@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.databinding.ItemEditorTaskBinding
 import com.sillyapps.meantime.ui.ItemTouchHelperAdapter
@@ -70,6 +71,6 @@ class TemplateExplorerDiffCallback: DiffUtil.ItemCallback<Task>() {
     }
 
     override fun areContentsTheSame(oldItem: Task, newItem: Task): Boolean {
-        return oldItem == newItem
+        return oldItem.startTime == newItem.startTime
     }
 }

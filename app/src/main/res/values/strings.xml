@@ -30,4 +30,17 @@
     <string name="no_templates">No templates, go to editor?</string>
     <string name="no_templates_found">No templates found, create new?</string>
     <string name="time_remain">Time remain:</string>
+
+    <!--DayService-->
+    <string name="channel_id">DayServiceTimer</string>
+    <string name="channel_name">Day Timer</string>
+    <string name="channel_description">Shows day progress</string>
+
+    <string name="stop">Stop</string>
+
+    <!--AlarmActivity-->
+    <string name="end_day">End day</string>
+    <string name="completed">Completed</string>
+    <string name="next_task">Next task:</string>
+    <string name="day_ended">Day Ended!</string>
 </resources>

@@ -1,5 +1,7 @@
 package com.sillyapps.meantime.ui.mainscreen
 
+import android.app.PendingIntent
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.sillyapps.meantime.databinding.FragmentMainScreenBinding
+import com.sillyapps.meantime.services.DayService
 import com.sillyapps.meantime.ui.mainscreen.recyclerview.RunningTasksAdapter
 import com.sillyapps.meantime.ui.ItemClickListener
 import com.sillyapps.meantime.ui.ItemTouchHelperCallback
@@ -39,9 +42,9 @@ class MainScreenFragment: Fragment() {
 
         viewDataBinding.lifecycleOwner = viewLifecycleOwner
 
+        viewModel.loadDay()
+
         setupNoTemplateLayout()
-        setupTasksAdapter()
-        setupService()
     }
 
     private fun setupNoTemplateLayout() {
@@ -52,6 +55,10 @@ class MainScreenFragment: Fragment() {
                     it.uiTimeRemain.removeObservers(viewLifecycleOwner)
                     it.serviceRunning.removeObservers(viewLifecycleOwner)
                 }
+            }
+            else {
+                setupTasksAdapter()
+                setupService()
             }
         }
         viewDataBinding.buttonNavigateToEditor.setOnClickListener { navigateToEditor() }
@@ -83,8 +90,11 @@ class MainScreenFragment: Fragment() {
     }
 
     private fun setupService() {
-        viewModel.noTemplate.observe(viewLifecycleOwner) {
-
+        viewModel.serviceRunning.observe(viewLifecycleOwner) { serviceIsRunning ->
+            if (serviceIsRunning) {
+                val intent = Intent(activity, DayService::class.java)
+                requireActivity().startService(intent)
+            }
         }
     }
 

@@ -1,31 +1,38 @@
 package com.sillyapps.meantime.data
 
 import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
+import com.sillyapps.meantime.AppBR
+import com.sillyapps.meantime.BR
 import com.sillyapps.meantime.getLocalCurrentTimeMillis
+import timber.log.Timber
 import java.util.*
 
-class Day(var tasks: MutableList<RunningTask>,
+class Day(val tasks: MutableList<RunningTask>,
+          val alarmDuration: Long,
           var state: DayState = DayState.WAITING,
           var dayStartTime: Long = 0L,
           currentTaskPos: Int = 0,
           ): BaseObservable() {
 
+    @Bindable("currentTaskPos")
     var currentTaskPos: Int = currentTaskPos
         set(value) {
             field = value
-            notifyChange()
         }
 
+    @Bindable("timeRemained")
     var timeRemain: Long = 0L
         set(value) {
             field = value
-            notifyChange()
+            notifyPropertyChanged(BR.timeRemain)
         }
 
-    var running: Boolean = false
+    @Bindable("runningState")
+    var runningState: Boolean = false
         set(value) {
             field = value
-            notifyChange()
+            notifyPropertyChanged(BR.runningState)
         }
 
     fun start() {
@@ -34,8 +41,7 @@ class Day(var tasks: MutableList<RunningTask>,
         resetTasks()
         tasks[currentTaskPos].start()
         timeRemain = getCurrentTask().duration
-
-        notifyChange()
+        runningState = true
     }
 
     fun selectNextTask(stop: Boolean = false) {
@@ -43,8 +49,12 @@ class Day(var tasks: MutableList<RunningTask>,
             getCurrentTask().stop()
             updateTasks(currentTaskPos)
             timeRemain = getCurrentTask().duration
+            notifyPropertyChanged(BR.currentTaskPos)
         }
-        else getCurrentTask().complete()
+        else {
+            getCurrentTask().complete()
+            notifyPropertyChanged(AppBR.taskFinishedNaturally)
+        }
 
         currentTaskPos++
         getCurrentTask().let {
@@ -53,14 +63,15 @@ class Day(var tasks: MutableList<RunningTask>,
         }
     }
 
-    fun endDay() {
+    fun endDay(stop: Boolean) {
+        if (!stop) notifyPropertyChanged(AppBR.taskFinishedNaturally)
+
         dayStartTime = 0L
         state = DayState.COMPLETED
         getCurrentTask().complete()
         resetTasks()
         timeRemain = 0L
-
-        notifyChange()
+        runningState = false
     }
 
     fun pause() {
@@ -75,6 +86,10 @@ class Day(var tasks: MutableList<RunningTask>,
 
     fun getCurrentTask(): RunningTask {
         return tasks[currentTaskPos]
+    }
+
+    fun getPreviousTask(): RunningTask {
+        return tasks[currentTaskPos-1]
     }
 
     fun updateTimeRemained(newTime: Long = getCurrentTask().duration) {
@@ -126,7 +141,7 @@ class Day(var tasks: MutableList<RunningTask>,
         fun fromTemplate(template: Template?): Day? {
             template?.let { currentTemplate ->
                 val runningTasks = currentTemplate.activities.map { RunningTask.copyFromExistingTask(it) }.toMutableList()
-                return Day(runningTasks)
+                return Day(runningTasks, currentTemplate.alarmDuration)
             }
             return null
         }
