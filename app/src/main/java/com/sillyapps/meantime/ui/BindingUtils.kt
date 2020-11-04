@@ -1,12 +1,20 @@
 package com.sillyapps.meantime.ui
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.media.RingtoneManager
+import android.net.Uri
+import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
+import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.R
 import com.sillyapps.meantime.convertMillisToStringFormat
 import com.sillyapps.meantime.convertMillisToStringFormatWithSeconds
 import com.sillyapps.meantime.data.RunningTask
+import timber.log.Timber
 
 @BindingAdapter("isDefault")
 fun ConstraintLayout.setDefault(isDefault: Boolean) {
@@ -42,4 +50,15 @@ fun TextView.setTime(time: Long) {
 @BindingAdapter("timeWithSeconds")
 fun TextView.setTimeWithSeconds(time: Long) {
     text = convertMillisToStringFormatWithSeconds(time)
+}
+
+@BindingAdapter("soundText")
+fun TextView.setSoundString(uriPath: String) {
+    if (uriPath == AppConstants.DEFAULT_RINGTONE)
+        text = context.getString(R.string.default_ringtone)
+
+    val cursor = context.contentResolver.query(Uri.parse(uriPath), null, null, null, null)
+    cursor?.moveToFirst()
+    text = cursor?.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+    cursor?.close()
 }

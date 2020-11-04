@@ -2,6 +2,7 @@ package com.sillyapps.meantime.ui.mainscreen
 
 import android.app.PendingIntent
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -67,7 +68,8 @@ class MainScreenFragment: Fragment() {
     private fun setupTasksAdapter() {
         val clickListener = object : ItemClickListener {
             override fun onClickItem(index: Int) {
-                // TODO show task info
+                viewModel.onTaskClicked(index)
+                showTaskInfo()
             }
 
             override fun onLongClick(index: Int): Boolean {
@@ -89,11 +91,19 @@ class MainScreenFragment: Fragment() {
 
     }
 
+    private fun showTaskInfo() {
+
+    }
+
     private fun setupService() {
         viewModel.serviceRunning.observe(viewLifecycleOwner) { serviceIsRunning ->
             if (serviceIsRunning) {
                 val intent = Intent(activity, DayService::class.java)
-                requireActivity().startService(intent)
+                intent.action = DayService.ACTION_START
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    requireActivity().startForegroundService(intent)
+                }
+                else requireActivity().startService(intent)
             }
         }
     }

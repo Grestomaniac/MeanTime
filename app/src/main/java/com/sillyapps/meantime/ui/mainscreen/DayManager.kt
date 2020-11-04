@@ -1,5 +1,7 @@
 package com.sillyapps.meantime.ui.mainscreen
 
+import android.os.CountDownTimer
+import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.data.Day
 import com.sillyapps.meantime.data.RunningTask
 import com.sillyapps.meantime.data.repository.AppRepository
@@ -11,8 +13,6 @@ import javax.inject.Singleton
 class DayManager @Inject constructor(private val repository: AppRepository) {
 
     var thisDay: Day? = null
-
-    private var timerJob: Job? = null
 
     suspend fun loadCurrentDay(): Boolean {
         thisDay?.let {
@@ -39,7 +39,7 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     }
 
     fun pauseDay() {
-        timerJob?.cancel()
+        timer.cancel()
         thisDay!!.pause()
     }
 
@@ -67,19 +67,8 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     }
 
     private fun startTimer() {
-        timerJob = CoroutineScope(Dispatchers.Main).launch {
-            RunningTask.lastSystemTime = System.currentTimeMillis()
-
-            while (true) {
-                val timeRemained = thisDay!!.getCurrentTask().continueTask()
-                if (timeRemained < 0) {
-                    getNextTask()
-                }
-                else
-                    thisDay!!.updateTimeRemained(timeRemained)
-                delay(1000)
-            }
-        }
+        RunningTask.lastSystemTime = System.currentTimeMillis()
+        timer.start()
     }
 
     private fun startNewDay() {
@@ -93,9 +82,24 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     }
 
     private fun resetDay(stop: Boolean) {
-        timerJob?.cancel()
+        timer.cancel()
         thisDay!!.endDay(stop)
         return
+    }
+
+    private val timer = object : CountDownTimer(AppConstants.TIMER_CHECK_INTERVAL, 1000L) {
+
+        override fun onTick(millisUntilFinished: Long) {
+            val timeRemained = thisDay!!.getCurrentTask().continueTask()
+            if (timeRemained < 0) {
+                getNextTask()
+            } else
+                thisDay!!.updateTimeRemained(timeRemained)
+        }
+
+        override fun onFinish() {
+            start()
+        }
     }
 
 }

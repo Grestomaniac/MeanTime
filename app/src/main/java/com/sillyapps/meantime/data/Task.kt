@@ -11,7 +11,7 @@ class Task(
     duration: Long = 0L,
     var vibrationOn: Boolean = true,
     var soundOn: Boolean = true,
-    var sound: String = AppConstants.DEFAULT_RINGTONE
+    sound: String = AppConstants.DEFAULT_RINGTONE
 ): BaseObservable() {
 
     @Bindable
@@ -26,6 +26,13 @@ class Task(
         set(value) {
             field = value
             notifyPropertyChanged(BR.duration)
+        }
+
+    @Bindable
+    var sound: String = sound
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.sound)
         }
 
     fun getNextStartTime(): Long {
@@ -73,12 +80,20 @@ class RunningTask(
     var soundOn = originalSoundOn
     var vibrationOn = originalVibrationOn
 
+    @Bindable
     var state: State = State.WAITING
         set(value) {
             field = value
-            notifyChange()
+            notifyPropertyChanged(BR.state)
         }
+
+    @Bindable
     var muffled: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.`muffled$1`)
+        }
+
     var stateBit: Byte = 0b00000001
 
     var progress: Long = 0L
@@ -113,7 +128,7 @@ class RunningTask(
     fun continueTask(): Long {
         val currentTime = System.currentTimeMillis()
         val dt = currentTime - lastSystemTime
-        progress += dt * 1000
+        progress += dt
         lastSystemTime = currentTime
 
         return duration - progress
@@ -162,6 +177,10 @@ class RunningTask(
 
     fun notSwappable(): Boolean {
         return ((state == State.COMPLETED) or (state == State.ACTIVE))
+    }
+
+    fun getProgressInPercents(): String {
+        return (progress.toFloat() / duration * 100).toInt().toString() + "%"
     }
 
     companion object {

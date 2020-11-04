@@ -19,6 +19,9 @@
     <string name="vibration_on">Vibration on</string>
     <string name="melody_on">Melody on</string>
 
+    <string name="choose_task_sound">Choose task notification sound</string>
+    <string name="default_ringtone">Default</string>
+
     <!--NavDrawer-->
     <string name="save">Save</string>
     <string name="template_editor">Template editor</string>
@@ -30,6 +33,13 @@
     <string name="no_templates">No templates, go to editor?</string>
     <string name="no_templates_found">No templates found, create new?</string>
     <string name="time_remain">Time remain:</string>
+
+    <!--TaskInfoDialog-->
+    <string name="duration">Duration:</string>
+    <string name="active">Active for:</string>
+    <string name="progress">Progress:</string>
+    <string name="muffled">Muffled</string>
+    <string name="sound_on">Sound on</string>
 
     <!--DayService-->
     <string name="channel_id">DayServiceTimer</string>

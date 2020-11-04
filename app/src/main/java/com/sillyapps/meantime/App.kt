@@ -4,9 +4,12 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
+import android.util.Log
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.hypertrack.hyperlog.HyperLog
 import com.sillyapps.meantime.data.local.AppDatabase
+import com.sillyapps.meantime.utils.FileLogger
 
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
@@ -25,6 +28,10 @@ class App: Application() {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
+            HyperLog.initialize(this)
+            HyperLog.setLogLevel(Log.DEBUG)
+            HyperLog.getDeviceLogsInFile(this)
+            FileLogger.initialize(this, true)
         }
     }
 

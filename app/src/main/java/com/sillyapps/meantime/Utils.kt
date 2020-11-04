@@ -1,5 +1,6 @@
 package com.sillyapps.meantime
 
+import android.content.Context
 import java.util.*
 
 fun getLocalCurrentTimeMillis(): Long {

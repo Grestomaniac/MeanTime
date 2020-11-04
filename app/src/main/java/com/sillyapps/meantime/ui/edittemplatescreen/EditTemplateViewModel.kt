@@ -1,11 +1,9 @@
 package com.sillyapps.meantime.ui.edittemplatescreen
 
-import androidx.databinding.Observable
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.sillyapps.meantime.AppBR
-import com.sillyapps.meantime.BR
+import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.R
 import com.sillyapps.meantime.convertToMillis
 import com.sillyapps.meantime.data.PropertyAwareMutableLiveData
@@ -19,7 +17,6 @@ import java.util.*
 
 class EditTemplateViewModel @ViewModelInject constructor(private val repository: AppRepository,
                                                          @Assisted private val savedStateHandle: SavedStateHandle): ViewModel() {
-    private val NEW_ONE = -1
 
     var templateId = savedStateHandle.get<Int>("templateId")!!
     val templateName: MutableLiveData<String> = MutableLiveData("")
@@ -27,7 +24,7 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
 
     val task: PropertyAwareMutableLiveData<Task> = PropertyAwareMutableLiveData()
 
-    var taskPosition = NEW_ONE
+    private var taskPosition = AppConstants.NOT_ASSIGNED
 
     init {
         if (templateId != 0)
@@ -54,7 +51,7 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
         tasks.value!!.let {
             val newTask = task.value!!
 
-            if (taskPosition == NEW_ONE) {
+            if (taskPosition == AppConstants.NOT_ASSIGNED) {
                 it.add(newTask)
             }
 
@@ -82,6 +79,11 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
 
     fun setTaskDuration(duration: Long) {
         task.value!!.duration = duration
+    }
+
+    fun setTaskSound(sound: String) {
+        Timber.d("Setting sound $sound")
+        task.value!!.sound = sound
     }
 
     fun isTaskDataValid(): Task.WhatIsWrong {

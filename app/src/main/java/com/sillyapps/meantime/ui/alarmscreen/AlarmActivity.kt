@@ -61,7 +61,11 @@ class AlarmActivity: AppCompatActivity() {
 
     private fun setRingtone(currentTask: RunningTask) {
         if (currentTask.soundOn) {
-            val soundUri = Uri.parse(currentTask.sound)
+            val soundUri =
+                if (currentTask.sound == AppConstants.DEFAULT_RINGTONE)
+                    RingtoneManager.getActualDefaultRingtoneUri(applicationContext, RingtoneManager.TYPE_RINGTONE)
+                else Uri.parse(currentTask.sound)
+
             ringtone = RingtoneManager.getRingtone(applicationContext, soundUri)
 
             ringtone?.play()

@@ -6,6 +6,9 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+
 
     <application
         android:name=".App"
@@ -26,7 +29,8 @@
 
         <activity android:name=".ui.alarmscreen.AlarmActivity"
             android:launchMode="singleInstance"
-            android:showOnLockScreen="true"/>
+            android:showOnLockScreen="true"
+            android:noHistory="true"/>
 
         <!--TODO add description-->
         <service android:name=".services.DayService"

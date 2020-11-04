@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 
 class PropertyAwareMutableLiveData<T: BaseObservable?>: MutableLiveData<T>() {
 
-    override fun setValue(value: T) {
+    override fun setValue(value: T?) {
         super.setValue(value)
 
         value?.addOnPropertyChangedCallback(callback)
@@ -14,7 +14,7 @@ class PropertyAwareMutableLiveData<T: BaseObservable?>: MutableLiveData<T>() {
 
     private val callback = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-            setValue(value!!)
+            value = value!!
         }
     }
 }

@@ -20,6 +20,9 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
     private val _serviceRunning: MutableLiveData<Boolean> = MutableLiveData(false)
     val serviceRunning: LiveData<Boolean> = _serviceRunning
 
+    private val _task: PropertyAwareMutableLiveData<RunningTask> = PropertyAwareMutableLiveData()
+    val task: LiveData<RunningTask> = _task
+
     private val _noTemplate: MutableLiveData<Boolean> = MutableLiveData(false)
     val noTemplate: LiveData<Boolean> = _noTemplate
 
@@ -30,7 +33,7 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
                 _noTemplate.value = true
             }
             else {
-                currentDay.setValue(dayManager.thisDay!!)
+                currentDay.value = dayManager.thisDay!!
                 _serviceRunning.value = currentDay.value!!.runningState
                 _noTemplate.value = false
                 dayManager.thisDay!!.addOnPropertyChangedCallback(dataUpdateCallback)
@@ -62,6 +65,14 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
         dayManager.notifyTaskDisabled(position)
     }
 
+    fun onTaskClicked(position: Int) {
+        _task.value = tasks.value!![position]
+    }
+
+    fun onTaskDialogClosed() {
+        _task.value = null
+    }
+
     override fun onCleared() {
         dayManager.thisDay?.removeOnPropertyChangedCallback(dataUpdateCallback)
         super.onCleared()
@@ -76,6 +87,7 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
                 BR.runningState -> {
                     _serviceRunning.value = currentDay.value!!.runningState
                 }
+
             }
         }
     }

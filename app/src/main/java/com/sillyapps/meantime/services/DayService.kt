@@ -6,17 +6,23 @@ import android.os.IBinder
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import androidx.databinding.Observable
+import com.hypertrack.hyperlog.HyperLog
 import com.sillyapps.meantime.*
 import com.sillyapps.meantime.ui.alarmscreen.AlarmActivity
 import com.sillyapps.meantime.ui.mainscreen.DayManager
+import com.sillyapps.meantime.utils.FileLogger
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.math.log
 
 @AndroidEntryPoint
 class DayService: Service() {
-    val SERVICE_ID = 1
-    val ACTION_STOP = "STOP"
+    companion object {
+        val SERVICE_ID = 1
+        val ACTION_STOP = "STOP"
+        val ACTION_START = "START"
+    }
 
     @Inject lateinit var dayManager: DayManager
     private lateinit var intentToActivity: PendingIntent
@@ -30,7 +36,7 @@ class DayService: Service() {
 
     override fun onCreate() {
         super.onCreate()
-        Timber.d("DayService recreated")
+        FileLogger.d("Service created")
 
         notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
@@ -41,15 +47,27 @@ class DayService: Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        intent?.let {
-            when (it.action) {
+        FileLogger.d("Service onStartCommand")
+        if (intent != null) {
+            when (intent.action) {
                 ACTION_STOP -> {
                     dayManager.getNextTask(true)
+                    updateTimer()
+                    FileLogger.d("Service is stopped")
+                }
+                ACTION_START -> {
+                    FileLogger.d("MainActivity requests for service")
+                }
+                else -> {
+                    FileLogger.d("Unknown intent")
                 }
             }
         }
+        else {
+            FileLogger.d("with a null intent. It has been probably restarted by the system")
+        }
 
-        return super.onStartCommand(intent, flags, startId)
+        return START_STICKY
     }
 
     private fun setupObservers() {
@@ -75,7 +93,6 @@ class DayService: Service() {
     private fun setNotificationBuilder() {
         val currentDay = dayManager.thisDay!!
         val timeRemain = convertMillisToStringFormatWithSeconds(currentDay.timeRemain)
-        Timber.d("Time remain = $timeRemain")
 
         notificationBuilder =  NotificationCompat.Builder(this, AppConstants.SERVICE_MAIN_NOTIFICATION_CHANNEL)
             .setContentTitle(currentDay.getCurrentTask().name)
@@ -94,10 +111,12 @@ class DayService: Service() {
             when (propertyId) {
                 BR.timeRemain -> {
                     updateTimer()
+
                 }
 
                 AppBR.taskFinishedNaturally -> {
                     turnOnAlarm()
+
                 }
 
                 BR.runningState -> {
@@ -130,5 +149,25 @@ class DayService: Service() {
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        FileLogger.d("Service is destroyed")
+    }
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
+        FileLogger.d("Service on task removed")
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        FileLogger.d("System on low memory")
+    }
+
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+        FileLogger.d("System trimming memory")
     }
 }
