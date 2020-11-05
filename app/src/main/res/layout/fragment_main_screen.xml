@@ -53,6 +53,19 @@
                 app:timeWithSeconds="@{viewmodel.uiTimeRemain}"
                 tools:text="00:00:00" />
 
+            <ImageButton
+                android:id="@+id/warning_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@null"
+                app:layout_constraintBottom_toBottomOf="@+id/timeRemained"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/timeRemained"
+                app:srcCompat="@drawable/ic_warning"
+
+                android:visibility="@{viewmodel.appPermissionWarnings.haveAnyWarnings ? View.VISIBLE : View.GONE}"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout

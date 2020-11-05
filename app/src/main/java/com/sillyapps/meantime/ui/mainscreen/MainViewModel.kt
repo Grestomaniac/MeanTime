@@ -4,11 +4,11 @@ import androidx.databinding.Observable
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.sillyapps.meantime.BR
+import com.sillyapps.meantime.data.AppPermissionWarnings
 import com.sillyapps.meantime.data.Day
 import com.sillyapps.meantime.data.PropertyAwareMutableLiveData
 import com.sillyapps.meantime.data.RunningTask
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class MainViewModel @ViewModelInject constructor(private val dayManager: DayManager): ViewModel() {
 
@@ -26,6 +26,11 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
     private val _noTemplate: MutableLiveData<Boolean> = MutableLiveData(false)
     val noTemplate: LiveData<Boolean> = _noTemplate
 
+    private val _appPermissionWarnings: MutableLiveData<AppPermissionWarnings> = MutableLiveData(
+        AppPermissionWarnings()
+    )
+    val appPermissionWarnings: LiveData<AppPermissionWarnings> = _appPermissionWarnings
+
     fun loadDay() {
         viewModelScope.launch {
             // No template
@@ -38,6 +43,13 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
                 _noTemplate.value = false
                 dayManager.thisDay!!.addOnPropertyChangedCallback(dataUpdateCallback)
             }
+        }
+    }
+
+    fun updatePermissionWarnings(ignoresAppOptimizations: Boolean, notificationEnabled: Boolean) {
+        _appPermissionWarnings.value?.apply {
+            batteryOptimizationEnabled = !ignoresAppOptimizations
+            notificationDisabled = !notificationEnabled
         }
     }
 

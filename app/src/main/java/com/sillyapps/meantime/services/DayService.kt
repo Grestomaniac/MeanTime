@@ -142,7 +142,7 @@ class DayService: Service() {
 
     private fun turnOnAlarm() {
         val alarmIntent = Intent(this, AlarmActivity::class.java)
-        alarmIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK + Intent.FLAG_ACTIVITY_CLEAR_TASK
+        alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK + Intent.FLAG_ACTIVITY_CLEAR_TASK)
 
         startActivity(alarmIntent)
     }

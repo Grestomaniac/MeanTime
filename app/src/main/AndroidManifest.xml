@@ -30,7 +30,7 @@
         <activity android:name=".ui.alarmscreen.AlarmActivity"
             android:launchMode="singleInstance"
             android:showOnLockScreen="true"
-            android:noHistory="true"/>
+            android:excludeFromRecents="true"/>
 
         <!--TODO add description-->
         <service android:name=".services.DayService"
