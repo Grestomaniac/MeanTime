@@ -2,12 +2,17 @@ package com.sillyapps.meantime.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.media.RingtoneManager
 import android.net.Uri
 import android.provider.MediaStore
 import android.provider.OpenableColumns
+import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.core.widget.ImageViewCompat
 import androidx.databinding.BindingAdapter
 import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.R
@@ -61,4 +66,16 @@ fun TextView.setSoundString(uriPath: String) {
     cursor?.moveToFirst()
     text = cursor?.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
     cursor?.close()
+}
+
+@BindingAdapter("warningColor")
+fun ImageView.setWarningColor(colorId: Int) {
+    val resolvedColor = ContextCompat.getColor(context, colorId)
+    imageTintList = ColorStateList.valueOf(resolvedColor)
+}
+
+@BindingAdapter("warningColor")
+fun TextView.setWarningColor(colorId: Int) {
+    val resolvedColor = ContextCompat.getColor(context, colorId)
+    setTextColor(resolvedColor)
 }

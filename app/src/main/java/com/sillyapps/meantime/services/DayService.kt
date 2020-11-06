@@ -150,24 +150,4 @@ class DayService: Service() {
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        FileLogger.d("Service is destroyed")
-    }
-
-    override fun onTaskRemoved(rootIntent: Intent?) {
-        super.onTaskRemoved(rootIntent)
-        FileLogger.d("Service on task removed")
-    }
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        FileLogger.d("System on low memory")
-    }
-
-    override fun onTrimMemory(level: Int) {
-        super.onTrimMemory(level)
-        FileLogger.d("System trimming memory")
-    }
 }

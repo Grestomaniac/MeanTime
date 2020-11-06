@@ -128,7 +128,7 @@ class RunningTask(
     fun continueTask(): Long {
         val currentTime = System.currentTimeMillis()
         val dt = currentTime - lastSystemTime
-        progress += dt
+        progress += dt * 1000
         lastSystemTime = currentTime
 
         return duration - progress

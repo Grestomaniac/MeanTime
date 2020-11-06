@@ -66,7 +66,6 @@ class TimePickerFragment: DialogFragment() {
             timePickerSeconds.maxValue = 0
             timePickerSeconds.maxValue = 59
 
-            timePickerHours.setFormatter(timeFormatter)
             timePickerMinutes.setFormatter(timeFormatter)
             timePickerSeconds.setFormatter(timeFormatter)
         }

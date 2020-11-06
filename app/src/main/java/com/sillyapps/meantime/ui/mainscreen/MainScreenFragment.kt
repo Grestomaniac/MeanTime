@@ -20,12 +20,15 @@ import com.sillyapps.meantime.services.DayService
 import com.sillyapps.meantime.ui.mainscreen.recyclerview.RunningTasksAdapter
 import com.sillyapps.meantime.ui.ItemClickListener
 import com.sillyapps.meantime.ui.ItemTouchHelperCallback
+import com.sillyapps.meantime.ui.TimePickerFragment
+import com.sillyapps.meantime.ui.edittemplatescreen.EditTaskFragment
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainScreenFragment: Fragment() {
 
-    private val viewModel by viewModels<MainViewModel>()
+    private val viewModel: MainViewModel by viewModels(ownerProducer = { this })
 
     private lateinit var viewDataBinding: FragmentMainScreenBinding
 
@@ -49,6 +52,7 @@ class MainScreenFragment: Fragment() {
         viewModel.loadDay()
 
         setupNoTemplateLayout()
+        viewDataBinding.warningButton.setOnClickListener { showWarningDialog() }
     }
 
     override fun onResume() {
@@ -103,6 +107,10 @@ class MainScreenFragment: Fragment() {
 
     }
 
+    private fun showWarningDialog() {
+        WarningDialogFragment().show(childFragmentManager, "Warning info")
+    }
+
     private fun setupService() {
         viewModel.serviceRunning.observe(viewLifecycleOwner) { serviceIsRunning ->
             if (serviceIsRunning) {
@@ -120,6 +128,7 @@ class MainScreenFragment: Fragment() {
         val ignoresAppOptimizations = checkIfAppIgnoresBatteryOptimizations()
         val notificationEnabled = NotificationManagerCompat.from(requireContext()).areNotificationsEnabled()
 
+        Timber.d("ignoresAppOptimizations = $ignoresAppOptimizations; notifications enabled = $notificationEnabled")
         viewModel.updatePermissionWarnings(ignoresAppOptimizations, notificationEnabled)
     }
 

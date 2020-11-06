@@ -41,6 +41,21 @@
     <string name="muffled">Muffled</string>
     <string name="sound_on">Sound on</string>
 
+    <!--WarningInfoDialog-->
+    <string name="warning_dialog_description">For the best experience possible please consider this
+        warnings. You will be navigated to corresponding solution if you click at these warnings</string>
+
+    <string name="battery_optimization_on">Battery optimization is on</string>
+    <string name="battery_optimization_off">Battery optimization is off</string>
+    <string name="battery_optimization_description">This app heavily depend on background tasks,
+        if you don\'t turn it off, system may spoil your experience</string>
+
+    <string name="notifications_on">Notifications is on</string>
+    <string name="notifications_off">Notifications is off</string>
+    <string name="notifications_description">Most of the time app will run in background, so
+        notifications is vital</string>
+    <string name="notification_settings_path">Battery optimization -> All apps -> $1%s -> Don\'t optimize</string>
+
     <!--DayService-->
     <string name="channel_id">DayServiceTimer</string>
     <string name="channel_name">Day Timer</string>

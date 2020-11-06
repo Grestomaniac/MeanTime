@@ -20,4 +20,14 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
+    <style name="WarningStyle" parent="AppTheme">
+        <item name="color">@color/colorWarning</item>
+        <item name="tint">@color/colorWarning</item>
+    </style>
+
+    <style name="AlrightStyle" parent="AppTheme">
+        <item name="color">@color/colorAlright</item>
+        <item name="tint">@color/colorAlright</item>
+    </style>
+
 </resources>

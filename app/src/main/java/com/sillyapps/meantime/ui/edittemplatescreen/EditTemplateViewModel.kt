@@ -22,7 +22,7 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
     val templateName: MutableLiveData<String> = MutableLiveData("")
     val tasks: MutableLiveData<MutableList<Task>> = MutableLiveData(mutableListOf())
 
-    val task: PropertyAwareMutableLiveData<Task> = PropertyAwareMutableLiveData()
+    val task: MutableLiveData<Task> = MutableLiveData()
 
     private var taskPosition = AppConstants.NOT_ASSIGNED
 

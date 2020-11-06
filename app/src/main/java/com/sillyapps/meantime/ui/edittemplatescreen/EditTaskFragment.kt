@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.sillyapps.meantime.R
@@ -20,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class EditTaskFragment : Fragment() {
+class EditTaskFragment : DialogFragment() {
 
     val REQUEST_CODE = 5
 

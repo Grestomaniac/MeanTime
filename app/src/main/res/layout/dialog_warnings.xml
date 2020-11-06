@@ -1,11 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="appWarnings"
+            type="com.sillyapps.meantime.data.AppPermissionWarnings" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+
+        android:background="@color/colorPrimaryDark">
 
 
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="@string/warning_dialog_description"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textColor="@android:color/primary_text_dark"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/batteryOptimizationLayout"
+            android:layout_width="0dp"
+
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/description">
+
+
+            <ImageView
+                android:id="@+id/batteryImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+
+                app:layout_constraintTop_toTopOf="parent"
+
+                app:srcCompat="@drawable/ic_battery"
+                app:warningColor="@{appWarnings.batteryWarningColor}"
+                tools:tint="@color/colorWarning" />
+
+            <TextView
+                android:id="@+id/batteryText"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="16dp"
+                android:text="@{appWarnings.batteryStringResource}"
+                app:warningColor="@{appWarnings.batteryWarningColor}"
+                app:layout_constraintBottom_toBottomOf="@+id/batteryImage"
+                app:layout_constraintEnd_toEndOf="parent"
+
+                app:layout_constraintStart_toEndOf="@+id/batteryImage"
+                app:layout_constraintTop_toTopOf="@+id/batteryImage"
+                tools:text="@string/battery_optimization_on"
+                tools:textColor="@color/colorWarning" />
+
+            <TextView
+                android:id="@+id/batteryWarningDescription"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/battery_optimization_description"
+                android:textColor="@android:color/primary_text_dark"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/batteryImage" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/notificationLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/batteryOptimizationLayout"
+            android:layout_margin="8dp">
+
+            <ImageView
+                android:id="@+id/notificationImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_notification"
+
+                app:warningColor="@{appWarnings.notificationWarningColor}"
+                tools:tint="@color/colorWarning"/>
+
+            <TextView
+                android:id="@+id/notificationText"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="16dp"
+                app:layout_constraintBottom_toBottomOf="@+id/notificationImage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/notificationImage"
+                app:layout_constraintTop_toTopOf="@+id/notificationImage"
+
+                app:warningColor="@{appWarnings.notificationWarningColor}"
+                android:text="@{appWarnings.notificationStringResource}"
+                tools:textColor="@color/colorWarning"
+                tools:text="@string/notifications_off"/>
+
+            <TextView
+                android:id="@+id/notificationWarningDescription"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/notifications_description"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/notificationImage"
+                android:textColor="@android:color/primary_text_dark"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class MainViewModel @ViewModelInject constructor(private val dayManager: DayManager): ViewModel() {
 
-    private val currentDay: PropertyAwareMutableLiveData<Day> = PropertyAwareMutableLiveData()
+    private val currentDay: MutableLiveData<Day> = MutableLiveData()
 
     val tasks: LiveData<MutableList<RunningTask>> = currentDay.map { it.tasks }
     private val _uiTimeRemain: MutableLiveData<Long> = MutableLiveData(0)
@@ -20,7 +20,7 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
     private val _serviceRunning: MutableLiveData<Boolean> = MutableLiveData(false)
     val serviceRunning: LiveData<Boolean> = _serviceRunning
 
-    private val _task: PropertyAwareMutableLiveData<RunningTask> = PropertyAwareMutableLiveData()
+    private val _task: MutableLiveData<RunningTask> = MutableLiveData()
     val task: LiveData<RunningTask> = _task
 
     private val _noTemplate: MutableLiveData<Boolean> = MutableLiveData(false)

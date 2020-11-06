@@ -8,4 +8,7 @@
     <color name="colorItemActive">#FFDC5E</color>
     <color name="colorItemDisabled">#D7BCC8</color>
     <color name="colorItemCompleted">#B1F8F2</color>
+
+    <color name="colorWarning">#E50002</color>
+    <color name="colorAlright">#38cc25</color>
 </resources>
