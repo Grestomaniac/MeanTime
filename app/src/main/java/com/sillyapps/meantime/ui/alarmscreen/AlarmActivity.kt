@@ -1,7 +1,6 @@
 package com.sillyapps.meantime.ui.alarmscreen
 
 import android.content.Context
-import android.content.Intent
 import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
@@ -12,10 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.R
-import com.sillyapps.meantime.data.RunningTask
+import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.databinding.ActivityAlarmBinding
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 
 @AndroidEntryPoint
@@ -36,11 +34,11 @@ class AlarmActivity: AppCompatActivity() {
         binding.viewmodel = viewModel
 
         val currentTask = viewModel.currentTask
-        if (currentTask.soundOn) {
+        if (currentTask.editableSoundOn) {
             setRingtone(currentTask)
         }
 
-        if (currentTask.vibrationOn) {
+        if (currentTask.editableVibrationOn) {
             setVibrator()
         }
 
@@ -59,8 +57,8 @@ class AlarmActivity: AppCompatActivity() {
         showActivityIfDeviceIsSleeping()
     }
 
-    private fun setRingtone(currentTask: RunningTask) {
-        if (currentTask.soundOn) {
+    private fun setRingtone(currentTask: Task) {
+        if (currentTask.editableSoundOn) {
             val soundUri =
                 if (currentTask.sound == AppConstants.DEFAULT_RINGTONE)
                     RingtoneManager.getActualDefaultRingtoneUri(applicationContext, RingtoneManager.TYPE_RINGTONE)

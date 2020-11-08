@@ -3,9 +3,8 @@ package com.sillyapps.meantime.ui.mainscreen
 import android.os.CountDownTimer
 import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.data.Day
-import com.sillyapps.meantime.data.RunningTask
+import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.data.repository.AppRepository
-import kotlinx.coroutines.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -63,7 +62,7 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     }
 
     private fun startTimer() {
-        RunningTask.lastSystemTime = System.currentTimeMillis()
+        Task.lastSystemTime = System.currentTimeMillis()
         timer.start()
     }
 

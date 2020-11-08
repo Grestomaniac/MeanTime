@@ -6,7 +6,7 @@
     <data>
         <variable
             name="task"
-            type="com.sillyapps.meantime.data.RunningTask" />
+            type="com.sillyapps.meantime.data.Task" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,7 +37,7 @@
 
         <TextView
             android:id="@+id/taskInfoDuration"
-            timeWithSeconds="@{task.duration}"
+            timeWithSeconds="@{task.editableDuration}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
 
@@ -142,7 +142,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
 
-                android:checked="@={task.soundOn}"
+                android:checked="@={task.editableSoundOn}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/soundOnText"
 
@@ -180,7 +180,7 @@
                 app:layout_constraintStart_toEndOf="@+id/vibrationOnText"
                 app:layout_constraintTop_toTopOf="parent"
 
-                android:checked="@={task.vibrationOn}"/>
+                android:checked="@={task.editableVibrationOn}"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

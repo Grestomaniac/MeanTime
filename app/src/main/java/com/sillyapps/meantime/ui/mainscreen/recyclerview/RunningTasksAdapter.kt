@@ -3,17 +3,15 @@ package com.sillyapps.meantime.ui.mainscreen.recyclerview
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.sillyapps.meantime.data.RunningTask
+import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.databinding.ItemMainScreenTaskBinding
 import com.sillyapps.meantime.ui.ItemTouchHelperAdapter
 import com.sillyapps.meantime.ui.ItemClickListener
 import com.sillyapps.meantime.ui.mainscreen.MainViewModel
-import timber.log.Timber
 
-class RunningTasksAdapter(private val clickListener: ItemClickListener, private val viewModel: MainViewModel): ListAdapter<RunningTask, RunningTasksAdapter.ViewHolder>(TasksDiffCallback()),
+class RunningTasksAdapter(private val clickListener: ItemClickListener, private val viewModel: MainViewModel): ListAdapter<Task, RunningTasksAdapter.ViewHolder>(TasksDiffCallback()),
     ItemTouchHelperAdapter {
 
     var itemTouchHelperDetachCallback: ItemTouchHelperOnDetachedCallback? = null
@@ -28,11 +26,7 @@ class RunningTasksAdapter(private val clickListener: ItemClickListener, private 
     }
 
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
-        Timber.d("Tasks swapped from $fromPosition to $toPosition")
         if (fromPosition > toPosition) {
-            if (getItem(toPosition).canNotBeSwappedOrDisabled()) {
-                return true
-            }
             viewModel.notifyTasksSwapped(toPosition, fromPosition)
         }
         else {
@@ -44,25 +38,24 @@ class RunningTasksAdapter(private val clickListener: ItemClickListener, private 
     }
 
     override fun onItemDropped(toPosition: Int) {
-        Timber.d("Item dropped to position: $toPosition")
         viewModel.recalculateStartTimes(toPosition)
         notifyItemRangeChanged(toPosition, itemCount-toPosition)
     }
 
     override fun onItemSwiped(position: Int) {
-        Timber.d("On item swiped")
+        /*Timber.d("On item swiped")
         if (getItem(position).canNotBeSwappedOrDisabled()) {
             Timber.d("Cannot be swiped")
             return
         }
         itemTouchHelperDetachCallback?.onDetach()
         viewModel.notifyTaskDisabled(position)
-        notifyItemRangeChanged(position, itemCount-position)
+        notifyItemRangeChanged(position, itemCount-position)*/
     }
 
     class ViewHolder private constructor(private val binding: ItemMainScreenTaskBinding): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: RunningTask, position: Int, clickListener: ItemClickListener) {
+        fun bind(item: Task, position: Int, clickListener: ItemClickListener) {
             binding.task = item
             binding.taskAdapterPosition = position
             binding.clickListener = clickListener
@@ -79,14 +72,14 @@ class RunningTasksAdapter(private val clickListener: ItemClickListener, private 
     }
 }
 
-class TasksDiffCallback: DiffUtil.ItemCallback<RunningTask>() {
-    override fun areItemsTheSame(oldItem: RunningTask, newItem: RunningTask): Boolean {
+class TasksDiffCallback: DiffUtil.ItemCallback<Task>() {
+    override fun areItemsTheSame(oldItem: Task, newItem: Task): Boolean {
         // true если два объекта имеют одинаковые ссылки, нужно было что-то вроде PrimaryKey использовать,
         // но думаю для этого адаптера и этого хватит
         return oldItem === newItem
     }
 
-    override fun areContentsTheSame(oldItem: RunningTask, newItem: RunningTask): Boolean {
+    override fun areContentsTheSame(oldItem: Task, newItem: Task): Boolean {
         // true если эти два объекта имеют одинаковое содержимое
         return oldItem.startTime == newItem.startTime
     }

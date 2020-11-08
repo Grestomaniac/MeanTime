@@ -39,9 +39,9 @@ class MainScreenFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         viewDataBinding = FragmentMainScreenBinding.inflate(inflater, container, false).apply {
-            this.viewmodel = viewModel
+            viewmodel = viewModel
         }
-
+        setHasOptionsMenu(true)
         return viewDataBinding.root
     }
 
@@ -52,6 +52,7 @@ class MainScreenFragment: Fragment() {
 
         viewModel.loadDay()
 
+        setupTasksAdapter()
         setupNoTemplateLayout()
         viewDataBinding.warningButton.setOnClickListener { showWarningDialog() }
     }
@@ -71,7 +72,6 @@ class MainScreenFragment: Fragment() {
                 }
             }
             else {
-                setupTasksAdapter()
                 setupService()
             }
         }
@@ -92,21 +92,21 @@ class MainScreenFragment: Fragment() {
         }
 
         val adapter = RunningTasksAdapter(clickListener, viewModel)
-        viewDataBinding.tasks.adapter = adapter
+        viewDataBinding.runningTasks.adapter = adapter
 
         val itemTouchHelperCallback = ItemTouchHelperCallback(adapter)
         val touchHelper = ItemTouchHelper(itemTouchHelperCallback)
-        touchHelper.attachToRecyclerView(viewDataBinding.tasks)
+        touchHelper.attachToRecyclerView(viewDataBinding.runningTasks)
 
         adapter.itemTouchHelperDetachCallback = object : ItemTouchHelperOnDetachedCallback {
             override fun onDetach() {
                 touchHelper.attachToRecyclerView(null)
-                touchHelper.attachToRecyclerView(viewDataBinding.tasks)
+                touchHelper.attachToRecyclerView(viewDataBinding.runningTasks)
             }
         }
 
         viewModel.tasks.observe(viewLifecycleOwner, {
-            it.let { adapter.submitList(it) }
+            adapter.submitList(it)
         })
 
     }

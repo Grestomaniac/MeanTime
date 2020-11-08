@@ -4,25 +4,28 @@ import androidx.databinding.Observable
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.sillyapps.meantime.BR
+import com.sillyapps.meantime.convertToMillis
 import com.sillyapps.meantime.data.AppPermissionWarnings
 import com.sillyapps.meantime.data.Day
-import com.sillyapps.meantime.data.PropertyAwareMutableLiveData
-import com.sillyapps.meantime.data.RunningTask
+import com.sillyapps.meantime.data.Task
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.*
 
 class MainViewModel @ViewModelInject constructor(private val dayManager: DayManager): ViewModel() {
 
     private val currentDay: MutableLiveData<Day> = MutableLiveData()
 
-    val tasks: MutableLiveData<MutableList<RunningTask>> = MutableLiveData()
+    val tasks: MutableLiveData<MutableList<Task>> = MutableLiveData(mutableListOf())
+
     private val _uiTimeRemain: MutableLiveData<Long> = MutableLiveData(0)
     val uiTimeRemain: LiveData<Long> = _uiTimeRemain
+
     private val _serviceRunning: MutableLiveData<Boolean> = MutableLiveData(false)
     val serviceRunning: LiveData<Boolean> = _serviceRunning
 
-    private val _task: MutableLiveData<RunningTask> = MutableLiveData()
-    val task: LiveData<RunningTask> = _task
+    private val _task: MutableLiveData<Task> = MutableLiveData()
+    val task: LiveData<Task> = _task
 
     private val _noTemplate: MutableLiveData<Boolean> = MutableLiveData(false)
     val noTemplate: LiveData<Boolean> = _noTemplate
@@ -43,6 +46,7 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
                 _serviceRunning.value = currentDay.value!!.runningState
                 tasks.value = dayManager.thisDay!!.tasks
                 _noTemplate.value = false
+
                 dayManager.thisDay!!.addOnPropertyChangedCallback(dataUpdateCallback)
             }
         }
@@ -101,9 +105,6 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
                 }
                 BR.runningState -> {
                     _serviceRunning.value = currentDay.value!!.runningState
-                }
-                BR.state -> {
-                    Timber.d("State changed")
                 }
             }
         }

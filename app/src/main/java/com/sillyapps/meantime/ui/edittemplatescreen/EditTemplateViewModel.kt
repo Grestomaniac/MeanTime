@@ -33,6 +33,7 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
                 templateName.postValue(template!!.name)
                 tasks.postValue(template.activities)
             }
+        populate()
     }
 
     fun populate() {
@@ -66,7 +67,7 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
 
     fun editTask(position: Int) {
         taskPosition = position
-        task.setValue(tasks.value!![position])
+        task.value = tasks.value!![position]
     }
 
     fun createNewTask() {
@@ -74,7 +75,7 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
             tasks.value!!.last().getNextStartTime()
         } else 0L
 
-        task.setValue(Task(nextStartTime))
+        task.value = Task(nextStartTime)
     }
 
     fun setTaskDuration(duration: Long) {

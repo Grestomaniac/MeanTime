@@ -5,10 +5,9 @@ import androidx.databinding.Bindable
 import com.sillyapps.meantime.AppBR
 import com.sillyapps.meantime.BR
 import com.sillyapps.meantime.getLocalCurrentTimeMillis
-import timber.log.Timber
 import java.util.*
 
-class Day(val tasks: MutableList<RunningTask>,
+class Day(val tasks: MutableList<Task>,
           val alarmDuration: Long,
           var state: DayState = DayState.WAITING,
           var dayStartTime: Long = 0L,
@@ -40,7 +39,7 @@ class Day(val tasks: MutableList<RunningTask>,
         state = DayState.ACTIVE
         resetTasks()
         tasks[currentTaskPos].start()
-        timeRemain = getCurrentTask().duration
+        timeRemain = getCurrentTask().editableDuration
         runningState = true
     }
 
@@ -52,7 +51,7 @@ class Day(val tasks: MutableList<RunningTask>,
 
         currentTaskPos++
         getCurrentTask().let {
-            if (it.state == RunningTask.State.DISABLED) selectNextTask(true)
+            if (it.state == Task.State.DISABLED) selectNextTask(true)
             it.start()
             recalculateStartTimes(currentTaskPos+1)
         }
@@ -76,19 +75,19 @@ class Day(val tasks: MutableList<RunningTask>,
 
     fun resume() {
         state = DayState.ACTIVE
-        val timePaused = System.currentTimeMillis() - RunningTask.lastSystemTime
+        val timePaused = System.currentTimeMillis() - Task.lastSystemTime
         getCurrentTask().addPausedOffset(timePaused)
     }
 
-    fun getCurrentTask(): RunningTask {
+    fun getCurrentTask(): Task {
         return tasks[currentTaskPos]
     }
 
-    fun getPreviousTask(): RunningTask {
+    fun getPreviousTask(): Task {
         return tasks[currentTaskPos-1]
     }
 
-    fun updateTimeRemained(newTime: Long = getCurrentTask().duration) {
+    fun updateTimeRemained(newTime: Long = getCurrentTask().editableDuration) {
         timeRemain = newTime
     }
 
@@ -103,7 +102,7 @@ class Day(val tasks: MutableList<RunningTask>,
         if (stop) {
             getCurrentTask().stop()
             updateTasks(currentTaskPos)
-            timeRemain = getCurrentTask().duration
+            timeRemain = getCurrentTask().editableDuration
         }
         else {
             getCurrentTask().complete()
@@ -149,8 +148,7 @@ class Day(val tasks: MutableList<RunningTask>,
     companion object {
         fun fromTemplate(template: Template?): Day? {
             template?.let { currentTemplate ->
-                val runningTasks = currentTemplate.activities.map { RunningTask.copyFromExistingTask(it) }.toMutableList()
-                return Day(runningTasks, currentTemplate.alarmDuration)
+                return Day(template.activities, currentTemplate.alarmDuration)
             }
             return null
         }

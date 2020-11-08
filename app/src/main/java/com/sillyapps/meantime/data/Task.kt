@@ -26,6 +26,7 @@ class Task(
     var duration: Long = duration
         set(value) {
             field = value
+            editableDuration = value
             notifyPropertyChanged(BR.duration)
         }
 
@@ -36,50 +37,10 @@ class Task(
             notifyPropertyChanged(BR.sound)
         }
 
-    fun getNextStartTime(): Long {
-        return if (duration == AppConstants.UNCERTAIN || startTime == AppConstants.UNCERTAIN) {
-            AppConstants.UNCERTAIN
-        }
-        else {
-            startTime + duration
-        }
-    }
+    var editableDuration: Long = duration
 
-    fun isDataValid(): WhatIsWrong {
-        if (name == "") return WhatIsWrong.NAME
-        if (duration == 0L) return WhatIsWrong.DURATION
-
-        return WhatIsWrong.NOTHING
-    }
-
-    enum class WhatIsWrong {
-        NAME, DURATION, NOTHING
-    }
-}
-
-class RunningTask(
-    startTime: Long,
-
-    var name: String = "",
-    private val originalDuration: Long = 0L,
-
-    private val originalVibrationOn: Boolean,
-    private val originalSoundOn: Boolean,
-    val sound: String
-): BaseObservable() {
-    var startTime: Long = startTime
-        set(value) {
-            field = value
-            notifyChange()
-        }
-
-    var duration: Long = originalDuration
-        set(value) {
-            field = value
-        }
-
-    var soundOn = originalSoundOn
-    var vibrationOn = originalVibrationOn
+    var editableSoundOn = soundOn
+    var editableVibrationOn = vibrationOn
 
     @Bindable
     var state: State = State.WAITING
@@ -92,7 +53,7 @@ class RunningTask(
     var muffled: Boolean = false
         set(value) {
             field = value
-            notifyPropertyChanged(BR.`muffled$1`)
+            notifyPropertyChanged(BR.muffled)
         }
 
     var stateBit: Byte = 0b00000001
@@ -105,20 +66,17 @@ class RunningTask(
 
     var timePaused: Long = 0L
 
-    enum class State {
-        WAITING, ACTIVE, COMPLETED, DISABLED
-    }
-
     fun resetStartTime(time: Long = 0L) {
         startTime = time
     }
 
     fun getNextStartTime(): Long {
-        return if (duration == AppConstants.UNCERTAIN || startTime == AppConstants.UNCERTAIN) {
+        return if (editableDuration == AppConstants.UNCERTAIN || startTime == AppConstants.UNCERTAIN) {
             AppConstants.UNCERTAIN
         }
         else {
-            startTime + duration
+            Timber.d("Task with name $name, new startTime = ${startTime + editableDuration}")
+            startTime + editableDuration
         }
     }
 
@@ -132,7 +90,7 @@ class RunningTask(
         progress += dt * 1000
         lastSystemTime = currentTime
 
-        return duration - progress
+        return editableDuration - progress
     }
 
     fun start() {
@@ -156,7 +114,7 @@ class RunningTask(
 
     fun stop() {
         state = State.COMPLETED
-        duration = progress
+        editableDuration = progress
     }
 
     fun complete() {
@@ -165,13 +123,13 @@ class RunningTask(
 
     fun muffle() {
         if (muffled) {
-            vibrationOn = originalVibrationOn
-            soundOn = originalSoundOn
+            editableVibrationOn = vibrationOn
+            editableSoundOn = soundOn
             muffled = false
         }
         else {
-            vibrationOn = false
-            soundOn = false
+            editableVibrationOn = false
+            editableSoundOn = false
             muffled = true
         }
     }
@@ -181,22 +139,25 @@ class RunningTask(
     }
 
     fun getProgressInPercents(): String {
-        return (progress.toFloat() / duration * 100).toInt().toString() + "%"
+        return (progress.toFloat() / editableDuration * 100).toInt().toString() + "%"
+    }
+
+    fun isDataValid(): WhatIsWrong {
+        if (name == "") return WhatIsWrong.NAME
+        if (duration == 0L) return WhatIsWrong.DURATION
+
+        return WhatIsWrong.NOTHING
     }
 
     companion object {
-        val waiting = 0b00000001
-        val active = 0b00000010
-        val completed = 0b00000100
-        val disabled = 0b00001000
-        val muffled = 0b00010000
-
         var lastSystemTime = 0L
+    }
 
-        fun copyFromExistingTask(task: Task): RunningTask {
-            task.apply {
-                return RunningTask(task.startTime, name, duration, vibrationOn, soundOn, sound)
-            }
-        }
+    enum class State {
+        WAITING, ACTIVE, COMPLETED, DISABLED
+    }
+
+    enum class WhatIsWrong {
+        NAME, DURATION, NOTHING
     }
 }

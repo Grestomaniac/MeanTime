@@ -1,25 +1,18 @@
 package com.sillyapps.meantime.ui
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.content.res.ColorStateList
-import android.media.RingtoneManager
 import android.net.Uri
-import android.provider.MediaStore
 import android.provider.OpenableColumns
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.widget.ImageViewCompat
 import androidx.databinding.BindingAdapter
 import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.R
 import com.sillyapps.meantime.convertMillisToStringFormat
 import com.sillyapps.meantime.convertMillisToStringFormatWithSeconds
-import com.sillyapps.meantime.data.RunningTask
-import timber.log.Timber
+import com.sillyapps.meantime.data.Task
 
 @BindingAdapter("isDefault")
 fun ConstraintLayout.setDefault(isDefault: Boolean) {
@@ -35,13 +28,13 @@ fun ConstraintLayout.setDefault(isDefault: Boolean) {
 }
 
 @BindingAdapter("taskState")
-fun ConstraintLayout.updateState(state: RunningTask.State) {
+fun ConstraintLayout.updateState(state: Task.State) {
     val backgroundResource =
         when (state) {
-            RunningTask.State.WAITING -> R.drawable.item_waiting
-            RunningTask.State.COMPLETED -> R.drawable.item_completed
-            RunningTask.State.DISABLED -> R.drawable.item_disabled
-            RunningTask.State.ACTIVE -> R.drawable.item_active
+            Task.State.WAITING -> R.drawable.item_waiting
+            Task.State.COMPLETED -> R.drawable.item_completed
+            Task.State.DISABLED -> R.drawable.item_disabled
+            Task.State.ACTIVE -> R.drawable.item_active
         }
 
     setBackgroundResource(backgroundResource)

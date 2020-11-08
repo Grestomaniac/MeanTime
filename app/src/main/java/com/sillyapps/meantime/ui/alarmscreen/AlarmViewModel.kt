@@ -6,17 +6,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sillyapps.meantime.data.Day
-import com.sillyapps.meantime.data.RunningTask
-import com.sillyapps.meantime.data.TimeWithSeconds
+import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.ui.mainscreen.DayManager
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class AlarmViewModel @ViewModelInject constructor(private val dayManager: DayManager): ViewModel() {
 
-    lateinit var currentTask: RunningTask
+    lateinit var currentTask: Task
     var dayEnded: Boolean = false
     var nextTaskName = ""
     var alarmDuration: Long = 0L

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="task"
-            type="com.sillyapps.meantime.data.RunningTask" />
+            type="com.sillyapps.meantime.data.Task" />
 
         <variable
             name="taskAdapterPosition"

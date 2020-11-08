@@ -1,16 +1,11 @@
 package com.sillyapps.meantime.data.local
 
-import android.icu.text.SimpleDateFormat
-import androidx.databinding.ObservableArrayList
 import androidx.room.TypeConverter
 import com.sillyapps.meantime.data.Day
-import com.sillyapps.meantime.data.RunningTask
 import com.sillyapps.meantime.data.Task
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
-import java.time.format.DateTimeFormatter
-import java.util.*
 
 object AppTypeConverter {
 
