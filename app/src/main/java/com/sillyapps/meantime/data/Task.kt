@@ -3,6 +3,7 @@ package com.sillyapps.meantime.data
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.sillyapps.meantime.*
+import timber.log.Timber
 
 class Task(
     startTime: Long = 0L,
@@ -143,12 +144,12 @@ class RunningTask(
         when (state) {
             State.COMPLETED, State.ACTIVE -> return
             State.DISABLED -> {
+                Timber.d("Disabling view")
                 state = State.WAITING
-                duration = originalDuration
             }
             State.WAITING -> {
+                Timber.d("Disabling view")
                 state = State.DISABLED
-                duration = 0L
             }
         }
     }
@@ -175,7 +176,7 @@ class RunningTask(
         }
     }
 
-    fun notSwappable(): Boolean {
+    fun canNotBeSwappedOrDisabled(): Boolean {
         return ((state == State.COMPLETED) or (state == State.ACTIVE))
     }
 

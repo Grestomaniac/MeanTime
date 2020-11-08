@@ -44,13 +44,9 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     }
 
     fun getNextTask(stop: Boolean = false) {
-        thisDay!!.let {
-            if (it.atLastTask()) {
-                resetDay(stop)
-                return
-            }
-
-            it.selectNextTask(stop)
+        val dayNotEnded = thisDay!!.selectNextTask(stop)
+        if (!dayNotEnded) {
+            resetDay(stop)
         }
     }
 

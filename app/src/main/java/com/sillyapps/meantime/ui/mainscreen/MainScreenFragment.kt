@@ -22,6 +22,7 @@ import com.sillyapps.meantime.ui.ItemClickListener
 import com.sillyapps.meantime.ui.ItemTouchHelperCallback
 import com.sillyapps.meantime.ui.TimePickerFragment
 import com.sillyapps.meantime.ui.edittemplatescreen.EditTaskFragment
+import com.sillyapps.meantime.ui.mainscreen.recyclerview.ItemTouchHelperOnDetachedCallback
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -96,6 +97,13 @@ class MainScreenFragment: Fragment() {
         val itemTouchHelperCallback = ItemTouchHelperCallback(adapter)
         val touchHelper = ItemTouchHelper(itemTouchHelperCallback)
         touchHelper.attachToRecyclerView(viewDataBinding.tasks)
+
+        adapter.itemTouchHelperDetachCallback = object : ItemTouchHelperOnDetachedCallback {
+            override fun onDetach() {
+                touchHelper.attachToRecyclerView(null)
+                touchHelper.attachToRecyclerView(viewDataBinding.tasks)
+            }
+        }
 
         viewModel.tasks.observe(viewLifecycleOwner, {
             it.let { adapter.submitList(it) }

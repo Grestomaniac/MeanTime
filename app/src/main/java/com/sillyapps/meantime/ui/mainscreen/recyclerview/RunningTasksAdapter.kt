@@ -3,6 +3,7 @@ package com.sillyapps.meantime.ui.mainscreen.recyclerview
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sillyapps.meantime.data.RunningTask
@@ -10,9 +11,12 @@ import com.sillyapps.meantime.databinding.ItemMainScreenTaskBinding
 import com.sillyapps.meantime.ui.ItemTouchHelperAdapter
 import com.sillyapps.meantime.ui.ItemClickListener
 import com.sillyapps.meantime.ui.mainscreen.MainViewModel
+import timber.log.Timber
 
 class RunningTasksAdapter(private val clickListener: ItemClickListener, private val viewModel: MainViewModel): ListAdapter<RunningTask, RunningTasksAdapter.ViewHolder>(TasksDiffCallback()),
     ItemTouchHelperAdapter {
+
+    var itemTouchHelperDetachCallback: ItemTouchHelperOnDetachedCallback? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -24,8 +28,9 @@ class RunningTasksAdapter(private val clickListener: ItemClickListener, private 
     }
 
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
+        Timber.d("Tasks swapped from $fromPosition to $toPosition")
         if (fromPosition > toPosition) {
-            if (getItem(toPosition).notSwappable()) {
+            if (getItem(toPosition).canNotBeSwappedOrDisabled()) {
                 return true
             }
             viewModel.notifyTasksSwapped(toPosition, fromPosition)
@@ -39,11 +44,18 @@ class RunningTasksAdapter(private val clickListener: ItemClickListener, private 
     }
 
     override fun onItemDropped(toPosition: Int) {
+        Timber.d("Item dropped to position: $toPosition")
         viewModel.recalculateStartTimes(toPosition)
         notifyItemRangeChanged(toPosition, itemCount-toPosition)
     }
 
-    override fun onItemDismiss(position: Int) {
+    override fun onItemSwiped(position: Int) {
+        Timber.d("On item swiped")
+        if (getItem(position).canNotBeSwappedOrDisabled()) {
+            Timber.d("Cannot be swiped")
+            return
+        }
+        itemTouchHelperDetachCallback?.onDetach()
         viewModel.notifyTaskDisabled(position)
         notifyItemRangeChanged(position, itemCount-position)
     }
@@ -78,4 +90,8 @@ class TasksDiffCallback: DiffUtil.ItemCallback<RunningTask>() {
         // true если эти два объекта имеют одинаковое содержимое
         return oldItem.startTime == newItem.startTime
     }
+}
+
+interface ItemTouchHelperOnDetachedCallback {
+    fun onDetach()
 }

@@ -1,6 +1,7 @@
 package com.sillyapps.meantime.ui
 
 import android.graphics.Canvas
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.sillyapps.meantime.AppConstants
@@ -11,6 +12,8 @@ class ItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter): Ite
 
     var dragTo = AppConstants.NOT_ASSIGNED
     var dragFrom = AppConstants.NOT_ASSIGNED
+
+    var waitingForAnimationToEnd = false
 
     override fun getMovementFlags(
         recyclerView: RecyclerView,
@@ -27,6 +30,20 @@ class ItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter): Ite
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
+
+        return true
+    }
+
+    override fun onMoved(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        fromPos: Int,
+        target: RecyclerView.ViewHolder,
+        toPos: Int,
+        x: Int,
+        y: Int
+    ) {
+        Timber.d("onMoved")
         val targetPosition = target.adapterPosition
 
         if (dragFrom == AppConstants.NOT_ASSIGNED) {
@@ -35,11 +52,16 @@ class ItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter): Ite
 
         mAdapter.onItemMove(viewHolder.adapterPosition, targetPosition)
         dragTo = targetPosition
-        return true
+        super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y)
+    }
+
+    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+        Timber.d("clearView")
+        super.clearView(recyclerView, viewHolder)
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        mAdapter.onItemDismiss(viewHolder.adapterPosition)
+
     }
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
@@ -64,26 +86,8 @@ class ItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter): Ite
         return true
     }
 
-    override fun onChildDraw(
-        c: Canvas,
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder,
-        dX: Float,
-        dY: Float,
-        actionState: Int,
-        isCurrentlyActive: Boolean
-    ) {
-        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            val alpha = ALPHA_FULL - abs(dX) / viewHolder.itemView.width.toFloat()
-            viewHolder.itemView.alpha = alpha
-            viewHolder.itemView.translationX = dX
-        }
-        else
-            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-    }
-
     companion object {
-        val ALPHA_FULL = 1.0f
+        val ALPHA_FULL = 1f
     }
 
 }
@@ -94,6 +98,6 @@ interface ItemTouchHelperAdapter {
 
     fun onItemDropped(toPosition: Int)
 
-    fun onItemDismiss(position: Int)
+    fun onItemSwiped(position: Int)
 
 }

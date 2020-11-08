@@ -44,23 +44,19 @@ class Day(val tasks: MutableList<RunningTask>,
         runningState = true
     }
 
-    fun selectNextTask(stop: Boolean = false) {
-        if (stop) {
-            getCurrentTask().stop()
-            updateTasks(currentTaskPos)
-            timeRemain = getCurrentTask().duration
-            notifyPropertyChanged(BR.currentTaskPos)
+    fun selectNextTask(stop: Boolean = false): Boolean {
+        if (atLastTask()) {
+            return false
         }
-        else {
-            getCurrentTask().complete()
-            notifyPropertyChanged(AppBR.taskFinishedNaturally)
-        }
+        completeCurrentTask(stop)
 
         currentTaskPos++
         getCurrentTask().let {
+            if (it.state == RunningTask.State.DISABLED) selectNextTask(true)
             it.start()
             recalculateStartTimes(currentTaskPos+1)
         }
+        return true
     }
 
     fun endDay(stop: Boolean) {
@@ -103,6 +99,18 @@ class Day(val tasks: MutableList<RunningTask>,
         }
     }
 
+    private fun completeCurrentTask(stop: Boolean) {
+        if (stop) {
+            getCurrentTask().stop()
+            updateTasks(currentTaskPos)
+            timeRemain = getCurrentTask().duration
+        }
+        else {
+            getCurrentTask().complete()
+            notifyPropertyChanged(AppBR.taskFinishedNaturally)
+        }
+    }
+
     private fun updateTasks(from: Int) {
         for (i in from+1 until tasks.size) {
             tasks[i].startTime = tasks[i-1].getNextStartTime()
@@ -123,6 +131,7 @@ class Day(val tasks: MutableList<RunningTask>,
     fun notifyTaskDisabled(position: Int) {
         tasks[position].disable()
         recalculateStartTimes(position)
+        notifyChange()
     }
 
     fun notifyTasksSwapped(upperPosition: Int, bottomPosition: Int) {

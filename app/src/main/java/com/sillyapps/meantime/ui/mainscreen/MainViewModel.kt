@@ -9,12 +9,13 @@ import com.sillyapps.meantime.data.Day
 import com.sillyapps.meantime.data.PropertyAwareMutableLiveData
 import com.sillyapps.meantime.data.RunningTask
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class MainViewModel @ViewModelInject constructor(private val dayManager: DayManager): ViewModel() {
 
     private val currentDay: MutableLiveData<Day> = MutableLiveData()
 
-    val tasks: LiveData<MutableList<RunningTask>> = currentDay.map { it.tasks }
+    val tasks: MutableLiveData<MutableList<RunningTask>> = MutableLiveData()
     private val _uiTimeRemain: MutableLiveData<Long> = MutableLiveData(0)
     val uiTimeRemain: LiveData<Long> = _uiTimeRemain
     private val _serviceRunning: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -40,6 +41,7 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
             else {
                 currentDay.value = dayManager.thisDay!!
                 _serviceRunning.value = currentDay.value!!.runningState
+                tasks.value = dayManager.thisDay!!.tasks
                 _noTemplate.value = false
                 dayManager.thisDay!!.addOnPropertyChangedCallback(dataUpdateCallback)
             }
@@ -92,6 +94,7 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
 
     private val dataUpdateCallback = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+            Timber.d("property changed with id: $propertyId")
             when (propertyId) {
                 BR.timeRemain -> {
                     _uiTimeRemain.value = currentDay.value!!.timeRemain
@@ -99,7 +102,9 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
                 BR.runningState -> {
                     _serviceRunning.value = currentDay.value!!.runningState
                 }
-
+                BR.state -> {
+                    Timber.d("State changed")
+                }
             }
         }
     }
