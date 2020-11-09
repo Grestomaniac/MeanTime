@@ -95,7 +95,7 @@ class DayService: Service() {
         val timeRemain = convertMillisToStringFormatWithSeconds(currentDay.timeRemain)
 
         notificationBuilder =  NotificationCompat.Builder(this, AppConstants.SERVICE_MAIN_NOTIFICATION_CHANNEL)
-            .setContentTitle(currentDay.getCurrentTask().name)
+            .setContentTitle(currentDay.currentTask.name)
             .setContentText(timeRemain)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setSmallIcon(R.mipmap.ic_launcher)
@@ -130,7 +130,7 @@ class DayService: Service() {
         val currentDay = dayManager.thisDay!!
         val timeRemain = convertMillisToStringFormatWithSeconds(currentDay.timeRemain)
         notificationBuilder.setContentText(timeRemain)
-        notificationBuilder.setContentTitle(currentDay.getCurrentTask().name)
+        notificationBuilder.setContentTitle(currentDay.currentTask.name)
 
         notificationManager.notify(SERVICE_ID, notificationBuilder.build())
     }

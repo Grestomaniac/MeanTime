@@ -33,10 +33,10 @@ class AlarmViewModel @ViewModelInject constructor(private val dayManager: DayMan
         alarmDuration = day.alarmDuration
 
         if (!dayEnded) {
-            nextTaskName = day.getCurrentTask().name
+            nextTaskName = day.currentTask.name
         }
         else {
-            currentTask = day.getCurrentTask()
+            currentTask = day.currentTask
         }
 
         timerJob = viewModelScope.launch {

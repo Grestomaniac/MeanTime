@@ -55,6 +55,7 @@ class MainScreenFragment: Fragment() {
         setupTasksAdapter()
         setupNoTemplateLayout()
         viewDataBinding.warningButton.setOnClickListener { showWarningDialog() }
+        viewDataBinding.buttonStop.setOnLongClickListener { viewModel.onLongStopButtonClick() }
     }
 
     override fun onResume() {

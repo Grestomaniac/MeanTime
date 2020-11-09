@@ -18,6 +18,7 @@ class Day(val tasks: MutableList<Task>,
     var currentTaskPos: Int = currentTaskPos
         set(value) {
             field = value
+            currentTask = tasks[value]
         }
 
     @Bindable("timeRemained")
@@ -34,12 +35,16 @@ class Day(val tasks: MutableList<Task>,
             notifyPropertyChanged(BR.runningState)
         }
 
+    @Bindable
+    var currentTask: Task = tasks[currentTaskPos]
+
     fun start() {
+        currentTaskPos = 0
         dayStartTime = getLocalCurrentTimeMillis()
         state = DayState.ACTIVE
         resetTasks()
-        tasks[currentTaskPos].start()
-        timeRemain = getCurrentTask().editableDuration
+        currentTask.start()
+        timeRemain = currentTask.editableDuration
         runningState = true
     }
 
@@ -50,8 +55,11 @@ class Day(val tasks: MutableList<Task>,
         completeCurrentTask(stop)
 
         currentTaskPos++
-        getCurrentTask().let {
-            if (it.state == Task.State.DISABLED) selectNextTask(true)
+        currentTask.let {
+            if (it.state == Task.State.DISABLED) {
+                selectNextTask(true)
+                return true
+            }
             it.start()
             recalculateStartTimes(currentTaskPos+1)
         }
@@ -63,8 +71,8 @@ class Day(val tasks: MutableList<Task>,
 
         dayStartTime = 0L
         state = DayState.COMPLETED
-        getCurrentTask().complete()
-        resetTasks()
+        for (i in currentTaskPos until tasks.size)
+            tasks[i].complete()
         timeRemain = 0L
         runningState = false
     }
@@ -76,18 +84,14 @@ class Day(val tasks: MutableList<Task>,
     fun resume() {
         state = DayState.ACTIVE
         val timePaused = System.currentTimeMillis() - Task.lastSystemTime
-        getCurrentTask().addPausedOffset(timePaused)
-    }
-
-    fun getCurrentTask(): Task {
-        return tasks[currentTaskPos]
+        currentTask.addPausedOffset(timePaused)
     }
 
     fun getPreviousTask(): Task {
         return tasks[currentTaskPos-1]
     }
 
-    fun updateTimeRemained(newTime: Long = getCurrentTask().editableDuration) {
+    fun updateTimeRemained(newTime: Long = currentTask.editableDuration) {
         timeRemain = newTime
     }
 
@@ -100,12 +104,12 @@ class Day(val tasks: MutableList<Task>,
 
     private fun completeCurrentTask(stop: Boolean) {
         if (stop) {
-            getCurrentTask().stop()
+            currentTask.stop()
             updateTasks(currentTaskPos)
-            timeRemain = getCurrentTask().editableDuration
+            timeRemain = currentTask.editableDuration
         }
         else {
-            getCurrentTask().complete()
+            currentTask.complete()
             notifyPropertyChanged(AppBR.taskFinishedNaturally)
         }
     }

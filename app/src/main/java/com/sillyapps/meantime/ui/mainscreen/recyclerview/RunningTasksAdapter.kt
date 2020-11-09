@@ -27,6 +27,9 @@ class RunningTasksAdapter(private val clickListener: ItemClickListener, private 
 
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
         if (fromPosition > toPosition) {
+            if (getItem(toPosition).canNotBeSwappedOrDisabled()) {
+                return true
+            }
             viewModel.notifyTasksSwapped(toPosition, fromPosition)
         }
         else {
@@ -43,14 +46,11 @@ class RunningTasksAdapter(private val clickListener: ItemClickListener, private 
     }
 
     override fun onItemSwiped(position: Int) {
-        /*Timber.d("On item swiped")
         if (getItem(position).canNotBeSwappedOrDisabled()) {
-            Timber.d("Cannot be swiped")
             return
         }
-        itemTouchHelperDetachCallback?.onDetach()
         viewModel.notifyTaskDisabled(position)
-        notifyItemRangeChanged(position, itemCount-position)*/
+        notifyItemRangeChanged(position, itemCount-position)
     }
 
     class ViewHolder private constructor(private val binding: ItemMainScreenTaskBinding): RecyclerView.ViewHolder(binding.root) {

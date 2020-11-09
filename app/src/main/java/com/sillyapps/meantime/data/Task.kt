@@ -75,7 +75,6 @@ class Task(
             AppConstants.UNCERTAIN
         }
         else {
-            Timber.d("Task with name $name, new startTime = ${startTime + editableDuration}")
             startTime + editableDuration
         }
     }
@@ -87,7 +86,7 @@ class Task(
     fun continueTask(): Long {
         val currentTime = System.currentTimeMillis()
         val dt = currentTime - lastSystemTime
-        progress += dt * 1000
+        progress += dt
         lastSystemTime = currentTime
 
         return editableDuration - progress
@@ -102,11 +101,11 @@ class Task(
         when (state) {
             State.COMPLETED, State.ACTIVE -> return
             State.DISABLED -> {
-                Timber.d("Disabling view")
+                editableDuration = duration
                 state = State.WAITING
             }
             State.WAITING -> {
-                Timber.d("Disabling view")
+                editableDuration = 0L
                 state = State.DISABLED
             }
         }

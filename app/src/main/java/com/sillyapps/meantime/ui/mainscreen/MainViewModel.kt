@@ -71,6 +71,11 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
         dayManager.getNextTask(true)
     }
 
+    fun onLongStopButtonClick(): Boolean {
+        dayManager.resetDay(true)
+        return true
+    }
+
     fun recalculateStartTimes(position: Int) {
         dayManager.recalculateStartTimes(position)
     }

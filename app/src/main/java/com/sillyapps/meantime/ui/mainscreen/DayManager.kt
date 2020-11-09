@@ -76,7 +76,7 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
         startTimer()
     }
 
-    private fun resetDay(stop: Boolean) {
+    fun resetDay(stop: Boolean) {
         timer.cancel()
         thisDay!!.endDay(stop)
         return
@@ -85,7 +85,7 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     private val timer = object : CountDownTimer(AppConstants.TIMER_CHECK_INTERVAL, 1000L) {
 
         override fun onTick(millisUntilFinished: Long) {
-            val timeRemained = thisDay!!.getCurrentTask().continueTask()
+            val timeRemained = thisDay!!.currentTask.continueTask()
             if (timeRemained < 0) {
                 getNextTask()
             } else

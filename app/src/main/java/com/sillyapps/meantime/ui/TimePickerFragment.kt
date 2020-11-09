@@ -1,23 +1,19 @@
 package com.sillyapps.meantime.ui
 
-import android.app.Dialog
-import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.NumberPicker
-import android.widget.TimePicker
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.navGraphViewModels
+import com.sillyapps.meantime.App
+import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.R
 import com.sillyapps.meantime.convertToMillis
-import com.sillyapps.meantime.data.TimeWithSeconds
 import com.sillyapps.meantime.databinding.DialogTimePickerBinding
 import com.sillyapps.meantime.ui.edittemplatescreen.EditTemplateViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_edit_task.*
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -42,6 +38,7 @@ class TimePickerFragment: DialogFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         binding.okButton.setOnClickListener { setDuration() }
+        binding.uncertainButton.setOnClickListener { setUncertainDuration() }
     }
 
     private fun setDuration() {
@@ -52,6 +49,11 @@ class TimePickerFragment: DialogFragment() {
                 timePickerSeconds.value
             ))
         }
+        dismiss()
+    }
+
+    private fun setUncertainDuration() {
+        viewModel.setTaskDuration(AppConstants.UNCERTAIN)
         dismiss()
     }
 
@@ -73,9 +75,13 @@ class TimePickerFragment: DialogFragment() {
     }
 
     private fun setupTimePickerValues() {
-        binding.apply {
-            val durationInMillis = viewModel.task.value!!.duration
+        val durationInMillis = viewModel.task.value!!.duration
 
+        if (durationInMillis == AppConstants.UNCERTAIN) {
+            return
+        }
+
+        binding.apply {
             val overallSeconds = (durationInMillis / 1000).toInt()
             timePickerSeconds.value = overallSeconds % 60
 

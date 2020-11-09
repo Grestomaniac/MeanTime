@@ -22,6 +22,8 @@
     <string name="choose_task_sound">Choose task notification sound</string>
     <string name="default_ringtone">Default</string>
 
+    <string name="duration_is_uncertain">Uncertain</string>
+
     <!--NavDrawer-->
     <string name="save">Save</string>
     <string name="template_editor">Template editor</string>
@@ -68,4 +70,5 @@
     <string name="completed">Completed</string>
     <string name="next_task">Next task:</string>
     <string name="day_ended">Day Ended!</string>
+
 </resources>

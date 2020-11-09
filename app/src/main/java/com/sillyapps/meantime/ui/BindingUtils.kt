@@ -13,6 +13,7 @@ import com.sillyapps.meantime.R
 import com.sillyapps.meantime.convertMillisToStringFormat
 import com.sillyapps.meantime.convertMillisToStringFormatWithSeconds
 import com.sillyapps.meantime.data.Task
+import timber.log.Timber
 
 @BindingAdapter("isDefault")
 fun ConstraintLayout.setDefault(isDefault: Boolean) {
@@ -42,18 +43,29 @@ fun ConstraintLayout.updateState(state: Task.State) {
 
 @BindingAdapter("time")
 fun TextView.setTime(time: Long) {
+    if (time == AppConstants.UNCERTAIN) {
+        text = "??:??"
+        return
+    }
     text = convertMillisToStringFormat(time)
 }
 
 @BindingAdapter("timeWithSeconds")
 fun TextView.setTimeWithSeconds(time: Long) {
+    Timber.d("Time = $time")
+    if (time == AppConstants.UNCERTAIN) {
+        text = "??:??:??"
+        return
+    }
     text = convertMillisToStringFormatWithSeconds(time)
 }
 
 @BindingAdapter("soundText")
 fun TextView.setSoundString(uriPath: String) {
-    if (uriPath == AppConstants.DEFAULT_RINGTONE)
+    if (uriPath == AppConstants.DEFAULT_RINGTONE) {
         text = context.getString(R.string.default_ringtone)
+        return
+    }
 
     val cursor = context.contentResolver.query(Uri.parse(uriPath), null, null, null, null)
     cursor?.moveToFirst()

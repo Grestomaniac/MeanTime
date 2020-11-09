@@ -5,26 +5,24 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="8dp">
 
         <NumberPicker
             android:id="@+id/timePickerHours"
 
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@+id/timePickerMinutes"
             app:layout_constraintEnd_toStartOf="@+id/timePickerMinutes"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/timePickerMinutes"
-            />
+            app:layout_constraintTop_toTopOf="@+id/timePickerMinutes" />
 
         <NumberPicker
             android:id="@+id/timePickerMinutes"
 
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:layout_constraintBottom_toTopOf="@+id/okButton"
             app:layout_constraintEnd_toStartOf="@+id/timePickerSeconds"
             app:layout_constraintStart_toEndOf="@+id/timePickerHours"
             app:layout_constraintTop_toTopOf="parent" />
@@ -32,21 +30,32 @@
         <NumberPicker
             android:id="@+id/timePickerSeconds"
 
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@+id/timePickerMinutes"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/timePickerMinutes"
-            app:layout_constraintTop_toTopOf="@+id/timePickerMinutes"/>
+            app:layout_constraintTop_toTopOf="@+id/timePickerMinutes" />
 
         <ImageButton
             android:id="@+id/okButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="@+id/timePickerSeconds"
+            app:layout_constraintStart_toStartOf="@+id/timePickerSeconds"
+            app:layout_constraintTop_toBottomOf="@+id/timePickerMinutes"
             app:srcCompat="@drawable/ic_check" />
+
+        <Button
+            android:id="@+id/uncertainButton"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="@string/duration_is_uncertain"
+            app:layout_constraintBottom_toBottomOf="@+id/okButton"
+            app:layout_constraintEnd_toEndOf="@+id/timePickerHours"
+            app:layout_constraintStart_toStartOf="@+id/timePickerHours"
+            app:layout_constraintTop_toTopOf="@+id/okButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
