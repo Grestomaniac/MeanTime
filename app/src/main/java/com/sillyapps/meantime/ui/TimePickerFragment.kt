@@ -17,11 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class TimePickerFragment: DialogFragment() {
-
-    private val viewModel: EditTemplateViewModel by navGraphViewModels(R.id.edit_template_graph) {
-        defaultViewModelProviderFactory
-    }
+class TimePickerFragment(private val viewModel: TimePickerViewModel): DialogFragment() {
 
     private lateinit var binding: DialogTimePickerBinding
 
@@ -75,7 +71,7 @@ class TimePickerFragment: DialogFragment() {
     }
 
     private fun setupTimePickerValues() {
-        val durationInMillis = viewModel.task.value!!.duration
+        val durationInMillis = viewModel.getTaskDuration()
 
         if (durationInMillis == AppConstants.UNCERTAIN) {
             return

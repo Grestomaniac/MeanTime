@@ -2,17 +2,20 @@ package com.sillyapps.meantime.services
 
 import android.app.*
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.IBinder
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import androidx.databinding.Observable
 import com.hypertrack.hyperlog.HyperLog
 import com.sillyapps.meantime.*
+import com.sillyapps.meantime.broadcastrecievers.ScreenOnOffBroadcastReceiver
 import com.sillyapps.meantime.ui.alarmscreen.AlarmActivity
 import com.sillyapps.meantime.ui.mainscreen.DayManager
 import com.sillyapps.meantime.utils.FileLogger
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
+import java.lang.IllegalArgumentException
 import javax.inject.Inject
 import kotlin.math.log
 
@@ -33,6 +36,8 @@ class DayService: Service() {
     private lateinit var stopIntent: PendingIntent
     private lateinit var notificationManager: NotificationManager
 
+    private lateinit var screenOnOffReceiver: ScreenOnOffBroadcastReceiver
+
 
     override fun onCreate() {
         super.onCreate()
@@ -40,6 +45,7 @@ class DayService: Service() {
 
         notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
+        registerScreenOnOffReceiver()
         setupObservers()
 
         setupButtonsIntents()
@@ -68,6 +74,23 @@ class DayService: Service() {
         }
 
         return START_STICKY
+    }
+
+    private fun registerScreenOnOffReceiver() {
+        screenOnOffReceiver = ScreenOnOffBroadcastReceiver(dayManager)
+        val intentFilter = IntentFilter().apply {
+            addAction(Intent.ACTION_SCREEN_ON)
+            addAction(Intent.ACTION_SCREEN_OFF)
+        }
+        registerReceiver(screenOnOffReceiver, intentFilter)
+    }
+
+    private fun unregisterScreenOnOffReceiver() {
+        try {
+            unregisterReceiver(screenOnOffReceiver)
+        } catch (e: IllegalArgumentException) {
+            e.printStackTrace()
+        }
     }
 
     private fun setupObservers() {
@@ -149,5 +172,10 @@ class DayService: Service() {
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterScreenOnOffReceiver()
     }
 }

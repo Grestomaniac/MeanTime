@@ -38,6 +38,7 @@
 
     <!--TaskInfoDialog-->
     <string name="duration">Duration:</string>
+    <string name="start_time">Start time:</string>
     <string name="active">Active for:</string>
     <string name="progress">Progress:</string>
     <string name="muffled">Muffled</string>

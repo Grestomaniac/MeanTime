@@ -3,16 +3,18 @@ package com.sillyapps.meantime.ui.mainscreen
 import androidx.databinding.Observable
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.BR
 import com.sillyapps.meantime.convertToMillis
 import com.sillyapps.meantime.data.AppPermissionWarnings
 import com.sillyapps.meantime.data.Day
 import com.sillyapps.meantime.data.Task
+import com.sillyapps.meantime.ui.TimePickerViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 
-class MainViewModel @ViewModelInject constructor(private val dayManager: DayManager): ViewModel() {
+class MainViewModel @ViewModelInject constructor(private val dayManager: DayManager): ViewModel(), TimePickerViewModel {
 
     private val currentDay: MutableLiveData<Day> = MutableLiveData()
 
@@ -26,6 +28,7 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
 
     private val _task: MutableLiveData<Task> = MutableLiveData()
     val task: LiveData<Task> = _task
+    private var taskPosition = AppConstants.NOT_ASSIGNED
 
     private val _noTemplate: MutableLiveData<Boolean> = MutableLiveData(false)
     val noTemplate: LiveData<Boolean> = _noTemplate
@@ -71,7 +74,7 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
         dayManager.getNextTask(true)
     }
 
-    fun onLongStopButtonClick(): Boolean {
+    fun onStopButtonLongClick(): Boolean {
         dayManager.resetDay(true)
         return true
     }
@@ -89,11 +92,30 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
     }
 
     fun onTaskClicked(position: Int) {
+        taskPosition = position
         _task.value = tasks.value!![position]
     }
 
     fun onTaskDialogClosed() {
         _task.value = null
+        taskPosition = AppConstants.NOT_ASSIGNED
+    }
+
+    fun onTaskRevertChanges() {
+        _task.value!!.revertChanges()
+        recalculateStartTimes(taskPosition)
+    }
+
+    override fun setTaskDuration(duration: Long) {
+        if (duration == getTaskDuration()) {
+            return
+        }
+        _task.value!!.editableDuration = duration
+        recalculateStartTimes(taskPosition)
+    }
+
+    override fun getTaskDuration(): Long {
+        return _task.value!!.editableDuration
     }
 
     override fun onCleared() {
@@ -103,7 +125,6 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
 
     private val dataUpdateCallback = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-            Timber.d("property changed with id: $propertyId")
             when (propertyId) {
                 BR.timeRemain -> {
                     _uiTimeRemain.value = currentDay.value!!.timeRemain

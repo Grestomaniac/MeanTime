@@ -4,6 +4,10 @@ object AppConstants {
     const val UNCERTAIN = -2L
     const val NOT_ASSIGNED = -1
 
+    const val NORMAL_INTERVAL = 100L
+    const val BATTERY_SAVING_INTERVAL = 10000L
+    const val CRITICAL_TIME_REMAINED = 300000L
+
     const val SERVICE_MAIN_NOTIFICATION_CHANNEL = "DayServiceChannel"
 
     const val ALARM_DEFAULT_DURATION = 60000L

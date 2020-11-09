@@ -37,10 +37,26 @@ class Task(
             notifyPropertyChanged(BR.sound)
         }
 
+    @Bindable
     var editableDuration: Long = duration
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.editableDuration)
+        }
 
+    @Bindable
     var editableSoundOn = soundOn
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.editableSoundOn)
+        }
+
+    @Bindable
     var editableVibrationOn = vibrationOn
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.editableVibrationOn)
+        }
 
     @Bindable
     var state: State = State.WAITING
@@ -53,15 +69,24 @@ class Task(
     var muffled: Boolean = false
         set(value) {
             field = value
+            if (!muffled) {
+                editableVibrationOn = vibrationOn
+                editableSoundOn = soundOn
+            }
+            else {
+                editableVibrationOn = false
+                editableSoundOn = false
+            }
             notifyPropertyChanged(BR.muffled)
         }
 
     var stateBit: Byte = 0b00000001
 
+    @Bindable
     var progress: Long = 0L
         set(value) {
             field = value
-            notifyChange()
+            notifyPropertyChanged(BR.progress)
         }
 
     var timePaused: Long = 0L
@@ -113,24 +138,18 @@ class Task(
 
     fun stop() {
         state = State.COMPLETED
-        editableDuration = progress
+        duration = progress
     }
 
     fun complete() {
         state = State.COMPLETED
     }
 
-    fun muffle() {
-        if (muffled) {
-            editableVibrationOn = vibrationOn
-            editableSoundOn = soundOn
-            muffled = false
-        }
-        else {
-            editableVibrationOn = false
-            editableSoundOn = false
-            muffled = true
-        }
+    fun revertChanges() {
+        editableDuration = duration
+        editableSoundOn = soundOn
+        editableVibrationOn = vibrationOn
+        muffled = false
     }
 
     fun canNotBeSwappedOrDisabled(): Boolean {

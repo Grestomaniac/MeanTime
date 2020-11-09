@@ -11,12 +11,13 @@ import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.data.Template
 import com.sillyapps.meantime.data.repository.AppRepository
 import com.sillyapps.meantime.ui.Result
+import com.sillyapps.meantime.ui.TimePickerViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 
 class EditTemplateViewModel @ViewModelInject constructor(private val repository: AppRepository,
-                                                         @Assisted private val savedStateHandle: SavedStateHandle): ViewModel() {
+                                                         @Assisted private val savedStateHandle: SavedStateHandle): ViewModel(), TimePickerViewModel {
 
     var templateId = savedStateHandle.get<Int>("templateId")!!
     val templateName: MutableLiveData<String> = MutableLiveData("")
@@ -78,8 +79,12 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
         task.value = Task(nextStartTime)
     }
 
-    fun setTaskDuration(duration: Long) {
+    override fun setTaskDuration(duration: Long) {
         task.value!!.duration = duration
+    }
+
+    override fun getTaskDuration(): Long {
+        return task.value!!.duration
     }
 
     fun setTaskSound(sound: String) {

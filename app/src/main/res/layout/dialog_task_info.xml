@@ -10,20 +10,31 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/taskName"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
+            android:layout_marginStart="40dp"
             android:text="@{task.name}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
 
+            app:layout_constraintEnd_toStartOf="@+id/revertChangesButton"
+            app:layout_constraintStart_toStartOf="@+id/vibrationOnField"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Task1" />
+
+        <ImageButton
+            android:id="@+id/revertChangesButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:layout_constraintBottom_toBottomOf="@+id/taskName"
+            app:layout_constraintEnd_toEndOf="@+id/vibrationOnField"
+            app:layout_constraintTop_toTopOf="@+id/taskName"
+            app:srcCompat="@drawable/ic_refresh" />
 
         <TextView
             android:id="@+id/durationText"
@@ -32,7 +43,7 @@
             android:text="@string/duration"
 
             app:layout_constraintEnd_toStartOf="@+id/taskInfoDuration"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/vibrationOnField"
             app:layout_constraintTop_toTopOf="@+id/taskInfoDuration" />
 
         <TextView
@@ -42,10 +53,32 @@
             android:layout_height="wrap_content"
 
             android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/vibrationOnField"
             app:layout_constraintStart_toEndOf="@+id/durationText"
 
             app:layout_constraintTop_toBottomOf="@+id/taskName"
+            tools:text="00:00:00" />
+
+        <TextView
+            android:id="@+id/startTimeText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/start_time"
+            app:layout_constraintBottom_toBottomOf="@+id/startTime"
+            app:layout_constraintEnd_toStartOf="@+id/startTime"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/startTime" />
+
+        <TextView
+            android:id="@+id/startTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/startTimeText"
+            app:layout_constraintTop_toBottomOf="@+id/taskInfoDuration"
+
+            timeWithSeconds="@{task.startTime}"
             tools:text="00:00:00" />
 
         <TextView
@@ -55,7 +88,7 @@
             android:text="@string/active"
 
             app:layout_constraintEnd_toStartOf="@+id/activeFor"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/vibrationOnField"
             app:layout_constraintTop_toTopOf="@+id/activeFor" />
 
         <TextView
@@ -65,10 +98,10 @@
             android:layout_height="wrap_content"
 
             android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/activeForText"
+            app:layout_constraintEnd_toEndOf="@+id/vibrationOnField"
 
-            app:layout_constraintTop_toBottomOf="@+id/taskInfoDuration"
+            app:layout_constraintStart_toEndOf="@+id/activeForText"
+            app:layout_constraintTop_toBottomOf="@+id/startTime"
             tools:text="00:00:00" />
 
         <TextView
@@ -77,7 +110,7 @@
             android:layout_height="wrap_content"
             android:text="@string/progress"
             app:layout_constraintEnd_toStartOf="@+id/progressInPercents"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/vibrationOnField"
             app:layout_constraintTop_toTopOf="@+id/progressInPercents" />
 
         <TextView
@@ -86,7 +119,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@{task.progressInPercents}"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/vibrationOnField"
             app:layout_constraintStart_toEndOf="@+id/progressText"
 
             app:layout_constraintTop_toBottomOf="@+id/activeFor"
@@ -97,9 +130,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="64dp"
             android:text="@string/muffled"
             app:layout_constraintEnd_toStartOf="@+id/muffled"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/vibrationOnField"
             app:layout_constraintTop_toBottomOf="@+id/progressText" />
 
 
@@ -107,13 +141,11 @@
             android:id="@+id/muffled"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
 
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/muffledText"
-            app:layout_constraintTop_toTopOf="@+id/muffledText"
+            android:checked="@={task.muffled}"
+            app:layout_constraintEnd_toEndOf="@+id/vibrationOnField"
 
-            android:checked="@={task.muffled}"/>
+            app:layout_constraintTop_toTopOf="@+id/muffledText" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -122,29 +154,29 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
 
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:interactive="@{!task.muffled}"
+            app:layout_constraintEnd_toEndOf="@+id/vibrationOnField"
+            app:layout_constraintStart_toStartOf="@+id/vibrationOnField"
+
             app:layout_constraintTop_toBottomOf="@+id/muffledText">
 
             <TextView
                 android:id="@+id/soundOnText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="64dp"
                 android:text="@string/sound_on"
                 app:layout_constraintEnd_toStartOf="@+id/taskInfoSoundOn"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/taskInfoSoundOn"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
 
                 android:checked="@={task.editableSoundOn}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/soundOnText"
 
                 app:layout_constraintTop_toTopOf="@+id/soundOnText" />
 
@@ -152,19 +184,21 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/vibrationOnField"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
 
+            app:interactive="@{!task.muffled}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/soundOnField"
-            >
+
+            app:layout_constraintTop_toBottomOf="@+id/soundOnField">
 
             <TextView
                 android:id="@+id/vibrationOnText"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="64dp"
                 android:text="@string/vibration_on"
                 app:layout_constraintEnd_toStartOf="@+id/taskInfoVibrationOn"
                 app:layout_constraintStart_toStartOf="parent"
@@ -172,15 +206,13 @@
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/taskInfoVibrationOn"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
 
+                android:checked="@={task.editableVibrationOn}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/vibrationOnText"
-                app:layout_constraintTop_toTopOf="parent"
 
-                android:checked="@={task.editableVibrationOn}"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

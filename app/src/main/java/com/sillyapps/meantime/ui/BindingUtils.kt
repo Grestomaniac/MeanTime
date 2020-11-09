@@ -3,10 +3,12 @@ package com.sillyapps.meantime.ui
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.provider.OpenableColumns
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.children
 import androidx.databinding.BindingAdapter
 import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.R
@@ -52,7 +54,6 @@ fun TextView.setTime(time: Long) {
 
 @BindingAdapter("timeWithSeconds")
 fun TextView.setTimeWithSeconds(time: Long) {
-    Timber.d("Time = $time")
     if (time == AppConstants.UNCERTAIN) {
         text = "??:??:??"
         return
@@ -83,4 +84,10 @@ fun ImageView.setWarningColor(colorId: Int) {
 fun TextView.setWarningColor(colorId: Int) {
     val resolvedColor = ContextCompat.getColor(context, colorId)
     setTextColor(resolvedColor)
+}
+
+@BindingAdapter("interactive")
+fun ConstraintLayout.setInteractive(isInteractive: Boolean) {
+    isEnabled = isInteractive
+    children.forEach { it.isEnabled = isInteractive }
 }

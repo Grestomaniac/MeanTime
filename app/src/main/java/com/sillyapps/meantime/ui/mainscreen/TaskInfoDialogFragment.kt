@@ -7,12 +7,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.sillyapps.meantime.databinding.DialogTaskInfoBinding
+import com.sillyapps.meantime.ui.TimePickerFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class TaskInfoDialogFragment: DialogFragment() {
 
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels( ownerProducer = { requireParentFragment() } )
 
     private lateinit var binding: DialogTaskInfoBinding
 
@@ -22,6 +23,23 @@ class TaskInfoDialogFragment: DialogFragment() {
         binding.task = viewModel.task.value
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.lifecycleOwner = viewLifecycleOwner
+
+        binding.taskInfoDuration.setOnClickListener { editDuration() }
+        binding.revertChangesButton.setOnClickListener { viewModel.onTaskRevertChanges() }
+    }
+
+    private fun editDuration() {
+        TimePickerFragment(viewModel).show(parentFragmentManager, "Pick time")
+    }
+
+    override fun onDestroy() {
+        viewModel.onTaskDialogClosed()
+        super.onDestroy()
     }
 
 }

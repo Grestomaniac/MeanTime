@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
-import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,14 +13,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
-import com.sillyapps.meantime.data.AppPermissionWarnings
 import com.sillyapps.meantime.databinding.FragmentMainScreenBinding
 import com.sillyapps.meantime.services.DayService
 import com.sillyapps.meantime.ui.mainscreen.recyclerview.RunningTasksAdapter
 import com.sillyapps.meantime.ui.ItemClickListener
 import com.sillyapps.meantime.ui.ItemTouchHelperCallback
-import com.sillyapps.meantime.ui.TimePickerFragment
-import com.sillyapps.meantime.ui.edittemplatescreen.EditTaskFragment
 import com.sillyapps.meantime.ui.mainscreen.recyclerview.ItemTouchHelperOnDetachedCallback
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -55,7 +51,7 @@ class MainScreenFragment: Fragment() {
         setupTasksAdapter()
         setupNoTemplateLayout()
         viewDataBinding.warningButton.setOnClickListener { showWarningDialog() }
-        viewDataBinding.buttonStop.setOnLongClickListener { viewModel.onLongStopButtonClick() }
+        viewDataBinding.buttonStop.setOnLongClickListener { viewModel.onStopButtonLongClick() }
     }
 
     override fun onResume() {
@@ -113,7 +109,7 @@ class MainScreenFragment: Fragment() {
     }
 
     private fun showTaskInfo() {
-
+        TaskInfoDialogFragment().show(childFragmentManager, "Task info")
     }
 
     private fun showWarningDialog() {

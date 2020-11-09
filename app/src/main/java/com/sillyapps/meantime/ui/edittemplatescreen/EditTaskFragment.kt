@@ -51,7 +51,7 @@ class EditTaskFragment : DialogFragment() {
     }
 
     private fun showTimePickerDialog() {
-        TimePickerFragment().show(parentFragmentManager, "Pick time")
+        TimePickerFragment(viewModel).show(parentFragmentManager, "Pick time")
     }
 
     private fun validateData() {

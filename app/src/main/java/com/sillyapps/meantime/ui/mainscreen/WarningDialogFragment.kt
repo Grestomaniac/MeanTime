@@ -40,7 +40,6 @@ class WarningDialogFragment: DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
-        viewModel.appPermissionWarnings.observe(viewLifecycleOwner) {}
 
         binding.batteryOptimizationLayout.setOnClickListener { onBatteryOptimizationWarningClick() }
         binding.notificationLayout.setOnClickListener { onNotificationWarningClick() }
