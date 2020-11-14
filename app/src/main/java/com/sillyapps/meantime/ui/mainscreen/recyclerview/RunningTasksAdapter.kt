@@ -14,8 +14,6 @@ import com.sillyapps.meantime.ui.mainscreen.MainViewModel
 class RunningTasksAdapter(private val clickListener: ItemClickListener, private val viewModel: MainViewModel): ListAdapter<Task, RunningTasksAdapter.ViewHolder>(TasksDiffCallback()),
     ItemTouchHelperAdapter {
 
-    var itemTouchHelperDetachCallback: ItemTouchHelperOnDetachedCallback? = null
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
     }

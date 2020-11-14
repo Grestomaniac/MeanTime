@@ -21,10 +21,16 @@ interface ApplicationPreferencesDao {
     suspend fun getApplicationPref(): ApplicationPreferences?
 
     @Query("update app_pref_table set defaultTemplateId = :templateId where id = 1")
-    suspend fun setDefaultTemplate(templateId: Int)
+    suspend fun setDefaultTemplateId(templateId: Int)
 
     @Query("select defaultTemplateId from app_pref_table where id = 1")
     suspend fun getDefaultTemplateId(): Int
+
+    @Query("update app_pref_table set defaultSchemeId = :schemeId where id = 1")
+    suspend fun setDefaultSchemeId(schemeId: Int)
+
+    @Query("select defaultSchemeId from app_pref_table where id = 1")
+    suspend fun getDefaultSchemeId(): Int
 
     @Query("select day from app_pref_table where id = 1")
     suspend fun getDay(): Day?

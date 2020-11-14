@@ -2,13 +2,12 @@ package com.sillyapps.meantime.data.repository
 
 import androidx.lifecycle.LiveData
 import com.sillyapps.meantime.data.Day
-import com.sillyapps.meantime.data.PropertyAwareMutableLiveData
+import com.sillyapps.meantime.data.Scheme
 import com.sillyapps.meantime.data.Template
 import com.sillyapps.meantime.data.local.ApplicationPreferencesDao
 import com.sillyapps.meantime.data.local.SchemeDao
 import com.sillyapps.meantime.data.local.TemplateDao
 import kotlinx.coroutines.*
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,17 +18,17 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
                                         private val ioDispatcher: CoroutineDispatcher) {
 
     private suspend fun findNewDefaultTemplate() {
-        appPrefDao.setDefaultTemplate(0)
+        appPrefDao.setDefaultTemplateId(0)
 
         val newTemplate = templateDao.getFirstExistingTemplate()
 
         newTemplate?.let {
-            appPrefDao.setDefaultTemplate(it.id)
+            appPrefDao.setDefaultTemplateId(it.id)
             templateDao.setTemplateDefault(it.id, true)
         }
     }
 
-    suspend fun updateAppPref(templateId: Int) {
+    suspend fun setNewDefaultTemplate(templateId: Int) {
         val lastDefaultTemplateId = appPrefDao.getDefaultTemplateId()
         if (lastDefaultTemplateId == templateId) return
 
@@ -38,7 +37,7 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
         }
         templateDao.setTemplateDefault(templateId, true)
 
-        appPrefDao.setDefaultTemplate(templateId)
+        appPrefDao.setDefaultTemplateId(templateId)
     }
 
     suspend fun insertTemplate(template: Template): Int {
@@ -74,6 +73,15 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
 
     fun observeAllTemplates(): LiveData<List<Template>> {
         return templateDao.observeTemplates()
+    }
+
+    suspend fun getCurrentScheme(): Scheme? {
+        val currentSchemeId = appPrefDao.getDefaultSchemeId()
+        return schemeDao.getScheme(currentSchemeId)
+    }
+
+    suspend fun setCurrentScheme(schemeId: Int) {
+        appPrefDao.setDefaultSchemeId(schemeId)
     }
 
     suspend fun getNextTemplate(): Template? {

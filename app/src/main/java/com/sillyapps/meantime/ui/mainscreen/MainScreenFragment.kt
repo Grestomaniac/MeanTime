@@ -95,13 +95,6 @@ class MainScreenFragment: Fragment() {
         val touchHelper = ItemTouchHelper(itemTouchHelperCallback)
         touchHelper.attachToRecyclerView(viewDataBinding.runningTasks)
 
-        adapter.itemTouchHelperDetachCallback = object : ItemTouchHelperOnDetachedCallback {
-            override fun onDetach() {
-                touchHelper.attachToRecyclerView(null)
-                touchHelper.attachToRecyclerView(viewDataBinding.runningTasks)
-            }
-        }
-
         viewModel.tasks.observe(viewLifecycleOwner, {
             adapter.submitList(it)
         })

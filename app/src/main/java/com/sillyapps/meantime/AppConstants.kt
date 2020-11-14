@@ -1,6 +1,8 @@
 package com.sillyapps.meantime
 
 object AppConstants {
+    const val DEFAULT_SCHEME_ID = 1
+
     const val UNCERTAIN = -2L
     const val NOT_ASSIGNED = -1
 

@@ -7,11 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.sillyapps.meantime.databinding.FragmentExplorerBinding
 import com.sillyapps.meantime.ui.ItemTouchHelperCallbackNoDrag
 import com.sillyapps.meantime.ui.explorer.recyclerview.ExplorerAdapter
 import com.sillyapps.meantime.ui.ItemClickListener
+import com.sillyapps.meantime.ui.schemescreen.SchemeFragment
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -19,6 +21,7 @@ import timber.log.Timber
 class TemplateExplorerFragment : Fragment() {
 
     private val viewModel by viewModels<TemplateExplorerViewModel>()
+    private val args: TemplateExplorerFragmentArgs by navArgs()
 
     private lateinit var viewDataBinding: FragmentExplorerBinding
 
@@ -28,6 +31,7 @@ class TemplateExplorerFragment : Fragment() {
     ): View? {
         viewDataBinding = FragmentExplorerBinding.inflate(inflater, container, false).apply {
             viewmodel = viewModel
+            editMode = args.editMode
         }
         return viewDataBinding.root
     }
@@ -48,18 +52,8 @@ class TemplateExplorerFragment : Fragment() {
     }
 
     private fun setupAdapter() {
-        val clickListener = object : ItemClickListener {
-            override fun onClickItem(index: Int) {
-                navigateToEditTemplateFragment(index)
-            }
-
-            override fun onLongClick(index: Int): Boolean {
-                Timber.d("Long click on template with id: $index")
-                viewModel.selectDefaultTemplate(index)
-                return true
-            }
-
-        }
+        val clickListener = if (args.editMode) getEditModeClickListener()
+                            else getExplorerModeClickListener()
 
         val explorerAdapter = ExplorerAdapter(viewModel, clickListener)
         viewDataBinding.items.adapter = explorerAdapter
@@ -71,6 +65,40 @@ class TemplateExplorerFragment : Fragment() {
         viewModel.items.observe(viewLifecycleOwner, {
             it.let { explorerAdapter.submitList(it) }
         })
+    }
+
+    private fun getEditModeClickListener(): ItemClickListener {
+        return object : ItemClickListener {
+            override fun onClickItem(index: Int) {
+                navigateToEditTemplateFragment(index)
+            }
+
+            override fun onLongClick(index: Int): Boolean {
+                viewModel.selectDefaultTemplate(index)
+                return true
+            }
+
+        }
+    }
+
+    private fun getExplorerModeClickListener(): ItemClickListener {
+        return object : ItemClickListener {
+            override fun onClickItem(index: Int) {
+                returnResultToSchemeFragment(index)
+            }
+
+            override fun onLongClick(index: Int): Boolean {
+                viewModel.selectDefaultTemplate(index)
+                return true
+            }
+        }
+    }
+
+    private fun returnResultToSchemeFragment(id: Int) {
+        findNavController().apply {
+            previousBackStackEntry?.savedStateHandle?.set(SchemeFragment.KEY_TEMPLATE_ID, id)
+            popBackStack()
+        }
     }
 
     private fun navigateToEditTemplateFragment(id: Int = 0) {

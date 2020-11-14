@@ -27,7 +27,6 @@
     <!--NavDrawer-->
     <string name="save">Save</string>
     <string name="template_editor">Template editor</string>
-    <string name="template_explorer">Template explorer</string>
     <string name="schema">Schema</string>
     <string name="main_screen">Main screen</string>
 

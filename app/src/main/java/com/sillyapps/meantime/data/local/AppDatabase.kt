@@ -55,6 +55,7 @@ abstract class AppDatabase: RoomDatabase() {
             INSTANCE?.let { appDatabase ->
                 CoroutineScope(Dispatchers.IO).launch {
                     appDatabase.appPrefDao.insert(ApplicationPreferences())
+                    appDatabase.schemesDao.insert(Scheme(1))
                 }
             }
         }

@@ -5,14 +5,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.databinding.ItemEditorTaskBinding
 import com.sillyapps.meantime.ui.ItemTouchHelperAdapter
 import com.sillyapps.meantime.ui.edittemplatescreen.EditTemplateViewModel
 import com.sillyapps.meantime.ui.ItemClickListener
 
-class TemplateEditorAdapter(private val viewModel: EditTemplateViewModel, private val onClickListener: ItemClickListener): ListAdapter<Task, TemplateEditorAdapter.ViewHolder>(TemplateExplorerDiffCallback()), ItemTouchHelperAdapter {
+class TemplateEditorAdapter(private val viewModel: EditTemplateViewModel, private val onClickListener: ItemClickListener): ListAdapter<Task, TemplateEditorAdapter.ViewHolder>(
+    TasksDiffCallback()
+), ItemTouchHelperAdapter {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -65,7 +66,7 @@ class TemplateEditorAdapter(private val viewModel: EditTemplateViewModel, privat
     }
 }
 
-class TemplateExplorerDiffCallback: DiffUtil.ItemCallback<Task>() {
+class TasksDiffCallback: DiffUtil.ItemCallback<Task>() {
     override fun areItemsTheSame(oldItem: Task, newItem: Task): Boolean {
         return oldItem === newItem
     }

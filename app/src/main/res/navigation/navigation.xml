@@ -13,17 +13,14 @@
         tools:layout="@layout/fragment_main_screen">
 
         <action
-            android:id="@+id/action_mainScreenFragment_to_explorerFragment"
-            app:destination="@id/explorerFragment" />
-
-        <action
             android:id="@+id/action_mainScreenFragment_to_edit_template_graph"
-            app:destination="@id/edit_template_graph"
-            >
+            app:destination="@id/edit_template_graph">
+
             <argument
                 android:name="templateId"
                 android:defaultValue="0"
                 app:argType="integer"/>
+
         </action>
 
     </fragment>
@@ -34,15 +31,50 @@
         android:label="ExplorerFragment"
 
         tools:layout="@layout/fragment_explorer">
+
         <action
             android:id="@+id/action_explorerFragment_to_edit_template_graph"
             app:destination="@id/edit_template_graph">
+
             <argument
                 android:name="templateId"
                 android:defaultValue="0"
                 app:argType="integer"/>
+
         </action>
+
+        <argument
+            android:name="edit_mode"
+            app:argType="boolean"
+            android:defaultValue="true" />
+
     </fragment>
+
+    <fragment
+        android:id="@+id/schemeFragment"
+        android:name="com.sillyapps.meantime.ui.schemescreen.SchemeFragment"
+        android:label="SchemeFragment"
+
+        tools:layout="@layout/fragment_scheme">
+
+        <action
+            android:id="@+id/action_schemeFragment_to_explorerFragment"
+            app:destination="@id/explorerFragment">
+
+            <argument
+                android:name="edit_mode"
+                app:argType="boolean"
+                android:defaultValue="false" />
+
+        </action>
+
+        <argument
+            android:name="new_template_pos"
+            app:argType="integer"
+            android:defaultValue="-1"/>
+
+    </fragment>
+
 
     <include app:graph="@navigation/edit_template_graph" />
 

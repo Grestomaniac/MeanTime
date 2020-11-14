@@ -37,7 +37,7 @@ object AppTypeConverter {
         if (data == null) return emptyList()
         val moshi = Moshi.Builder().build()
 
-        val dataList = Types.newParameterizedType(List::class.java, Int::class.java)
+        val dataList = Types.newParameterizedType(List::class.java, Int::class.javaObjectType)
         val jsonAdapter: JsonAdapter<List<Int>> = moshi.adapter(dataList)
 
         return jsonAdapter.fromJson(data)
@@ -47,7 +47,7 @@ object AppTypeConverter {
     @JvmStatic
     fun convertOrderListToJson(list: List<Int>?): String {
         val moshi = Moshi.Builder().build()
-        val dataList = Types.newParameterizedType(List::class.java, Int::class.java)
+        val dataList = Types.newParameterizedType(List::class.java, Int::class.javaObjectType)
         val jsonAdapter: JsonAdapter<List<Int>> = moshi.adapter(dataList)
 
         return jsonAdapter.toJson(list)

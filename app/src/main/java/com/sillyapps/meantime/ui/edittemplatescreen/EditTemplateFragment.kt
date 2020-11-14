@@ -7,12 +7,12 @@ import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.sillyapps.meantime.R
 import com.sillyapps.meantime.databinding.FragmentEditTemplateBinding
-import com.sillyapps.meantime.ui.edittemplatescreen.recyclerview.TemplateEditorAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.sillyapps.meantime.ui.ItemTouchHelperCallback
 import com.sillyapps.meantime.ui.ItemClickListener
+import com.sillyapps.meantime.ui.edittemplatescreen.recyclerview.TemplateEditorAdapter
 
 @AndroidEntryPoint
 class EditTemplateFragment : Fragment() {

@@ -12,7 +12,7 @@ import com.sillyapps.meantime.ui.explorer.TemplateExplorerViewModel
 import com.sillyapps.meantime.ui.ItemClickListener
 
 class ExplorerAdapter(private val viewModel: TemplateExplorerViewModel, private val clickListener: ItemClickListener): ListAdapter<Template, ExplorerAdapter.ViewHolder>(
-    TemplateExplorerDiffCallback()), ItemTouchHelperAdapterNoDrag {
+    TemplatesDiffCallback()), ItemTouchHelperAdapterNoDrag {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -50,7 +50,7 @@ class ExplorerAdapter(private val viewModel: TemplateExplorerViewModel, private 
 
 }
 
-class TemplateExplorerDiffCallback: DiffUtil.ItemCallback<Template>() {
+class TemplatesDiffCallback: DiffUtil.ItemCallback<Template>() {
     override fun areItemsTheSame(oldItem: Template, newItem: Template): Boolean {
         return oldItem.id == newItem.id
     }
