@@ -111,7 +111,7 @@ class Task(
     fun continueTask(): Long {
         val currentTime = System.currentTimeMillis()
         val dt = currentTime - lastSystemTime
-        progress += dt
+        progress += dt * 1000
         lastSystemTime = currentTime
 
         return editableDuration - progress
@@ -169,10 +169,6 @@ class Task(
 
     companion object {
         var lastSystemTime = 0L
-    }
-
-    enum class State {
-        WAITING, ACTIVE, COMPLETED, DISABLED
     }
 
     enum class WhatIsWrong {

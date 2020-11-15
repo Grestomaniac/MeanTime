@@ -31,10 +31,11 @@ class ExplorerAdapter(private val viewModel: TemplateExplorerViewModel, private 
     class ViewHolder private constructor(private val binding: ItemTemplateBinding): RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Template, position: Int, clickListener: ItemClickListener) {
-            binding.apply {
-                template = item
-                this.clickListener = clickListener
-                binding.itemTemplate.setOnLongClickListener { clickListener.onLongClick(item.id) }
+            binding.let {
+                it.template = item
+                it.clickListener = clickListener
+                it.position = position
+                it.itemTemplate.setOnLongClickListener { clickListener.onLongClick(item.id) }
             }
         }
 

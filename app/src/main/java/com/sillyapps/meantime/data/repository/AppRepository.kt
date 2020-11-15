@@ -1,8 +1,10 @@
 package com.sillyapps.meantime.data.repository
 
 import androidx.lifecycle.LiveData
+import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.data.Day
 import com.sillyapps.meantime.data.Scheme
+import com.sillyapps.meantime.data.SimplifiedTemplate
 import com.sillyapps.meantime.data.Template
 import com.sillyapps.meantime.data.local.ApplicationPreferencesDao
 import com.sillyapps.meantime.data.local.SchemeDao
@@ -75,6 +77,14 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
         return templateDao.observeTemplates()
     }
 
+    fun observeCurrentScheme(): LiveData<Scheme> {
+        return schemeDao.observeScheme(AppConstants.DEFAULT_SCHEME_ID)
+    }
+
+    suspend fun updateCurrentScheme(scheme: Scheme) {
+        schemeDao.update(scheme)
+    }
+
     suspend fun getCurrentScheme(): Scheme? {
         val currentSchemeId = appPrefDao.getDefaultSchemeId()
         return schemeDao.getScheme(currentSchemeId)
@@ -84,10 +94,24 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
         appPrefDao.setDefaultSchemeId(schemeId)
     }
 
-    suspend fun getNextTemplate(): Template? {
-        // TODO get template from scheme
-        val defaultTemplateId = appPrefDao.getDefaultTemplateId()
-        return templateDao.getTemplate(defaultTemplateId)
+    suspend fun addTemplateToCurrentScheme(simplifiedTemplate: SimplifiedTemplate) {
+        val scheme = schemeDao.getScheme(AppConstants.DEFAULT_SCHEME_ID)!!
+        scheme.orderList.add(simplifiedTemplate)
+        schemeDao.update(scheme)
+    }
+
+    private suspend fun getNextTemplate(): Template? {
+        var templateId = appPrefDao.getDefaultTemplateId()
+
+        val scheme = getCurrentScheme()
+        scheme?.let { _scheme ->
+            if (_scheme.isActive) {
+                _scheme.getNextTemplateId()?.let { templateId = it }
+            }
+            schemeDao.update(_scheme)
+        }
+
+        return templateDao.getTemplate(templateId)
     }
 
     suspend fun getCurrentDay(): Day? {

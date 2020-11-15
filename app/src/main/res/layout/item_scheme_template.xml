@@ -6,7 +6,7 @@
     <data>
         <variable
             name="template"
-            type="com.sillyapps.meantime.data.Template"/>
+            type="com.sillyapps.meantime.data.SimplifiedTemplate"/>
 
         <variable
             name="clickListener"
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:id="@+id/item_template"
-        android:background="@drawable/item_waiting"
+        state="@{template.state}"
 
         android:onClick="@{() -> clickListener.onClickItem(template.id)}">
 

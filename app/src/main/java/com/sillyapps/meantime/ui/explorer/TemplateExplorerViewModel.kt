@@ -2,27 +2,31 @@ package com.sillyapps.meantime.ui.explorer
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.sillyapps.meantime.data.Template
-import com.sillyapps.meantime.ui.schemescreen.TemplatesManager
+import com.sillyapps.meantime.data.SimplifiedTemplate
+import com.sillyapps.meantime.data.repository.AppRepository
 import kotlinx.coroutines.launch
 
-class TemplateExplorerViewModel @ViewModelInject constructor(private val templatesManager: TemplatesManager): ViewModel() {
+class TemplateExplorerViewModel @ViewModelInject constructor(private val repository: AppRepository): ViewModel() {
 
-    val items: MutableLiveData<List<Template>> = MutableLiveData()
+    val items = repository.observeAllTemplates()
 
-    init {
+    fun deleteTemplate(position: Int) {
         viewModelScope.launch {
-            templatesManager.loadTemplates()
-            items.value = templatesManager.allTemplates
+            val template = items.value!![position]
+            repository.deleteTemplate(template)
         }
     }
 
-    fun deleteTemplate(position: Int) {
-        viewModelScope.launch { templatesManager.deleteTemplate(position) }
+    fun selectDefaultTemplate(position: Int) {
+        viewModelScope.launch {
+            val templateId = items.value!![position].id
+            repository.setNewDefaultTemplate(templateId)
+        }
     }
 
-    fun selectDefaultTemplate(templateId: Int) {
-        viewModelScope.launch { templatesManager.setNewDefaultTemplate(templateId) }
+    fun getSimplifiedTemplate(position: Int): SimplifiedTemplate {
+        val template = items.value!![position]
+        return template.simplify()
     }
 
 }

@@ -9,7 +9,7 @@ import java.util.*
 
 class Day(val tasks: MutableList<Task>,
           val alarmDuration: Long,
-          var state: DayState = DayState.WAITING,
+          var state: State = State.WAITING,
           var dayStartTime: Long = 0L,
           currentTaskPos: Int = 0,
           ): BaseObservable() {
@@ -38,10 +38,12 @@ class Day(val tasks: MutableList<Task>,
     @Bindable
     var currentTask: Task = tasks[currentTaskPos]
 
+    var completedTaskPos: Int = -1
+
     fun start() {
         currentTaskPos = 0
         dayStartTime = getLocalCurrentTimeMillis()
-        state = DayState.ACTIVE
+        state = State.ACTIVE
         resetTasks()
         currentTask.start()
         timeRemain = currentTask.editableDuration
@@ -56,9 +58,8 @@ class Day(val tasks: MutableList<Task>,
 
         currentTaskPos++
         currentTask.let {
-            if (it.state == Task.State.DISABLED) {
-                selectNextTask(true)
-                return true
+            if (it.state == State.DISABLED) {
+                return selectNextTask(true)
             }
             it.start()
             recalculateStartTimes(currentTaskPos+1)
@@ -67,10 +68,13 @@ class Day(val tasks: MutableList<Task>,
     }
 
     fun endDay(stop: Boolean) {
-        if (!stop) notifyPropertyChanged(AppBR.taskFinishedNaturally)
+        if (!stop) {
+            completedTaskPos = currentTaskPos
+            notifyPropertyChanged(AppBR.taskFinishedNaturally)
+        }
 
         dayStartTime = 0L
-        state = DayState.COMPLETED
+        state = State.COMPLETED
         for (i in currentTaskPos until tasks.size)
             tasks[i].complete()
         timeRemain = 0L
@@ -78,17 +82,17 @@ class Day(val tasks: MutableList<Task>,
     }
 
     fun pause() {
-        state = DayState.PAUSED
+        state = State.DISABLED
     }
 
     fun resume() {
-        state = DayState.ACTIVE
+        state = State.ACTIVE
         val timePaused = System.currentTimeMillis() - Task.lastSystemTime
         currentTask.addPausedOffset(timePaused)
     }
 
-    fun getPreviousTask(): Task {
-        return tasks[currentTaskPos-1]
+    fun getCompletedTask(offset: Int = 0): Task {
+        return tasks[completedTaskPos + offset]
     }
 
     fun updateTimeRemained(newTime: Long = currentTask.editableDuration) {
@@ -110,6 +114,7 @@ class Day(val tasks: MutableList<Task>,
         }
         else {
             currentTask.complete()
+            completedTaskPos = currentTaskPos
             notifyPropertyChanged(AppBR.taskFinishedNaturally)
         }
     }
@@ -145,14 +150,10 @@ class Day(val tasks: MutableList<Task>,
         return currentTaskPos == tasks.lastIndex
     }
 
-    enum class DayState {
-        WAITING, PAUSED, COMPLETED, ACTIVE
-    }
-
     companion object {
         fun fromTemplate(template: Template?): Day? {
-            template?.let { currentTemplate ->
-                return Day(template.activities, currentTemplate.alarmDuration)
+            template?.let {
+                return Day(it.activities, it.alarmDuration)
             }
             return null
         }

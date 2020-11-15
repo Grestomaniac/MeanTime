@@ -14,6 +14,7 @@ import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.R
 import com.sillyapps.meantime.convertMillisToStringFormat
 import com.sillyapps.meantime.convertMillisToStringFormatWithSeconds
+import com.sillyapps.meantime.data.State
 import com.sillyapps.meantime.data.Task
 import timber.log.Timber
 
@@ -30,14 +31,14 @@ fun ConstraintLayout.setDefault(isDefault: Boolean) {
     setBackgroundResource(backgroundResource)
 }
 
-@BindingAdapter("taskState")
-fun ConstraintLayout.updateState(state: Task.State) {
+@BindingAdapter("state")
+fun ConstraintLayout.updateState(state: State) {
     val backgroundResource =
         when (state) {
-            Task.State.WAITING -> R.drawable.item_waiting
-            Task.State.COMPLETED -> R.drawable.item_completed
-            Task.State.DISABLED -> R.drawable.item_disabled
-            Task.State.ACTIVE -> R.drawable.item_active
+            State.WAITING -> R.drawable.item_waiting
+            State.COMPLETED -> R.drawable.item_completed
+            State.DISABLED -> R.drawable.item_disabled
+            State.ACTIVE -> R.drawable.item_active
         }
 
     setBackgroundResource(backgroundResource)

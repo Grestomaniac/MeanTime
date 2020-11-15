@@ -15,7 +15,6 @@ import com.sillyapps.meantime.ui.explorer.recyclerview.ExplorerAdapter
 import com.sillyapps.meantime.ui.ItemClickListener
 import com.sillyapps.meantime.ui.schemescreen.SchemeFragment
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class TemplateExplorerFragment : Fragment() {
@@ -94,9 +93,10 @@ class TemplateExplorerFragment : Fragment() {
         }
     }
 
-    private fun returnResultToSchemeFragment(id: Int) {
+    private fun returnResultToSchemeFragment(position: Int) {
         findNavController().apply {
-            previousBackStackEntry?.savedStateHandle?.set(SchemeFragment.KEY_TEMPLATE_ID, id)
+            val template = viewModel.getSimplifiedTemplate(position)
+            findNavController().previousBackStackEntry?.savedStateHandle?.set(SchemeFragment.TEMPLATE_KEY, template)
             popBackStack()
         }
     }

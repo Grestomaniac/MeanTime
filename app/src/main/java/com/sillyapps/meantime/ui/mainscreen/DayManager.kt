@@ -2,6 +2,7 @@ package com.sillyapps.meantime.ui.mainscreen
 
 import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.data.Day
+import com.sillyapps.meantime.data.State
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.data.repository.AppRepository
 import kotlinx.coroutines.*
@@ -36,8 +37,8 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
 
     fun start() {
         when (thisDay!!.state) {
-            Day.DayState.WAITING -> startNewDay()
-            Day.DayState.PAUSED -> resumeDay()
+            State.WAITING -> startNewDay()
+            State.DISABLED -> resumeDay()
             else -> return
         }
     }

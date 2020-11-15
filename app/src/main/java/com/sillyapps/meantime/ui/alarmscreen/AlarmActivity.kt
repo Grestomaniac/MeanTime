@@ -33,7 +33,7 @@ class AlarmActivity: AppCompatActivity() {
 
         binding.viewmodel = viewModel
 
-        val currentTask = viewModel.currentTask
+        val currentTask = viewModel.completedTask
         if (currentTask.editableSoundOn) {
             setRingtone(currentTask)
         }

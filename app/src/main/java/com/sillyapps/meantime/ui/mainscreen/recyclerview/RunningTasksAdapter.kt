@@ -43,7 +43,7 @@ class RunningTasksAdapter(private val clickListener: ItemClickListener, private 
         notifyItemRangeChanged(toPosition, itemCount-toPosition)
     }
 
-    override fun onItemSwiped(position: Int) {
+    override fun onItemSwiped(position: Int, direction: Int) {
         if (getItem(position).canNotBeSwappedOrDisabled()) {
             return
         }

@@ -4,35 +4,47 @@ import androidx.databinding.ObservableInt
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.sillyapps.meantime.data.Scheme
+import com.sillyapps.meantime.data.SimplifiedTemplate
 import com.sillyapps.meantime.data.Template
+import com.sillyapps.meantime.data.repository.AppRepository
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 
-class SchemeViewModel @ViewModelInject constructor(private val templatesManager: TemplatesManager): ViewModel() {
+class SchemeViewModel @ViewModelInject constructor(private val repository: AppRepository): ViewModel() {
 
-    private var scheme: Scheme? = null
+    var scheme = MutableLiveData<Scheme>()
 
-    var schemeTemplates: MutableLiveData<List<Template?>> = MutableLiveData()
+    var schemeTemplates: LiveData<List<SimplifiedTemplate>> = scheme.map { it.orderList }
 
     init {
         viewModelScope.launch {
-            templatesManager.loadTemplates()
-            scheme = templatesManager.getCurrentScheme()
-            schemeTemplates.value = scheme?.let { _scheme ->
-                _scheme.orderList.map { templatesManager.allTemplates!!.find { template -> template.id == it } } }
+            scheme.postValue(repository.getCurrentScheme())
         }
     }
 
     fun notifyItemsSwapped(fromPosition: Int, toPosition: Int) {
-        Collections.swap(scheme!!.orderList, fromPosition, toPosition)
+        Collections.swap(scheme.value!!.orderList, fromPosition, toPosition)
     }
 
     fun notifyItemRemoved(position: Int) {
-        scheme!!.orderList.removeAt(position)
+        scheme.value!!.orderList.removeAt(position)
     }
 
-    fun addTemplate(id: Int) {
-        scheme!!.orderList.add(id)
+    fun notifyItemDisabled(position: Int) {
+        scheme.value!!.orderList[position].disable()
+    }
+
+    fun addTemplate(template: SimplifiedTemplate) {
+        scheme.value!!.orderList.add(template)
+    }
+
+    fun saveScheme() {
+        viewModelScope.launch { repository.updateCurrentScheme(scheme.value!!) }
+    }
+
+    override fun onCleared() {
+        Timber.d("SchemeViewModel is cleared")
+        super.onCleared()
     }
 }

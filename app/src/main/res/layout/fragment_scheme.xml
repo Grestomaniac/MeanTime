@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
-            name="viewModel"
-            type="com.sillyapps.meantime.ui.schemescreen.SchemeViewModel" />
+            name="scheme"
+            type="com.sillyapps.meantime.data.Scheme" />
     </data>
 
     <FrameLayout
@@ -19,6 +19,47 @@
             android:layout_height="match_parent"
             android:background="@color/colorPrimaryDark">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/switchLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:background="@color/colorItemActive"
+                android:paddingBottom="16dp">
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/activeSwitch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+
+                    android:checked="@={scheme.active}"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/is_active"
+                    app:layout_constraintBottom_toBottomOf="@+id/repeatSwitch"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/repeatSwitch"
+                    app:layout_constraintTop_toTopOf="@+id/repeatSwitch" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/repeatSwitch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+
+                    android:checked="@={scheme.repeat}"
+
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/repeat"
+                    app:layout_constraintEnd_toStartOf="@+id/activeSwitch"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/items"
                 android:layout_width="0dp"
@@ -27,15 +68,14 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-
-                tools:listitem="@layout/item_template"
-
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                />
+                app:layout_constraintBottom_toBottomOf="parent"
+
+                app:layout_constraintEnd_toEndOf="parent"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/switchLayout"
+                tools:listitem="@layout/item_scheme_template" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

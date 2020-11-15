@@ -71,4 +71,8 @@
     <string name="next_task">Next task:</string>
     <string name="day_ended">Day Ended!</string>
 
+    <!--Scheme Fragment-->
+    <string name="is_active">Active</string>
+    <string name="repeat">Repeat</string>
+
 </resources>

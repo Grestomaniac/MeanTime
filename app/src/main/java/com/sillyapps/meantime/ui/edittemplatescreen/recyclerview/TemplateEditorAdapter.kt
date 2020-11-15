@@ -41,7 +41,7 @@ class TemplateEditorAdapter(private val viewModel: EditTemplateViewModel, privat
         notifyItemRangeChanged(toPosition, itemCount-toPosition)
     }
 
-    override fun onItemSwiped(position: Int) {
+    override fun onItemSwiped(position: Int, direction: Int) {
         viewModel.notifyTaskRemoved(position)
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, itemCount-position)

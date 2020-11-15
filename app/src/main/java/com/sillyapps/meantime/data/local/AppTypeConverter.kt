@@ -2,6 +2,7 @@ package com.sillyapps.meantime.data.local
 
 import androidx.room.TypeConverter
 import com.sillyapps.meantime.data.Day
+import com.sillyapps.meantime.data.SimplifiedTemplate
 import com.sillyapps.meantime.data.Task
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -33,22 +34,22 @@ object AppTypeConverter {
 
     @TypeConverter
     @JvmStatic
-    fun convertStringToOrderList(data: String?): List<Int>? {
+    fun convertStringToOrderList(data: String?): List<SimplifiedTemplate>? {
         if (data == null) return emptyList()
         val moshi = Moshi.Builder().build()
 
-        val dataList = Types.newParameterizedType(List::class.java, Int::class.javaObjectType)
-        val jsonAdapter: JsonAdapter<List<Int>> = moshi.adapter(dataList)
+        val dataList = Types.newParameterizedType(List::class.java, SimplifiedTemplate::class.java)
+        val jsonAdapter: JsonAdapter<List<SimplifiedTemplate>> = moshi.adapter(dataList)
 
         return jsonAdapter.fromJson(data)
     }
 
     @TypeConverter
     @JvmStatic
-    fun convertOrderListToJson(list: List<Int>?): String {
+    fun convertOrderListToJson(list: List<SimplifiedTemplate>?): String {
         val moshi = Moshi.Builder().build()
-        val dataList = Types.newParameterizedType(List::class.java, Int::class.javaObjectType)
-        val jsonAdapter: JsonAdapter<List<Int>> = moshi.adapter(dataList)
+        val dataList = Types.newParameterizedType(List::class.java, SimplifiedTemplate::class.java)
+        val jsonAdapter: JsonAdapter<List<SimplifiedTemplate>> = moshi.adapter(dataList)
 
         return jsonAdapter.toJson(list)
     }

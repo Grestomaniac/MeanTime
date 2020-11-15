@@ -1,19 +1,17 @@
 package com.sillyapps.meantime.ui.schemescreen
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.sillyapps.meantime.R
+import com.sillyapps.meantime.data.SimplifiedTemplate
 import com.sillyapps.meantime.databinding.FragmentSchemeBinding
 import com.sillyapps.meantime.ui.ItemTouchHelperCallback
-import com.sillyapps.meantime.ui.mainscreen.recyclerview.ItemTouchHelperOnDetachedCallback
-import com.sillyapps.meantime.ui.mainscreen.recyclerview.RunningTasksAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class SchemeFragment: Fragment() {
@@ -28,7 +26,8 @@ class SchemeFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSchemeBinding.inflate(inflater, container, false)
-        binding.viewModel = viewModel
+
+        setHasOptionsMenu(true)
         return binding.root
     }
 
@@ -39,7 +38,28 @@ class SchemeFragment: Fragment() {
 
         setupRecyclerView()
         binding.addTemplateFab.setOnClickListener { pickTemplate() }
+
+        findNavController().currentBackStackEntry?.savedStateHandle?.let {
+            it.getLiveData<SimplifiedTemplate>(TEMPLATE_KEY).observe(
+                viewLifecycleOwner) { result ->
+                viewModel.addTemplate(result)
+                it.remove<SimplifiedTemplate>(TEMPLATE_KEY)
+            }
+        }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.scheme_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) =
+        when (item.itemId) {
+            R.id.action_save -> {
+                onSaveButtonClick()
+                true
+            }
+            else -> false
+        }
 
     private fun setupRecyclerView() {
         val adapter = SchemeAdapter(viewModel)
@@ -53,10 +73,10 @@ class SchemeFragment: Fragment() {
             adapter.submitList(it)
         })
 
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Int>(KEY_TEMPLATE_ID)?.observe(viewLifecycleOwner) {
-            viewModel.addTemplate(it)
-            adapter.notifyItemInserted(adapter.currentList.lastIndex)
-        }
+    }
+
+    private fun onSaveButtonClick() {
+        viewModel.saveScheme()
     }
 
     private fun pickTemplate() {
@@ -64,6 +84,6 @@ class SchemeFragment: Fragment() {
     }
 
     companion object {
-        const val KEY_TEMPLATE_ID = "template_id"
+        const val TEMPLATE_KEY = "template_id"
     }
 }

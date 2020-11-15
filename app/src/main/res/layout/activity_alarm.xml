@@ -27,7 +27,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
 
-            android:text="@{viewmodel.currentTask.name}"
+            android:text="@{viewmodel.completedTask.name}"
             tools:text="Task 1"/>
 
         <TextView
