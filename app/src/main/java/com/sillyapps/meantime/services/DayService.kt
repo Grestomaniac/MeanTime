@@ -42,7 +42,7 @@ class DayService: Service() {
 
         notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
-        registerScreenOnOffReceiver()
+        /*registerScreenOnOffReceiver()*/
         setupObservers()
 
         setupButtonsIntents()
@@ -74,7 +74,7 @@ class DayService: Service() {
     }
 
     private fun registerScreenOnOffReceiver() {
-        screenOnOffReceiver = ScreenOnOffBroadcastReceiver(dayManager)
+        screenOnOffReceiver = ScreenOnOffBroadcastReceiver()
         val intentFilter = IntentFilter().apply {
             addAction(Intent.ACTION_SCREEN_ON)
             addAction(Intent.ACTION_SCREEN_OFF)
@@ -177,6 +177,6 @@ class DayService: Service() {
     override fun onDestroy() {
         Timber.d("Service destroyed")
         super.onDestroy()
-        unregisterScreenOnOffReceiver()
+        /*unregisterScreenOnOffReceiver()*/
     }
 }

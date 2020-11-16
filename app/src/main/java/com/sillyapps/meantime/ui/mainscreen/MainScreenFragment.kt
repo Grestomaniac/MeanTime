@@ -49,6 +49,8 @@ class MainScreenFragment: Fragment() {
         setupRefreshLayout()
         setupTasksAdapter()
         setupNoTemplateLayout()
+        setupService()
+
         viewDataBinding.warningButton.setOnClickListener { showWarningDialog() }
         viewDataBinding.buttonStop.setOnLongClickListener { viewModel.onStopButtonLongClick() }
     }
@@ -69,18 +71,6 @@ class MainScreenFragment: Fragment() {
     }
 
     private fun setupNoTemplateLayout() {
-        viewModel.noTemplate.observe(viewLifecycleOwner) { noTemplate ->
-            if (noTemplate) {
-                viewModel.let {
-                    it.tasks.removeObservers(viewLifecycleOwner)
-                    it.uiTimeRemain.removeObservers(viewLifecycleOwner)
-                    it.serviceRunning.removeObservers(viewLifecycleOwner)
-                }
-            }
-            else {
-                setupService()
-            }
-        }
         viewDataBinding.buttonNavigateToEditor.setOnClickListener { navigateToEditor() }
     }
 

@@ -72,7 +72,7 @@
             android:id="@+id/noTemplatesLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="@{viewmodel.noTemplate ? View.VISIBLE : View.GONE}"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/play_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -117,7 +117,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
 
-            android:visibility="@{viewmodel.noTemplate ? View.GONE : View.VISIBLE}"
+            android:visibility="visible"
             tools:visibility="visible">
 
             <androidx.recyclerview.widget.RecyclerView

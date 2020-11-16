@@ -31,8 +31,12 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
         }
 
         val day = repository.getDay(request)
-            ?: //No templates found
+
+        if (day == null) {
+            thisDay = null
             return true
+        }
+        Timber.d("setting new day")
         thisDay = day
 
         return false

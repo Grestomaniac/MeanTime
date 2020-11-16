@@ -47,6 +47,10 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
         viewModelScope.launch {
             // No template
             if (dayManager.loadCurrentDay(request)) {
+                currentDay.value = null
+                _serviceRunning.value = false
+                tasks.value = null
+
                 _noTemplate.value = true
             }
             else {

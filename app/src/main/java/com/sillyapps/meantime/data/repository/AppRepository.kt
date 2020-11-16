@@ -10,6 +10,7 @@ import com.sillyapps.meantime.data.local.ApplicationPreferencesDao
 import com.sillyapps.meantime.data.local.SchemeDao
 import com.sillyapps.meantime.data.local.TemplateDao
 import com.sillyapps.meantime.ui.mainscreen.DayManager
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -104,6 +105,7 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
 
         getTemplateFromScheme(getNextTemplate)?.let { templateId = it }
 
+        Timber.d("Template id = $templateId")
         return templateDao.getTemplate(templateId)
     }
 
@@ -132,6 +134,7 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
                 appPrefDao.setCurrentDay(Day.fromTemplate(loadTemplate()))
             }
             DayManager.RequestType.REFRESH -> {
+                Timber.d("Refreshing")
                 appPrefDao.setCurrentDay(Day.fromTemplate(loadTemplate(false)))
             }
             else -> {
