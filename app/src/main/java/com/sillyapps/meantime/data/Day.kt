@@ -14,25 +14,25 @@ class Day(val tasks: MutableList<Task>,
           currentTaskPos: Int = 0,
           ): BaseObservable() {
 
-    @Bindable("currentTaskPos")
+    @Bindable
     var currentTaskPos: Int = currentTaskPos
         set(value) {
             field = value
             currentTask = tasks[value]
         }
 
-    @Bindable("timeRemained")
+    @Bindable
     var timeRemain: Long = 0L
         set(value) {
             field = value
             notifyPropertyChanged(BR.timeRemain)
         }
 
-    @Bindable("runningState")
-    var runningState: Boolean = false
+    @Bindable
+    var isRunning: Boolean = false
         set(value) {
             field = value
-            notifyPropertyChanged(BR.runningState)
+            notifyPropertyChanged(BR.isRunning)
         }
 
     @Bindable
@@ -47,7 +47,7 @@ class Day(val tasks: MutableList<Task>,
         resetTasks()
         currentTask.start()
         timeRemain = currentTask.editableDuration
-        runningState = true
+        isRunning = true
     }
 
     fun selectNextTask(stop: Boolean = false): Boolean {
@@ -78,7 +78,9 @@ class Day(val tasks: MutableList<Task>,
         for (i in currentTaskPos until tasks.size)
             tasks[i].complete()
         timeRemain = 0L
-        runningState = false
+        isRunning = false
+
+        notifyPropertyChanged(AppBR.dayEnded)
     }
 
     fun pause() {

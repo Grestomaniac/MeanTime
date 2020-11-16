@@ -3,16 +3,14 @@ package com.sillyapps.meantime.ui.mainscreen
 import androidx.databinding.Observable
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import com.sillyapps.meantime.AppBR
 import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.BR
-import com.sillyapps.meantime.convertToMillis
 import com.sillyapps.meantime.data.AppPermissionWarnings
 import com.sillyapps.meantime.data.Day
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.ui.TimePickerViewModel
 import kotlinx.coroutines.launch
-import timber.log.Timber
-import java.util.*
 
 class MainViewModel @ViewModelInject constructor(private val dayManager: DayManager): ViewModel(), TimePickerViewModel {
 
@@ -38,21 +36,34 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
     )
     val appPermissionWarnings: LiveData<AppPermissionWarnings> = _appPermissionWarnings
 
-    fun loadDay() {
+    private val _refreshing = MutableLiveData(false)
+    val refreshing: LiveData<Boolean> = _refreshing
+
+    init {
+        loadDay()
+    }
+
+    fun loadDay(request: DayManager.RequestType = DayManager.RequestType.GET_CURRENT) {
         viewModelScope.launch {
             // No template
-            if (dayManager.loadCurrentDay()) {
+            if (dayManager.loadCurrentDay(request)) {
                 _noTemplate.value = true
             }
             else {
                 currentDay.value = dayManager.thisDay!!
-                _serviceRunning.value = currentDay.value!!.runningState
+                _serviceRunning.value = currentDay.value!!.isRunning
                 tasks.value = dayManager.thisDay!!.tasks
                 _noTemplate.value = false
 
                 dayManager.thisDay!!.addOnPropertyChangedCallback(dataUpdateCallback)
             }
+            _refreshing.value = false
         }
+    }
+
+    fun refreshDay() {
+        _refreshing.value = true
+        loadDay(DayManager.RequestType.REFRESH)
     }
 
     fun updatePermissionWarnings(ignoresAppOptimizations: Boolean, notificationEnabled: Boolean) {
@@ -129,8 +140,13 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
                 BR.timeRemain -> {
                     _uiTimeRemain.value = currentDay.value!!.timeRemain
                 }
-                BR.runningState -> {
-                    _serviceRunning.value = currentDay.value!!.runningState
+
+                BR.isRunning -> {
+                    _serviceRunning.value = currentDay.value!!.isRunning
+                }
+
+                AppBR.dayEnded -> {
+                    loadDay(DayManager.RequestType.GET_NEXT)
                 }
             }
         }

@@ -13,21 +13,24 @@ import javax.inject.Singleton
 @Singleton
 class DayManager @Inject constructor(private val repository: AppRepository) {
 
+    enum class RequestType {
+        GET_NEXT, REFRESH, GET_CURRENT
+    }
+
     var thisDay: Day? = null
 
     private var tickInterval = AppConstants.NORMAL_INTERVAL
     private var coroutineCounter: Job? = null
     private var untilCriticalTimer: Job? = null
 
-    suspend fun loadCurrentDay(): Boolean {
+    suspend fun loadCurrentDay(request: RequestType): Boolean {
         thisDay?.let {
-            if (it.runningState) {
+            if (it.isRunning) {
                 return false
             }
         }
 
-        repository.setNewDay()
-        val day = repository.getCurrentDay()
+        val day = repository.getDay(request)
             ?: //No templates found
             return true
         thisDay = day
@@ -86,6 +89,7 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     fun resetDay(stop: Boolean) {
         /*timer.cancel()*/
         coroutineCounter?.cancel()
+        untilCriticalTimer?.cancel()
         thisDay!!.endDay(stop)
         return
     }

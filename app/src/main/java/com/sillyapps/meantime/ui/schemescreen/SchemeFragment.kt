@@ -26,7 +26,7 @@ class SchemeFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSchemeBinding.inflate(inflater, container, false)
-
+        binding.viewModel = viewModel
         setHasOptionsMenu(true)
         return binding.root
     }

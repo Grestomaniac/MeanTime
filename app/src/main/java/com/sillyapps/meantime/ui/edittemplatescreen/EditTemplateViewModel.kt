@@ -6,7 +6,6 @@ import androidx.lifecycle.*
 import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.R
 import com.sillyapps.meantime.convertToMillis
-import com.sillyapps.meantime.data.PropertyAwareMutableLiveData
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.data.Template
 import com.sillyapps.meantime.data.repository.AppRepository
@@ -30,7 +29,7 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
     init {
         if (templateId != 0)
             viewModelScope.launch {
-                val template = repository.getTemplate(templateId)
+                val template = repository.loadTemplate(templateId)
                 templateName.postValue(template!!.name)
                 tasks.postValue(template.activities)
             }

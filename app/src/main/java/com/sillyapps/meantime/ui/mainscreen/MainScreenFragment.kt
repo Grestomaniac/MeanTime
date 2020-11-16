@@ -46,8 +46,7 @@ class MainScreenFragment: Fragment() {
 
         viewDataBinding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel.loadDay()
-
+        setupRefreshLayout()
         setupTasksAdapter()
         setupNoTemplateLayout()
         viewDataBinding.warningButton.setOnClickListener { showWarningDialog() }
@@ -57,6 +56,16 @@ class MainScreenFragment: Fragment() {
     override fun onResume() {
         super.onResume()
         checkAppVitalPermissions()
+    }
+
+    private fun setupRefreshLayout() {
+        viewDataBinding.refreshDay.setOnRefreshListener {
+            viewModel.refreshDay()
+        }
+
+        viewModel.refreshing.observe(viewLifecycleOwner) {
+            viewDataBinding.refreshDay.isRefreshing = it
+        }
     }
 
     private fun setupNoTemplateLayout() {

@@ -9,15 +9,14 @@ import com.sillyapps.meantime.data.Template
 import com.sillyapps.meantime.data.local.ApplicationPreferencesDao
 import com.sillyapps.meantime.data.local.SchemeDao
 import com.sillyapps.meantime.data.local.TemplateDao
-import kotlinx.coroutines.*
+import com.sillyapps.meantime.ui.mainscreen.DayManager
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class AppRepository @Inject constructor(private val templateDao: TemplateDao,
                                         private val schemeDao: SchemeDao,
-                                        private val appPrefDao: ApplicationPreferencesDao,
-                                        private val ioDispatcher: CoroutineDispatcher) {
+                                        private val appPrefDao: ApplicationPreferencesDao) {
 
     private suspend fun findNewDefaultTemplate() {
         appPrefDao.setDefaultTemplateId(0)
@@ -55,7 +54,7 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
         return templateId
     }
 
-    suspend fun getTemplate(templateId: Int): Template? {
+    suspend fun loadTemplate(templateId: Int): Template? {
         return templateDao.getTemplate(templateId)
     }
 
@@ -100,32 +99,48 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
         schemeDao.update(scheme)
     }
 
-    private suspend fun getNextTemplate(): Template? {
+    private suspend fun loadTemplate(getNextTemplate: Boolean = true): Template? {
         var templateId = appPrefDao.getDefaultTemplateId()
 
-        val scheme = getCurrentScheme()
-        scheme?.let { _scheme ->
-            if (_scheme.isActive) {
-                _scheme.getNextTemplateId()?.let { templateId = it }
-            }
-            schemeDao.update(_scheme)
-        }
+        getTemplateFromScheme(getNextTemplate)?.let { templateId = it }
 
         return templateDao.getTemplate(templateId)
     }
 
-    suspend fun getCurrentDay(): Day? {
-        val day = appPrefDao.getDay()
+    private suspend fun getTemplateFromScheme(getNextTemplate: Boolean = true): Int? {
+        var templateId = -1
+        val scheme = getCurrentScheme()
+        scheme?.let { _scheme ->
+            if (_scheme.isActive) {
+                if (getNextTemplate) {
+                    _scheme.getNextTemplateId()?.let { templateId = it }
+                }
+                else {
+                    templateId = _scheme.getCurrentTemplateId()
+                }
 
-        if (day == null) {
-            setNewDay()
+                schemeDao.update(_scheme)
+                return templateId
+            }
+        }
+        return null
+    }
+
+    suspend fun getDay(request: DayManager.RequestType): Day? {
+        when (request) {
+            DayManager.RequestType.GET_NEXT -> {
+                appPrefDao.setCurrentDay(Day.fromTemplate(loadTemplate()))
+            }
+            DayManager.RequestType.REFRESH -> {
+                appPrefDao.setCurrentDay(Day.fromTemplate(loadTemplate(false)))
+            }
+            else -> {
+                val day = appPrefDao.getDay()
+                if (day == null) appPrefDao.setCurrentDay(Day.fromTemplate(loadTemplate()))
+            }
         }
 
         return appPrefDao.getDay()
-    }
-
-    suspend fun setNewDay() {
-        appPrefDao.setCurrentDay(Day.fromTemplate(getNextTemplate()))
     }
 
 }

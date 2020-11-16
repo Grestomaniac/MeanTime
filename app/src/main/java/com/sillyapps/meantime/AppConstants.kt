@@ -22,4 +22,5 @@ object AppConstants {
 
 object AppBR {
     const val taskFinishedNaturally = 1001
+    const val dayEnded = 1002
 }

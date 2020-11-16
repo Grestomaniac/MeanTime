@@ -49,6 +49,10 @@ class Scheme(
         return setTemplate()
     }
 
+    fun getCurrentTemplateId(): Int {
+        return orderList[currentTemplatePos].id
+    }
+
     private fun setTemplate(): Int? {
         orderList[currentTemplatePos].let {
             if (it.state == State.DISABLED) {

@@ -4,10 +4,8 @@ import android.app.*
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.IBinder
-import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import androidx.databinding.Observable
-import com.hypertrack.hyperlog.HyperLog
 import com.sillyapps.meantime.*
 import com.sillyapps.meantime.broadcastrecievers.ScreenOnOffBroadcastReceiver
 import com.sillyapps.meantime.ui.alarmscreen.AlarmActivity
@@ -17,7 +15,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.lang.IllegalArgumentException
 import javax.inject.Inject
-import kotlin.math.log
 
 @AndroidEntryPoint
 class DayService: Service() {
@@ -134,7 +131,6 @@ class DayService: Service() {
             when (propertyId) {
                 BR.timeRemain -> {
                     updateTimer()
-
                 }
 
                 AppBR.taskFinishedNaturally -> {
@@ -142,7 +138,7 @@ class DayService: Service() {
 
                 }
 
-                BR.runningState -> {
+                BR.isRunning -> {
                     stopService()
                 }
             }
@@ -159,8 +155,12 @@ class DayService: Service() {
     }
 
     private fun stopService() {
-        if (!dayManager.thisDay!!.runningState)
+        val serviceShouldRun = dayManager.thisDay!!.isRunning
+        Timber.d("Service should run is $serviceShouldRun")
+        if (!serviceShouldRun) {
+            Timber.d("Stopping")
             stopSelf()
+        }
     }
 
     private fun turnOnAlarm() {
@@ -175,6 +175,7 @@ class DayService: Service() {
     }
 
     override fun onDestroy() {
+        Timber.d("Service destroyed")
         super.onDestroy()
         unregisterScreenOnOffReceiver()
     }
