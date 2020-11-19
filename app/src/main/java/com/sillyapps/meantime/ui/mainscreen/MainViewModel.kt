@@ -44,6 +44,28 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
     private val _paused = MutableLiveData(false)
     val paused: LiveData<Boolean> = _paused
 
+    private val dataUpdateCallback = object : Observable.OnPropertyChangedCallback() {
+        override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+            when (propertyId) {
+                BR.timeRemain -> {
+                    _uiTimeRemain.value = currentDay.value!!.timeRemain
+                }
+
+                BR.isRunning -> {
+                    _serviceRunning.value = currentDay.value!!.isRunning
+                }
+
+                AppBR.dayEnded -> {
+                    loadDay(DayManager.RequestType.GET_NEXT)
+                }
+
+                AppBR.dayPausedOrUnPaused -> {
+                    setDayPausedOrUnPaused()
+                }
+            }
+        }
+    }
+
     init {
         loadDay()
     }
@@ -97,7 +119,7 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
     }
 
     fun onStopButtonLongClick(): Boolean {
-        dayManager.resetDay(true)
+        dayManager.resetDay()
         return true
     }
 
@@ -141,35 +163,12 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
     }
 
     override fun onCleared() {
-        Timber.d("Removing on property changed listener")
         dayManager.thisDay?.removeOnPropertyChangedCallback(dataUpdateCallback)
         super.onCleared()
     }
 
     private fun setDayPausedOrUnPaused() {
         _paused.value = currentDay.value!!.state == State.DISABLED
-    }
-
-    private val dataUpdateCallback = object : Observable.OnPropertyChangedCallback() {
-        override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-            when (propertyId) {
-                BR.timeRemain -> {
-                    _uiTimeRemain.value = currentDay.value!!.timeRemain
-                }
-
-                BR.isRunning -> {
-                    _serviceRunning.value = currentDay.value!!.isRunning
-                }
-
-                AppBR.dayEnded -> {
-                    loadDay(DayManager.RequestType.GET_NEXT)
-                }
-
-                AppBR.dayPausedOrUnPaused -> {
-                    setDayPausedOrUnPaused()
-                }
-            }
-        }
     }
 
 }

@@ -45,43 +45,47 @@ class Day(val tasks: MutableList<Task>,
         dayStartTime = getLocalCurrentTimeMillis()
         state = State.ACTIVE
         resetTasks()
-        currentTask.start()
+        startCurrentTask()
         timeRemain = currentTask.editableDuration
         isRunning = true
     }
 
-    fun selectNextTask(stop: Boolean = false): Boolean {
-        if (atLastTask()) {
-            return false
+    private fun startCurrentTask() {
+        if (currentTask.state == State.DISABLED) {
+            selectNextTask(true)
         }
-        completeCurrentTask(stop)
-
-        currentTaskPos++
-        currentTask.let {
-            if (it.state == State.DISABLED) {
-                return selectNextTask(true)
-            }
-            it.start()
+        else {
+            currentTask.start()
             recalculateStartTimes(currentTaskPos+1)
         }
-        return true
     }
 
-    fun endDay(stop: Boolean) {
-        if (!stop) {
-            completedTaskPos = currentTaskPos
-            notifyPropertyChanged(AppBR.taskFinishedNaturally)
+    fun selectNextTask(stop: Boolean = false) {
+        completeCurrentTask(stop)
+
+        if (atLastTask()) {
+            endDay()
+            return
         }
 
+        currentTaskPos++
+        startCurrentTask()
+    }
+
+    private fun endDay() {
         dayStartTime = 0L
         state = State.COMPLETED
-        for (i in currentTaskPos until tasks.size)
-            tasks[i].complete()
         timeRemain = 0L
         isRunning = false
-
         notifyPropertyChanged(AppBR.dayEnded)
     }
+
+    fun stopDayManually() {
+        for (i in currentTaskPos until tasks.size)
+            tasks[i].complete()
+        endDay()
+    }
+
 
     fun pause() {
         state = State.DISABLED
@@ -113,7 +117,6 @@ class Day(val tasks: MutableList<Task>,
         if (stop) {
             currentTask.stop()
             updateTasks(currentTaskPos)
-            timeRemain = currentTask.editableDuration
         }
         else {
             currentTask.complete()
@@ -149,7 +152,7 @@ class Day(val tasks: MutableList<Task>,
         Collections.swap(tasks, upperPosition, bottomPosition)
     }
 
-    fun atLastTask(): Boolean {
+    private fun atLastTask(): Boolean {
         return currentTaskPos == tasks.lastIndex
     }
 

@@ -2,6 +2,7 @@ package com.sillyapps.meantime.data.local
 
 import androidx.room.TypeConverter
 import com.sillyapps.meantime.data.Day
+import com.sillyapps.meantime.data.Goal
 import com.sillyapps.meantime.data.SimplifiedTemplate
 import com.sillyapps.meantime.data.Task
 import com.squareup.moshi.JsonAdapter
@@ -28,6 +29,28 @@ object AppTypeConverter {
         val moshi = Moshi.Builder().build()
         val dataList = Types.newParameterizedType(List::class.java, Task::class.java)
         val jsonAdapter: JsonAdapter<List<Task>> = moshi.adapter(dataList)
+
+        return jsonAdapter.toJson(list)
+    }
+
+    @TypeConverter
+    @JvmStatic
+    fun convertStringToGoalsList(data: String?): List<Goal>? {
+        if (data == null) return emptyList()
+        val moshi = Moshi.Builder().build()
+
+        val dataList = Types.newParameterizedType(List::class.java, Goal::class.java)
+        val jsonAdapter: JsonAdapter<List<Goal>> = moshi.adapter(dataList)
+
+        return jsonAdapter.fromJson(data)
+    }
+
+    @TypeConverter
+    @JvmStatic
+    fun convertGoalsListToJson(list: List<Goal>?): String {
+        val moshi = Moshi.Builder().build()
+        val dataList = Types.newParameterizedType(List::class.java, Goal::class.java)
+        val jsonAdapter: JsonAdapter<List<Goal>> = moshi.adapter(dataList)
 
         return jsonAdapter.toJson(list)
     }

@@ -1,6 +1,9 @@
 package com.sillyapps.meantime.ui.mainscreen
 
+import androidx.databinding.Observable
+import com.sillyapps.meantime.AppBR
 import com.sillyapps.meantime.AppConstants
+import com.sillyapps.meantime.BR
 import com.sillyapps.meantime.data.Day
 import com.sillyapps.meantime.data.State
 import com.sillyapps.meantime.data.Task
@@ -23,11 +26,24 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     private var coroutineCounter: Job? = null
     private var untilCriticalTimer: Job? = null
 
+    private val dataUpdateCallback = object : Observable.OnPropertyChangedCallback() {
+        override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+            when (propertyId) {
+
+                AppBR.dayEnded -> {
+                    cancelTimers()
+                }
+
+            }
+        }
+    }
+
     suspend fun loadCurrentDay(request: RequestType): Boolean {
         thisDay?.let {
             if (it.isRunning) {
                 return false
             }
+            it.removeOnPropertyChangedCallback(dataUpdateCallback)
         }
 
         val day = repository.getDay(request)
@@ -38,6 +54,7 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
         }
         Timber.d("setting new day")
         thisDay = day
+        thisDay!!.addOnPropertyChangedCallback(dataUpdateCallback)
 
         return false
     }
@@ -58,10 +75,7 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     }
 
     fun getNextTask(stop: Boolean = false) {
-        val dayNotEnded = thisDay!!.selectNextTask(stop)
-        if (!dayNotEnded) {
-            resetDay(stop)
-        }
+        thisDay!!.selectNextTask(stop)
     }
 
     fun recalculateStartTimes(position: Int) {
@@ -86,20 +100,20 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
         startCoroutineCounter()
     }
 
-    fun resetDay(stop: Boolean) {
+    fun resetDay() {
+        thisDay!!.stopDayManually()
+    }
+
+    private fun cancelTimers() {
         coroutineCounter?.cancel()
         untilCriticalTimer?.cancel()
-        thisDay!!.endDay(stop)
-        return
     }
 
     fun screenIsOff() {
         if (thisDay!!.timeRemain < AppConstants.CRITICAL_TIME_REMAINED) {
-            Timber.d("No time left, returning")
             return
         }
         else {
-            Timber.d("Setting battery saving interval")
             tickInterval = AppConstants.BATTERY_SAVING_INTERVAL
             startUntilCriticalTimer()
         }

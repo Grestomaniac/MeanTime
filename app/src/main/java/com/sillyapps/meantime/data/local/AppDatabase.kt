@@ -5,9 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.sillyapps.meantime.data.ApplicationPreferences
 import com.sillyapps.meantime.data.Scheme
+import com.sillyapps.meantime.data.TaskGoals
 import com.sillyapps.meantime.data.Template
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-@Database(entities = [Template::class, Scheme::class, ApplicationPreferences::class], version = 5, exportSchema = false)
+@Database(entities = [Template::class, Scheme::class, ApplicationPreferences::class, TaskGoals::class], version = 6, exportSchema = false)
 @TypeConverters(AppTypeConverter::class)
 abstract class AppDatabase: RoomDatabase() {
 
@@ -31,6 +33,12 @@ abstract class AppDatabase: RoomDatabase() {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
+        val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("create table goal_table (id integer primary key not null, name text not null, goals text not null)")
+            }
+        }
+
         fun getInstance(context: Context): AppDatabase {
             synchronized(this) {
                 var instance = INSTANCE
@@ -41,7 +49,7 @@ abstract class AppDatabase: RoomDatabase() {
                         AppDatabase::class.java,
                         "app_database")
                         .addCallback(DatabaseCallback())
-                        .fallbackToDestructiveMigration()
+                        .addMigrations(MIGRATION_5_6)
                         .build()
                     INSTANCE = instance
                 }
