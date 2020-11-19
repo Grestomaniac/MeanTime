@@ -69,7 +69,8 @@ class TemplateExplorerFragment : Fragment() {
     private fun getEditModeClickListener(): ItemClickListener {
         return object : ItemClickListener {
             override fun onClickItem(index: Int) {
-                navigateToEditTemplateFragment(index)
+                val templateId = viewModel.items.value!![index].id
+                navigateToEditTemplateFragment(templateId)
             }
 
             override fun onLongClick(index: Int): Boolean {

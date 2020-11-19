@@ -25,6 +25,8 @@ abstract class AppDatabase: RoomDatabase() {
 
     abstract val appPrefDao: ApplicationPreferencesDao
 
+    abstract val taskGoalsDao: TaskGoalsDao
+
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null

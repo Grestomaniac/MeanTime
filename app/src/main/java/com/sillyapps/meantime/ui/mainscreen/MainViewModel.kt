@@ -8,9 +8,11 @@ import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.BR
 import com.sillyapps.meantime.data.AppPermissionWarnings
 import com.sillyapps.meantime.data.Day
+import com.sillyapps.meantime.data.State
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.ui.TimePickerViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class MainViewModel @ViewModelInject constructor(private val dayManager: DayManager): ViewModel(), TimePickerViewModel {
 
@@ -39,6 +41,9 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
     private val _refreshing = MutableLiveData(false)
     val refreshing: LiveData<Boolean> = _refreshing
 
+    private val _paused = MutableLiveData(false)
+    val paused: LiveData<Boolean> = _paused
+
     init {
         loadDay()
     }
@@ -54,10 +59,12 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
                 _noTemplate.value = true
             }
             else {
-                currentDay.value = dayManager.thisDay!!
-                _serviceRunning.value = currentDay.value!!.isRunning
-                tasks.value = dayManager.thisDay!!.tasks
+                val day = dayManager.thisDay!!
+                currentDay.value = day
+                _serviceRunning.value = day.isRunning
+                tasks.value = day.tasks
                 _noTemplate.value = false
+                setDayPausedOrUnPaused()
 
                 dayManager.thisDay!!.addOnPropertyChangedCallback(dataUpdateCallback)
             }
@@ -134,8 +141,13 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
     }
 
     override fun onCleared() {
+        Timber.d("Removing on property changed listener")
         dayManager.thisDay?.removeOnPropertyChangedCallback(dataUpdateCallback)
         super.onCleared()
+    }
+
+    private fun setDayPausedOrUnPaused() {
+        _paused.value = currentDay.value!!.state == State.DISABLED
     }
 
     private val dataUpdateCallback = object : Observable.OnPropertyChangedCallback() {
@@ -151,6 +163,10 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
 
                 AppBR.dayEnded -> {
                     loadDay(DayManager.RequestType.GET_NEXT)
+                }
+
+                AppBR.dayPausedOrUnPaused -> {
+                    setDayPausedOrUnPaused()
                 }
             }
         }

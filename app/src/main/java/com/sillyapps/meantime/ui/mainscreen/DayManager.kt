@@ -51,6 +51,8 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     }
 
     fun pauseDay() {
+        if (thisDay!!.state == State.DISABLED) return
+
         coroutineCounter?.cancel()
         thisDay!!.pause()
     }
@@ -74,14 +76,8 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
         thisDay!!.notifyTaskDisabled(position)
     }
 
-    /*private fun startTimer() {
-        Task.lastSystemTime = System.currentTimeMillis()
-        timer.start()
-    }*/
-
     private fun startNewDay() {
         thisDay!!.start()
-        /*startTimer()*/
         startCoroutineCounter()
     }
 
@@ -91,7 +87,6 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     }
 
     fun resetDay(stop: Boolean) {
-        /*timer.cancel()*/
         coroutineCounter?.cancel()
         untilCriticalTimer?.cancel()
         thisDay!!.endDay(stop)
@@ -120,14 +115,15 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     private fun startCoroutineCounter() {
         Task.lastSystemTime = System.currentTimeMillis()
         coroutineCounter = CoroutineScope(Dispatchers.Main).launch {
-            Timber.d("Coroutine launched")
             while (true) {
                 val timeRemained = thisDay!!.currentTask.continueTask()
                 if (timeRemained < 0) {
                     getNextTask()
                 }
+                else {
+                    thisDay!!.updateTimeRemained(timeRemained)
+                }
 
-                thisDay!!.updateTimeRemained(timeRemained)
                 delay(tickInterval)
             }
         }
@@ -140,18 +136,4 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
         }
     }
 
-    /*private val timer = object : CountDownTimer(AppConstants.TIMER_CHECK_INTERVAL, 1000L) {
-
-        override fun onTick(millisUntilFinished: Long) {
-            val timeRemained = thisDay!!.currentTask.continueTask()
-            if (timeRemained < 0) {
-                getNextTask()
-            } else
-                thisDay!!.updateTimeRemained(timeRemained)
-        }
-
-        override fun onFinish() {
-            start()
-        }
-    }*/
 }

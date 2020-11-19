@@ -111,7 +111,7 @@ class Task(
     fun continueTask(): Long {
         val currentTime = System.currentTimeMillis()
         val dt = currentTime - lastSystemTime
-        progress += dt * 1000
+        progress += dt
         lastSystemTime = currentTime
 
         return editableDuration - progress
@@ -165,6 +165,10 @@ class Task(
         if (duration == 0L) return WhatIsWrong.DURATION
 
         return WhatIsWrong.NOTHING
+    }
+
+    fun copy(): Task {
+        return Task(startTime, name, duration, vibrationOn, soundOn, sound)
     }
 
     companion object {

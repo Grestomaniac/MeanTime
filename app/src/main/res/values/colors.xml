@@ -11,4 +11,6 @@
 
     <color name="colorWarning">#E50002</color>
     <color name="colorAlright">#38cc25</color>
+
+    <color name="colorNotActive">#7C7E7F</color>
 </resources>

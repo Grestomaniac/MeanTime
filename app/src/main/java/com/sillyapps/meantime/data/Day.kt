@@ -85,6 +85,7 @@ class Day(val tasks: MutableList<Task>,
 
     fun pause() {
         state = State.DISABLED
+        notifyPropertyChanged(AppBR.dayPausedOrUnPaused)
     }
 
     fun resume() {

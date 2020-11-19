@@ -82,7 +82,3 @@ class TasksDiffCallback: DiffUtil.ItemCallback<Task>() {
         return oldItem.startTime == newItem.startTime
     }
 }
-
-interface ItemTouchHelperOnDetachedCallback {
-    fun onDetach()
-}

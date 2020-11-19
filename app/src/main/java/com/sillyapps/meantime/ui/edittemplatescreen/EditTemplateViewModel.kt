@@ -33,7 +33,6 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
                 templateName.postValue(template!!.name)
                 tasks.postValue(template.activities)
             }
-        populate()
     }
 
     fun populate() {
@@ -67,7 +66,7 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
 
     fun editTask(position: Int) {
         taskPosition = position
-        task.value = tasks.value!![position]
+        task.value = tasks.value!![position].copy()
     }
 
     fun createNewTask() {
@@ -87,7 +86,6 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
     }
 
     fun setTaskSound(sound: String) {
-        Timber.d("Setting sound $sound")
         task.value!!.sound = sound
     }
 

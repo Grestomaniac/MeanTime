@@ -92,3 +92,12 @@ fun ConstraintLayout.setInteractive(isInteractive: Boolean) {
     isEnabled = isInteractive
     children.forEach { it.isEnabled = isInteractive }
 }
+
+@BindingAdapter("isActive")
+fun View.setActive(isActive: Boolean) {
+    if (isActive)
+        foregroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.colorNotActive))
+    else {
+        foregroundTintList = null
+    }
+}

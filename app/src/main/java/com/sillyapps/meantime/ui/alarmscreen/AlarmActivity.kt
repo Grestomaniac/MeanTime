@@ -61,7 +61,7 @@ class AlarmActivity: AppCompatActivity() {
         if (currentTask.editableSoundOn) {
             val soundUri =
                 if (currentTask.sound == AppConstants.DEFAULT_RINGTONE)
-                    RingtoneManager.getActualDefaultRingtoneUri(applicationContext, RingtoneManager.TYPE_RINGTONE)
+                    RingtoneManager.getActualDefaultRingtoneUri(applicationContext, RingtoneManager.TYPE_ALARM)
                 else Uri.parse(currentTask.sound)
 
             ringtone = RingtoneManager.getRingtone(applicationContext, soundUri)
@@ -82,7 +82,7 @@ class AlarmActivity: AppCompatActivity() {
             )
         } else {
             @Suppress("DEPRECATION")
-            vibrator?.vibrate(5000L)
+            vibrator?.vibrate(viewModel.alarmDuration)
         }
     }
 

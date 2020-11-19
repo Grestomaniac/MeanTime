@@ -32,6 +32,10 @@ object ApplicationModule {
 
     @Singleton
     @Provides
+    fun provideTaskGoalsDao(db: AppDatabase) = db.taskGoalsDao
+
+    @Singleton
+    @Provides
     fun provideIoDispatcher() = Dispatchers.IO
 }
 

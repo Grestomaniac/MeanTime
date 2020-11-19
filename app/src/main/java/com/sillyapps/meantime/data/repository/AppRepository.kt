@@ -2,12 +2,10 @@ package com.sillyapps.meantime.data.repository
 
 import androidx.lifecycle.LiveData
 import com.sillyapps.meantime.AppConstants
-import com.sillyapps.meantime.data.Day
-import com.sillyapps.meantime.data.Scheme
-import com.sillyapps.meantime.data.SimplifiedTemplate
-import com.sillyapps.meantime.data.Template
+import com.sillyapps.meantime.data.*
 import com.sillyapps.meantime.data.local.ApplicationPreferencesDao
 import com.sillyapps.meantime.data.local.SchemeDao
+import com.sillyapps.meantime.data.local.TaskGoalsDao
 import com.sillyapps.meantime.data.local.TemplateDao
 import com.sillyapps.meantime.ui.mainscreen.DayManager
 import timber.log.Timber
@@ -17,7 +15,8 @@ import javax.inject.Singleton
 @Singleton
 class AppRepository @Inject constructor(private val templateDao: TemplateDao,
                                         private val schemeDao: SchemeDao,
-                                        private val appPrefDao: ApplicationPreferencesDao) {
+                                        private val appPrefDao: ApplicationPreferencesDao,
+                                        private val taskGoalsDao: TaskGoalsDao) {
 
     private suspend fun findNewDefaultTemplate() {
         appPrefDao.setDefaultTemplateId(0)
@@ -59,10 +58,6 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
         return templateDao.getTemplate(templateId)
     }
 
-    suspend fun getAllTemplates(): List<Template> {
-        return templateDao.getAllTemplates()
-    }
-
     suspend fun deleteTemplate(template: Template) {
 
         val templateWasDefault = template.chosenAsDefault
@@ -77,10 +72,6 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
         return templateDao.observeTemplates()
     }
 
-    fun observeCurrentScheme(): LiveData<Scheme> {
-        return schemeDao.observeScheme(AppConstants.DEFAULT_SCHEME_ID)
-    }
-
     suspend fun updateCurrentScheme(scheme: Scheme) {
         schemeDao.update(scheme)
     }
@@ -88,16 +79,6 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
     suspend fun getCurrentScheme(): Scheme? {
         val currentSchemeId = appPrefDao.getDefaultSchemeId()
         return schemeDao.getScheme(currentSchemeId)
-    }
-
-    suspend fun setCurrentScheme(schemeId: Int) {
-        appPrefDao.setDefaultSchemeId(schemeId)
-    }
-
-    suspend fun addTemplateToCurrentScheme(simplifiedTemplate: SimplifiedTemplate) {
-        val scheme = schemeDao.getScheme(AppConstants.DEFAULT_SCHEME_ID)!!
-        scheme.orderList.add(simplifiedTemplate)
-        schemeDao.update(scheme)
     }
 
     private suspend fun loadTemplate(getNextTemplate: Boolean = true): Template? {
@@ -144,6 +125,14 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
         }
 
         return appPrefDao.getDay()
+    }
+
+    suspend fun getTaskGoals(taskGoalsId: Int): TaskGoals {
+        return taskGoalsDao.getTaskGoals(taskGoalsId)
+    }
+
+    suspend fun updateGoals(taskGoals: TaskGoals) {
+        taskGoalsDao.updateGoals(taskGoals.id, taskGoals.goals)
     }
 
 }

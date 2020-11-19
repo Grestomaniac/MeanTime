@@ -35,7 +35,7 @@ class ExplorerAdapter(private val viewModel: TemplateExplorerViewModel, private 
                 it.template = item
                 it.clickListener = clickListener
                 it.position = position
-                it.itemTemplate.setOnLongClickListener { clickListener.onLongClick(item.id) }
+                it.itemTemplate.setOnLongClickListener { clickListener.onLongClick(position) }
             }
         }
 

@@ -6,7 +6,7 @@ object AppConstants {
     const val UNCERTAIN = -2L
     const val NOT_ASSIGNED = -1
 
-    const val NORMAL_INTERVAL = 100L
+    const val NORMAL_INTERVAL = 1000L
     const val BATTERY_SAVING_INTERVAL = 10000L
     const val CRITICAL_TIME_REMAINED = 300000L
 
@@ -23,4 +23,5 @@ object AppConstants {
 object AppBR {
     const val taskFinishedNaturally = 1001
     const val dayEnded = 1002
+    const val dayPausedOrUnPaused = 1003
 }
