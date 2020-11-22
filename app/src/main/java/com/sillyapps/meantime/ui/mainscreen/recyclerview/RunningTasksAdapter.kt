@@ -3,6 +3,7 @@ package com.sillyapps.meantime.ui.mainscreen.recyclerview
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sillyapps.meantime.data.Task
@@ -13,6 +14,8 @@ import com.sillyapps.meantime.ui.mainscreen.MainViewModel
 
 class RunningTasksAdapter(private val clickListener: ItemClickListener, private val viewModel: MainViewModel): ListAdapter<Task, RunningTasksAdapter.ViewHolder>(TasksDiffCallback()),
     ItemTouchHelperAdapter {
+
+    var onSwipeToStartCallback: SwipeToStartCallback? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -44,6 +47,11 @@ class RunningTasksAdapter(private val clickListener: ItemClickListener, private 
     }
 
     override fun onItemSwiped(position: Int, direction: Int) {
+        if (direction == ItemTouchHelper.START) {
+            onSwipeToStartCallback?.swiped(getItem(position).goalsId)
+            return
+        }
+
         if (getItem(position).canNotBeSwappedOrDisabled()) {
             return
         }
@@ -81,4 +89,8 @@ class TasksDiffCallback: DiffUtil.ItemCallback<Task>() {
         // true если эти два объекта имеют одинаковое содержимое
         return oldItem.startTime == newItem.startTime
     }
+}
+
+interface SwipeToStartCallback {
+    fun swiped(index: Int)
 }

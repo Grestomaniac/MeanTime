@@ -2,11 +2,13 @@ package com.sillyapps.meantime.ui.goalscreen
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.data.Goal
-import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.data.TaskGoals
 import com.sillyapps.meantime.data.repository.AppRepository
 import kotlinx.coroutines.*
+import java.text.FieldPosition
+import java.util.*
 
 class GoalViewModel @ViewModelInject constructor(private val repository: AppRepository): ViewModel() {
 
@@ -18,20 +20,42 @@ class GoalViewModel @ViewModelInject constructor(private val repository: AppRepo
 
     val goals: LiveData<MutableList<Goal>> = taskGoals.map { it.goals }
 
+    val goal: MutableLiveData<Goal> = MutableLiveData()
+    private var goalPos = AppConstants.NOT_ASSIGNED
+
     fun load(taskGoalId: Int) {
         viewModelScope.launch {
-            taskGoals.postValue(repository.getTaskGoals(taskGoalId))
+            taskGoals.value = repository.getTaskGoals(taskGoalId)
         }
     }
 
     fun notifyTasksSwapped(upperPosition: Int, bottomPosition: Int) {
+        Collections.swap(goals.value!!, upperPosition, bottomPosition)
         goalsChanged()
-
     }
 
     fun notifyTaskRemoved(position: Int) {
+        goals.value!!.removeAt(position)
         goalsChanged()
+    }
 
+    fun editGoal(position: Int) {
+        goalPos = position
+        if (goalPos == AppConstants.NOT_ASSIGNED) {
+            goal.value = Goal()
+        }
+        else {
+            goal.value = goals.value!![position].copy()
+        }
+    }
+
+    fun saveGoal() {
+        if (goalPos == AppConstants.NOT_ASSIGNED) {
+            goals.value!!.add(goal.value!!)
+        }
+        else {
+            goals.value!![goalPos].fillWith(goal.value!!)
+        }
     }
 
     private fun goalsChanged() {
@@ -41,13 +65,14 @@ class GoalViewModel @ViewModelInject constructor(private val repository: AppRepo
         updateTimer = viewModelScope.launch {
             delay(updateInterval)
 
-            updateGoals()
             updateTimer = null
+            updateGoals()
         }
     }
 
     override fun onCleared() {
-        updateGoals()
+        updateTimer?.cancel()
+        taskGoals.value?.let { updateGoals() }
         super.onCleared()
     }
 

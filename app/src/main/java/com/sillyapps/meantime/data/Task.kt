@@ -12,7 +12,9 @@ class Task(
     duration: Long = 0L,
     var vibrationOn: Boolean = true,
     var soundOn: Boolean = true,
-    sound: String = AppConstants.DEFAULT_RINGTONE
+    sound: String = AppConstants.DEFAULT_RINGTONE,
+
+    var goalsId: Int = 0
 ): BaseObservable() {
 
     @Bindable

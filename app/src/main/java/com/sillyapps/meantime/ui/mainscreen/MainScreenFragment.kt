@@ -18,6 +18,7 @@ import com.sillyapps.meantime.services.DayService
 import com.sillyapps.meantime.ui.mainscreen.recyclerview.RunningTasksAdapter
 import com.sillyapps.meantime.ui.ItemClickListener
 import com.sillyapps.meantime.ui.ItemTouchHelperCallback
+import com.sillyapps.meantime.ui.mainscreen.recyclerview.SwipeToStartCallback
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -83,10 +84,18 @@ class MainScreenFragment: Fragment() {
             override fun onLongClick(index: Int): Boolean {
                 return true
             }
+        }
 
+        val onSwipeToEndCallback = object : SwipeToStartCallback {
+            override fun swiped(index: Int) {
+                // TODO calculate actual position if where is temporal tasks
+                navigateToGoalFragment(index)
+            }
         }
 
         val adapter = RunningTasksAdapter(clickListener, viewModel)
+        adapter.onSwipeToStartCallback = onSwipeToEndCallback
+
         viewDataBinding.runningTasks.adapter = adapter
 
         val itemTouchHelperCallback = ItemTouchHelperCallback(adapter)
@@ -141,6 +150,10 @@ class MainScreenFragment: Fragment() {
 
     private fun navigateToEditor() {
         findNavController().navigate(MainScreenFragmentDirections.actionMainScreenFragmentToEditTemplateGraph())
+    }
+
+    private fun navigateToGoalFragment(taskGoalsId: Int) {
+        findNavController().navigate(MainScreenFragmentDirections.actionMainScreenFragmentToGoalFragment(taskGoalsId))
     }
 
 

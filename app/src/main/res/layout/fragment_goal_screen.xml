@@ -5,6 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View"/>
+
         <variable
             name="viewModel"
             type="com.sillyapps.meantime.ui.goalscreen.GoalViewModel" />
@@ -33,19 +35,22 @@
                 app:layout_constraintTop_toTopOf="parent"
 
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:stackFromEnd="true"/>
+                app:reverseLayout="true"
+                app:stackFromEnd="true"
+
+                tools:listitem="@layout/item_goal"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/add_template_fab"
+            android:id="@+id/add_goal_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
             android:layout_margin="@dimen/fab_margin"
             android:src="@drawable/ic_add"
             app:fabSize="normal"
-            android:layout_gravity="bottom|end" />
+            android:layout_gravity="bottom|end"/>
 
     </FrameLayout>
 

@@ -127,12 +127,21 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
         return appPrefDao.getDay()
     }
 
-    suspend fun getTaskGoals(taskGoalsId: Int): TaskGoals {
+    suspend fun getTaskGoals(taskGoalsId: Int): TaskGoals? {
         return taskGoalsDao.getTaskGoals(taskGoalsId)
     }
 
     suspend fun updateGoals(taskGoals: TaskGoals) {
         taskGoalsDao.updateGoals(taskGoals.id, taskGoals.goals)
+    }
+
+    suspend fun getTaskGoalIdByName(taskName: String): Int {
+        var taskGoalsId = taskGoalsDao.getTaskGoalsIdByName(taskName)
+        if (taskGoalsId == null) {
+            taskGoalsId = taskGoalsDao.insertTaskGoals(TaskGoals(0, taskName)).toInt()
+        }
+
+        return taskGoalsId
     }
 
 }

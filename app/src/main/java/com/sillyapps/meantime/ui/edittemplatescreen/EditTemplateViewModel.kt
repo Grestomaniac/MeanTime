@@ -94,6 +94,7 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
     }
 
     fun saveTemplate(): Result {
+
         if (tasks.value!!.size == 0) {
             return Result(false, R.string.zero_tasks)
         }
@@ -101,14 +102,22 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
             return Result(false, R.string.name_is_empty)
         }
 
-        val template = Template(templateId, templateName.value!!, false, tasks.value!!)
         viewModelScope.launch {
-            //TODO dangerous code
+            for (task in tasks.value!!) {
+                if (task.goalsId == 0) {
+                    task.goalsId = repository.getTaskGoalIdByName(task.name)
+                }
+            }
+
+            val template = Template(templateId, templateName.value!!, false, tasks.value!!)
+
             templateId = repository.insertTemplate(template)
         }
-
         return Result(true)
+
     }
+
+
 
     fun recalculateStartTimes(position: Int) {
         tasks.value?.let {

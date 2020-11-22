@@ -16,8 +16,8 @@ class TaskGoals(
 }
 
 class Goal(
-    name: String,
-    description: String
+    name: String = "",
+    description: String = ""
 ): BaseObservable() {
     @Bindable
     var name: String = name
@@ -42,5 +42,14 @@ class Goal(
         var result = name.hashCode()
         result = 31 * result + description.hashCode()
         return result
+    }
+
+    fun copy(): Goal {
+        return Goal(name, description)
+    }
+
+    fun fillWith(goal: Goal) {
+        name = goal.name
+        description = goal.description
     }
 }

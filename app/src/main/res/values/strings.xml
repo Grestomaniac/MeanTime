@@ -74,5 +74,8 @@
     <!--Scheme Fragment-->
     <string name="is_active">Active</string>
     <string name="repeat">Repeat</string>
+    <string name="no_goals_found">No goals found for this task, create new?</string>
+    <string name="goal_name">Goal name:</string>
+    <string name="goal_description">Goal description:</string>
 
 </resources>

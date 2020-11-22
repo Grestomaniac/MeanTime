@@ -6,17 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.databinding.FragmentGoalScreenBinding
 import com.sillyapps.meantime.ui.ItemClickListener
 import com.sillyapps.meantime.ui.ItemTouchHelperCallback
+import com.sillyapps.meantime.ui.mainscreen.TaskInfoDialogFragment
 import com.sillyapps.meantime.ui.mainscreen.recyclerview.RunningTasksAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class GoalFragment: Fragment() {
 
-    private val viewModel: GoalViewModel by viewModels()
+    private val viewModel: GoalViewModel by viewModels(ownerProducer = { this })
 
     private lateinit var binding: FragmentGoalScreenBinding
+
+    private val args: GoalFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,18 +39,23 @@ class GoalFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.lifecycleOwner = viewLifecycleOwner
+
+        viewModel.load(args.taskGoalsId)
         setupRecyclerView()
+
+        binding.addGoalFab.setOnClickListener { showGoalDialog() }
     }
 
     private fun setupRecyclerView() {
         val clickListener = object : ItemClickListener {
             override fun onClickItem(index: Int) {
+                showGoalDialog(index)
             }
 
             override fun onLongClick(index: Int): Boolean {
                 return true
             }
-
         }
 
         val adapter = GoalsAdapter(clickListener, viewModel)
@@ -56,5 +68,10 @@ class GoalFragment: Fragment() {
         viewModel.goals.observe(viewLifecycleOwner, {
             adapter.submitList(it)
         })
+    }
+
+    private fun showGoalDialog(goalPosition: Int = AppConstants.NOT_ASSIGNED) {
+        viewModel.editGoal(goalPosition)
+        GoalDialogFragment().show(childFragmentManager, "Goal dialog")
     }
 }

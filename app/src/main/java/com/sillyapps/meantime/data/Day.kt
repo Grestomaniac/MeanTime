@@ -9,9 +9,10 @@ import java.util.*
 
 class Day(val tasks: MutableList<Task>,
           val alarmDuration: Long,
+          val templateId: Int = 0,
           var state: State = State.WAITING,
           var dayStartTime: Long = 0L,
-          currentTaskPos: Int = 0,
+          currentTaskPos: Int = 0
           ): BaseObservable() {
 
     @Bindable
@@ -159,7 +160,7 @@ class Day(val tasks: MutableList<Task>,
     companion object {
         fun fromTemplate(template: Template?): Day? {
             template?.let {
-                return Day(it.activities, it.alarmDuration)
+                return Day(it.activities, it.alarmDuration, it.id)
             }
             return null
         }
