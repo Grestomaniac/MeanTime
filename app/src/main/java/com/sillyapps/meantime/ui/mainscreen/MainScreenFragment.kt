@@ -29,11 +29,19 @@ class MainScreenFragment: Fragment() {
 
     private lateinit var viewDataBinding: FragmentMainScreenBinding
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (viewModel.serviceRunning.value!!) {
+            val currentTaskGoalsId = viewModel.getCurrentTaskGoalsId()
+            currentTaskGoalsId?.let { navigateToGoalFragment(it) }
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         viewDataBinding = FragmentMainScreenBinding.inflate(inflater, container, false).apply {
             viewmodel = viewModel
         }
@@ -98,7 +106,7 @@ class MainScreenFragment: Fragment() {
 
         viewDataBinding.runningTasks.adapter = adapter
 
-        val itemTouchHelperCallback = ItemTouchHelperCallback(adapter)
+        val itemTouchHelperCallback = DayItemTouchHelperCallback(adapter)
         val touchHelper = ItemTouchHelper(itemTouchHelperCallback)
         touchHelper.attachToRecyclerView(viewDataBinding.runningTasks)
 
@@ -129,11 +137,17 @@ class MainScreenFragment: Fragment() {
         }
     }
 
+    private fun showTaskGoals() {
+        val currentTaskGoalsId = viewModel.getCurrentTaskGoalsId()
+        currentTaskGoalsId?.let {
+            navigateToGoalFragment(currentTaskGoalsId)
+        }
+    }
+
     private fun checkAppVitalPermissions() {
         val ignoresAppOptimizations = checkIfAppIgnoresBatteryOptimizations()
         val notificationEnabled = NotificationManagerCompat.from(requireContext()).areNotificationsEnabled()
 
-        Timber.d("ignoresAppOptimizations = $ignoresAppOptimizations; notifications enabled = $notificationEnabled")
         viewModel.updatePermissionWarnings(ignoresAppOptimizations, notificationEnabled)
     }
 
@@ -155,6 +169,5 @@ class MainScreenFragment: Fragment() {
     private fun navigateToGoalFragment(taskGoalsId: Int) {
         findNavController().navigate(MainScreenFragmentDirections.actionMainScreenFragmentToGoalFragment(taskGoalsId))
     }
-
 
 }

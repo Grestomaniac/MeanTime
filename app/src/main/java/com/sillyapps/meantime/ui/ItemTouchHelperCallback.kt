@@ -8,12 +8,10 @@ import com.sillyapps.meantime.AppConstants
 import timber.log.Timber
 import kotlin.math.abs
 
-class ItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter): ItemTouchHelper.Callback() {
+open class ItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter): ItemTouchHelper.Callback() {
 
     var dragTo = AppConstants.NOT_ASSIGNED
     var dragFrom = AppConstants.NOT_ASSIGNED
-
-    var waitingForAnimationToEnd = false
 
     override fun getMovementFlags(
         recyclerView: RecyclerView,
@@ -30,20 +28,6 @@ class ItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter): Ite
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-
-        return true
-    }
-
-    override fun onMoved(
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder,
-        fromPos: Int,
-        target: RecyclerView.ViewHolder,
-        toPos: Int,
-        x: Int,
-        y: Int
-    ) {
-        Timber.d("onMoved")
         val targetPosition = target.adapterPosition
 
         if (dragFrom == AppConstants.NOT_ASSIGNED) {
@@ -52,12 +36,8 @@ class ItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter): Ite
 
         mAdapter.onItemMove(viewHolder.adapterPosition, targetPosition)
         dragTo = targetPosition
-        super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y)
-    }
 
-    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
-        Timber.d("clearView")
-        super.clearView(recyclerView, viewHolder)
+        return true
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {

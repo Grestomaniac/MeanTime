@@ -5,6 +5,9 @@ import androidx.databinding.Bindable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.sillyapps.meantime.BR
+import timber.log.Timber
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Entity(tableName = "goal_table")
 class TaskGoals(
@@ -17,8 +20,10 @@ class TaskGoals(
 
 class Goal(
     name: String = "",
-    description: String = ""
+    description: String = "",
+    changedDate: String = ""
 ): BaseObservable() {
+
     @Bindable
     var name: String = name
         set(value) {
@@ -33,23 +38,34 @@ class Goal(
             notifyPropertyChanged(BR.description)
         }
 
+    @Bindable
+    var changedDate: String = changedDate
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.changedDate)
+        }
+
     override fun equals(other: Any?): Boolean {
         val otherGoal = other as Goal
-        return (otherGoal.name == name) and (otherGoal.description == description)
+        return otherGoal.name == name
     }
 
     override fun hashCode(): Int {
-        var result = name.hashCode()
-        result = 31 * result + description.hashCode()
-        return result
+        return name.hashCode()
+    }
+
+    fun saveGoal() {
+        changedDate = SimpleDateFormat("MMM dd, HH:mm", Locale.getDefault()).format(Date())
+        Timber.d("Saving goal, changedDate = ${changedDate}}")
     }
 
     fun copy(): Goal {
-        return Goal(name, description)
+        return Goal(name, description, changedDate)
     }
 
     fun fillWith(goal: Goal) {
         name = goal.name
         description = goal.description
+        changedDate = goal.changedDate
     }
 }

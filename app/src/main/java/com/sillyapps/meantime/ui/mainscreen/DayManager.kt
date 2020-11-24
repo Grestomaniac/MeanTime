@@ -26,6 +26,8 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     private var coroutineCounter: Job? = null
     private var untilCriticalTimer: Job? = null
 
+    var currentTaskGoalsIsNotEmpty: Boolean = false
+
     private val dataUpdateCallback = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
             when (propertyId) {
@@ -43,6 +45,7 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
             if (it.isRunning) {
                 return false
             }
+
             it.removeOnPropertyChangedCallback(dataUpdateCallback)
         }
 
@@ -52,7 +55,6 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
             thisDay = null
             return true
         }
-        Timber.d("setting new day")
         thisDay = day
         thisDay!!.addOnPropertyChangedCallback(dataUpdateCallback)
 
@@ -76,6 +78,14 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
 
     fun getNextTask(stop: Boolean = false) {
         thisDay!!.selectNextTask(stop)
+        checkIfCurrentTaskGoalsIsEmpty()
+    }
+
+    fun checkIfCurrentTaskGoalsIsEmpty() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val currentTaskGoals = repository.getTaskGoals(thisDay!!.currentTask.goalsId)
+            currentTaskGoalsIsNotEmpty = currentTaskGoals.goals.isNotEmpty()
+        }
     }
 
     fun recalculateStartTimes(position: Int) {
@@ -93,6 +103,7 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     private fun startNewDay() {
         thisDay!!.start()
         startCoroutineCounter()
+        checkIfCurrentTaskGoalsIsEmpty()
     }
 
     private fun resumeDay() {

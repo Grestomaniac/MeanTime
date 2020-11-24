@@ -6,11 +6,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.sillyapps.meantime.data.State
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.databinding.ItemMainScreenTaskBinding
 import com.sillyapps.meantime.ui.ItemTouchHelperAdapter
 import com.sillyapps.meantime.ui.ItemClickListener
 import com.sillyapps.meantime.ui.mainscreen.MainViewModel
+import timber.log.Timber
 
 class RunningTasksAdapter(private val clickListener: ItemClickListener, private val viewModel: MainViewModel): ListAdapter<Task, RunningTasksAdapter.ViewHolder>(TasksDiffCallback()),
     ItemTouchHelperAdapter {
@@ -60,11 +62,14 @@ class RunningTasksAdapter(private val clickListener: ItemClickListener, private 
     }
 
     class ViewHolder private constructor(private val binding: ItemMainScreenTaskBinding): RecyclerView.ViewHolder(binding.root) {
+        var notDraggable: Boolean = false
 
         fun bind(item: Task, position: Int, clickListener: ItemClickListener) {
             binding.task = item
             binding.taskAdapterPosition = position
             binding.clickListener = clickListener
+
+            notDraggable = item.canNotBeSwappedOrDisabled()
         }
 
         companion object {

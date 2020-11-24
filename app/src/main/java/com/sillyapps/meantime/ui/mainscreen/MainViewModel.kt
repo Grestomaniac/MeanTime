@@ -54,10 +54,6 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
                 AppBR.dayEnded -> {
                     loadDay(DayManager.RequestType.GET_NEXT)
                 }
-
-                AppBR.dayPausedOrUnPaused -> {
-                    pauseDay()
-                }
             }
         }
     }
@@ -143,8 +139,11 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
         recalculateStartTimes(taskPosition)
     }
 
-    fun getTemplateId(): Int {
-        return dayManager.thisDay!!.templateId
+    fun getCurrentTaskGoalsId(): Int? {
+        if (dayManager.currentTaskGoalsIsNotEmpty) {
+            return dayManager.thisDay!!.currentTask.goalsId
+        }
+        return null
     }
 
     override fun setTaskDuration(duration: Long) {

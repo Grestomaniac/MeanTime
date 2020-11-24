@@ -83,10 +83,8 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
 
     private suspend fun loadTemplate(getNextTemplate: Boolean = true): Template? {
         var templateId = appPrefDao.getDefaultTemplateId()
-
         getTemplateFromScheme(getNextTemplate)?.let { templateId = it }
 
-        Timber.d("Template id = $templateId")
         return templateDao.getTemplate(templateId)
     }
 
@@ -115,7 +113,6 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
                 appPrefDao.setCurrentDay(Day.fromTemplate(loadTemplate()))
             }
             DayManager.RequestType.REFRESH -> {
-                Timber.d("Refreshing")
                 appPrefDao.setCurrentDay(Day.fromTemplate(loadTemplate(false)))
             }
             else -> {
@@ -127,7 +124,7 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
         return appPrefDao.getDay()
     }
 
-    suspend fun getTaskGoals(taskGoalsId: Int): TaskGoals? {
+    suspend fun getTaskGoals(taskGoalsId: Int): TaskGoals {
         return taskGoalsDao.getTaskGoals(taskGoalsId)
     }
 

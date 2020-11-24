@@ -50,6 +50,7 @@ class GoalViewModel @ViewModelInject constructor(private val repository: AppRepo
     }
 
     fun saveGoal() {
+        goal.value!!.saveGoal()
         if (goalPos == AppConstants.NOT_ASSIGNED) {
             goals.value!!.add(goal.value!!)
         }

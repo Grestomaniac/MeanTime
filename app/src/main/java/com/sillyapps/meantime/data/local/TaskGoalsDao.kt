@@ -16,7 +16,7 @@ interface TaskGoalsDao {
     fun observeAllTaskGoals(): LiveData<List<TaskGoals>>
 
     @Query("select * from goal_table where id = :taskGoalsId")
-    suspend fun getTaskGoals(taskGoalsId: Int): TaskGoals?
+    suspend fun getTaskGoals(taskGoalsId: Int): TaskGoals
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTaskGoals(taskGoals: TaskGoals): Long
