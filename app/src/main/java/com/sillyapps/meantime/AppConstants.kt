@@ -23,5 +23,6 @@ object AppConstants {
 object AppBR {
     const val taskFinishedNaturally = 1001
     const val dayEnded = 1002
-    const val dayPausedOrUnPaused = 1003
+    const val currentTaskStateChanged = 1003
+    const val dayPausedOrUnPaused = 1004
 }

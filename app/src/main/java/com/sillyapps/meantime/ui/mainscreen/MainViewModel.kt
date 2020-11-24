@@ -29,6 +29,9 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
     private val _noTemplate: MutableLiveData<Boolean> = MutableLiveData(false)
     val noTemplate: LiveData<Boolean> = _noTemplate
 
+    private val _currentTaskStateChanged: MutableLiveData<Boolean> = MutableLiveData(false)
+    val currentTaskStateChanged: LiveData<Boolean> = _currentTaskStateChanged
+
     private val _appPermissionWarnings: MutableLiveData<AppPermissionWarnings> = MutableLiveData(
         AppPermissionWarnings()
     )
@@ -49,6 +52,10 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
 
                 BR.isRunning -> {
                     _serviceRunning.value = dayManager.thisDay!!.isRunning
+                }
+
+                AppBR.currentTaskStateChanged -> {
+                    _currentTaskStateChanged.value = true
                 }
 
                 AppBR.dayEnded -> {
@@ -144,6 +151,14 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
             return dayManager.thisDay!!.currentTask.goalsId
         }
         return null
+    }
+
+    fun getCurrentTaskPosition(): Int {
+        return dayManager.thisDay!!.currentTaskPos
+    }
+
+    fun currentTaskStateHandled() {
+        _currentTaskStateChanged.value = false
     }
 
     override fun setTaskDuration(duration: Long) {

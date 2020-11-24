@@ -114,6 +114,13 @@ class MainScreenFragment: Fragment() {
             adapter.submitList(it)
         })
 
+        viewModel.currentTaskStateChanged.observe(viewLifecycleOwner) {
+            if (it) {
+                adapter.notifyItemChanged(viewModel.getCurrentTaskPosition())
+                viewModel.currentTaskStateHandled()
+            }
+        }
+
     }
 
     private fun showTaskInfo() {
