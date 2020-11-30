@@ -10,7 +10,7 @@ import com.sillyapps.meantime.databinding.ItemGoalBinding
 import com.sillyapps.meantime.ui.ItemClickListener
 import com.sillyapps.meantime.ui.ItemTouchHelperAdapter
 
-class GoalsAdapter(private val clickListener: ItemClickListener, private val viewModel: GoalViewModel): ListAdapter<Goal, GoalsAdapter.ViewHolder>(GoalsDiffCallback()),
+class GoalsAdapter(private val clickListener: ItemClickListener, private val callbacks: ItemTouchCallbacks): ListAdapter<Goal, GoalsAdapter.ViewHolder>(GoalsDiffCallback()),
     ItemTouchHelperAdapter {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -23,13 +23,7 @@ class GoalsAdapter(private val clickListener: ItemClickListener, private val vie
     }
 
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
-        if (fromPosition > toPosition) {
-            viewModel.notifyTasksSwapped(toPosition, fromPosition)
-        }
-        else {
-            viewModel.notifyTasksSwapped(fromPosition, toPosition)
-        }
-
+        callbacks.onItemMoved(fromPosition, toPosition)
         notifyItemMoved(fromPosition, toPosition)
         return true
     }
@@ -38,7 +32,7 @@ class GoalsAdapter(private val clickListener: ItemClickListener, private val vie
     }
 
     override fun onItemSwiped(position: Int, direction: Int) {
-        viewModel.notifyTaskRemoved(position)
+        callbacks.onSwiped(position, direction)
         notifyItemRemoved(position)
     }
 
@@ -59,6 +53,12 @@ class GoalsAdapter(private val clickListener: ItemClickListener, private val vie
             }
         }
     }
+}
+
+interface ItemTouchCallbacks {
+    fun onSwiped(position: Int, direction: Int)
+
+    fun onItemMoved(fromPosition: Int, toPosition: Int)
 }
 
 class GoalsDiffCallback: DiffUtil.ItemCallback<Goal>() {

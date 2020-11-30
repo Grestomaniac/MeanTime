@@ -36,7 +36,7 @@ object AppTypeConverter {
     @TypeConverter
     @JvmStatic
     fun convertStringToGoalsList(data: String?): List<Goal>? {
-        if (data == null) return emptyList()
+        if (data.isNullOrEmpty()) return mutableListOf()
         val moshi = Moshi.Builder().build()
 
         val dataList = Types.newParameterizedType(List::class.java, Goal::class.java)

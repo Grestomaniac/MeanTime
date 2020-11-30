@@ -16,7 +16,7 @@ interface TaskGoalsDao {
     fun observeAllTaskGoals(): LiveData<List<TaskGoals>>
 
     @Query("select * from goal_table where id = :taskGoalsId")
-    suspend fun getTaskGoals(taskGoalsId: Int): TaskGoals
+    suspend fun getTaskGoals(taskGoalsId: Int): TaskGoals?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTaskGoals(taskGoals: TaskGoals): Long
@@ -24,8 +24,8 @@ interface TaskGoalsDao {
     @Update
     suspend fun updateTaskGoals(taskGoals: TaskGoals)
 
-    @Query("update goal_table set goals = :newGoals where id = :taskGoalsId")
-    suspend fun updateGoals(taskGoalsId: Int, newGoals: MutableList<Goal>)
+    @Update
+    suspend fun updateGoals(taskGoals: TaskGoals)
 
     @Query("select id from goal_table where name = :taskName")
     suspend fun getTaskGoalsIdByName(taskName: String): Int?

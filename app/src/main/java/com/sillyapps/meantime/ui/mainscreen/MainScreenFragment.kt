@@ -20,6 +20,7 @@ import com.sillyapps.meantime.ui.ItemClickListener
 import com.sillyapps.meantime.ui.ItemTouchHelperCallback
 import com.sillyapps.meantime.ui.mainscreen.recyclerview.SwipeToStartCallback
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_main_screen.*
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -56,9 +57,9 @@ class MainScreenFragment: Fragment() {
 
         setupRefreshLayout()
         setupTasksAdapter()
-        setupNoTemplateLayout()
         setupService()
 
+        addTemporalTaskButton.setOnClickListener { addTemporalTask() }
         viewDataBinding.warningButton.setOnClickListener { showWarningDialog() }
         viewDataBinding.buttonStop.setOnLongClickListener { viewModel.onStopButtonLongClick() }
     }
@@ -78,10 +79,6 @@ class MainScreenFragment: Fragment() {
         }
     }
 
-    private fun setupNoTemplateLayout() {
-        viewDataBinding.buttonNavigateToEditor.setOnClickListener { navigateToEditor() }
-    }
-
     private fun setupTasksAdapter() {
         val clickListener = object : ItemClickListener {
             override fun onClickItem(index: Int) {
@@ -96,7 +93,6 @@ class MainScreenFragment: Fragment() {
 
         val onSwipeToEndCallback = object : SwipeToStartCallback {
             override fun swiped(index: Int) {
-                // TODO calculate actual position if where is temporal tasks
                 navigateToGoalFragment(index)
             }
         }
@@ -115,12 +111,17 @@ class MainScreenFragment: Fragment() {
         })
 
         viewModel.currentTaskStateChanged.observe(viewLifecycleOwner) {
-            if (it) {
-                adapter.notifyItemChanged(viewModel.getCurrentTaskPosition())
-                viewModel.currentTaskStateHandled()
-            }
+            adapter.notifyItemChanged(viewModel.getCurrentTaskPosition())
         }
 
+        viewModel.taskAdded.observe(viewLifecycleOwner) {
+            adapter.notifyItemInserted(adapter.itemCount)
+        }
+    }
+
+    private fun addTemporalTask() {
+        viewModel.createTemporalTask()
+        TemporalTaskDialogFragment().show(childFragmentManager, "Temporal task dialog")
     }
 
     private fun showTaskInfo() {
@@ -141,13 +142,6 @@ class MainScreenFragment: Fragment() {
                 }
                 else requireActivity().startService(intent)
             }
-        }
-    }
-
-    private fun showTaskGoals() {
-        val currentTaskGoalsId = viewModel.getCurrentTaskGoalsId()
-        currentTaskGoalsId?.let {
-            navigateToGoalFragment(currentTaskGoalsId)
         }
     }
 

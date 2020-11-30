@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sillyapps.meantime.data.Day
+import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.data.State
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.ui.mainscreen.DayManager
@@ -29,9 +29,9 @@ class AlarmViewModel @ViewModelInject constructor(private val dayManager: DayMan
         timerJob?.cancel()
 
         val day = dayManager.thisDay!!
-        dayEnded = (day.state == State.COMPLETED)
+        dayEnded = (day.dayState == State.COMPLETED)
         completedTask = day.getCompletedTask()
-        alarmDuration = day.alarmDuration
+        alarmDuration = AppConstants.ALARM_DEFAULT_DURATION
 
         if (!dayEnded) {
             nextTaskName = day.getCompletedTask(1).name

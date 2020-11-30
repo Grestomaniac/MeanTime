@@ -6,6 +6,7 @@
 
     <data>
         <import type="android.view.View"/>
+        <import type="com.sillyapps.meantime.ui.goalscreen.GoalViewModel.GoalTab"/>
 
         <variable
             name="viewModel"
@@ -20,22 +21,61 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/goalsTabLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/active_goals"/>
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/completed_goals"/>
+
+            </com.google.android.material.tabs.TabLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/goals"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:padding="8dp"
-
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
 
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:reverseLayout="true"
-                app:stackFromEnd="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
 
-                tools:listitem="@layout/item_goal"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/goalsTabLayout"
+                app:reverseLayout="true"
+
+                app:stackFromEnd="true"
+                tools:listitem="@layout/item_goal"
+
+                android:visibility="@{viewModel.tabSelected == GoalTab.ACTIVE ? View.VISIBLE : View.GONE}"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/completedGoals"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/goalsTabLayout"
+                app:reverseLayout="true"
+
+                app:stackFromEnd="true"
+                tools:listitem="@layout/item_goal"
+
+                android:visibility="@{viewModel.tabSelected == GoalTab.COMPLETED ? View.VISIBLE : View.GONE}"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

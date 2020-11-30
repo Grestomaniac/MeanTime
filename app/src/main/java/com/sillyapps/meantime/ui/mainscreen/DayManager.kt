@@ -3,13 +3,11 @@ package com.sillyapps.meantime.ui.mainscreen
 import androidx.databinding.Observable
 import com.sillyapps.meantime.AppBR
 import com.sillyapps.meantime.AppConstants
-import com.sillyapps.meantime.BR
 import com.sillyapps.meantime.data.Day
 import com.sillyapps.meantime.data.State
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.data.repository.AppRepository
 import kotlinx.coroutines.*
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -40,29 +38,26 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
         }
     }
 
-    suspend fun loadCurrentDay(request: RequestType): Boolean {
+    suspend fun loadCurrentDay(request: RequestType) {
         thisDay?.let {
             if (it.isRunning) {
-                return false
+                return
             }
-
             it.removeOnPropertyChangedCallback(dataUpdateCallback)
         }
 
         val day = repository.getDay(request)
 
         if (day == null) {
-            thisDay = null
-            return true
+            thisDay = Day()
+            return
         }
         thisDay = day
         thisDay!!.addOnPropertyChangedCallback(dataUpdateCallback)
-
-        return false
     }
 
     fun start() {
-        when (thisDay!!.state) {
+        when (thisDay!!.dayState) {
             State.WAITING -> startNewDay()
             State.DISABLED -> resumeDay()
             else -> return
@@ -70,8 +65,6 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     }
 
     fun pauseDay() {
-        if (thisDay!!.state == State.DISABLED) return
-
         coroutineCounter?.cancel()
         thisDay!!.pause()
     }
@@ -81,15 +74,19 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
         checkIfCurrentTaskGoalsIsEmpty()
     }
 
-    fun checkIfCurrentTaskGoalsIsEmpty() {
+    private fun checkIfCurrentTaskGoalsIsEmpty() {
         CoroutineScope(Dispatchers.IO).launch {
             val currentTaskGoals = repository.getTaskGoals(thisDay!!.currentTask.goalsId)
-            currentTaskGoalsIsNotEmpty = currentTaskGoals.goals.isNotEmpty()
+            currentTaskGoals?.let { currentTaskGoalsIsNotEmpty = it.activeGoals.isNotEmpty() }
         }
     }
 
     fun recalculateStartTimes(position: Int) {
         thisDay!!.recalculateStartTimes(position)
+    }
+
+    suspend fun getTaskGoalsIdByName(taskName: String): Int {
+        return repository.getTaskGoalIdByName(taskName)
     }
 
     fun notifyTasksSwapped(upperPosition: Int, bottomPosition: Int) {
@@ -138,7 +135,6 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     }
 
     private fun startCoroutineCounter() {
-        Task.lastSystemTime = System.currentTimeMillis()
         coroutineCounter = CoroutineScope(Dispatchers.Main).launch {
             while (true) {
                 val timeRemained = thisDay!!.currentTask.continueTask()

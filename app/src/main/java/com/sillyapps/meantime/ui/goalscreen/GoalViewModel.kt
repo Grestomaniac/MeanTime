@@ -7,10 +7,11 @@ import com.sillyapps.meantime.data.Goal
 import com.sillyapps.meantime.data.TaskGoals
 import com.sillyapps.meantime.data.repository.AppRepository
 import kotlinx.coroutines.*
-import java.text.FieldPosition
 import java.util.*
 
 class GoalViewModel @ViewModelInject constructor(private val repository: AppRepository): ViewModel() {
+
+    enum class GoalTab{ ACTIVE, COMPLETED }
 
     private val updateInterval = 5000L
 
@@ -18,7 +19,12 @@ class GoalViewModel @ViewModelInject constructor(private val repository: AppRepo
 
     private val taskGoals: MutableLiveData<TaskGoals> = MutableLiveData()
 
-    val goals: LiveData<MutableList<Goal>> = taskGoals.map { it.goals }
+    private val _tabSelected: MutableLiveData<GoalTab> = MutableLiveData(GoalTab.ACTIVE)
+    val tabSelected: LiveData<GoalTab> = _tabSelected
+
+    val goals: LiveData<MutableList<Goal>> = taskGoals.map { it.activeGoals }
+
+    val completedGoals: LiveData<MutableList<Goal>> = taskGoals.map { it.completedGoals }
 
     val goal: MutableLiveData<Goal> = MutableLiveData()
     private var goalPos = AppConstants.NOT_ASSIGNED
@@ -29,13 +35,34 @@ class GoalViewModel @ViewModelInject constructor(private val repository: AppRepo
         }
     }
 
-    fun notifyTasksSwapped(upperPosition: Int, bottomPosition: Int) {
-        Collections.swap(goals.value!!, upperPosition, bottomPosition)
+    fun selectTab(goalTab: GoalTab) {
+        _tabSelected.value = goalTab
+    }
+
+    fun notifyActiveGoalSwapped(fromPosition: Int, toPosition: Int) {
+        Collections.swap(goals.value!!, fromPosition, toPosition)
         goalsChanged()
     }
 
-    fun notifyTaskRemoved(position: Int) {
+    fun notifyActiveGoalRemoved(position: Int) {
+        completedGoals.value!!.add(goals.value!![position])
         goals.value!!.removeAt(position)
+        goalsChanged()
+    }
+
+    fun notifyCompletedGoalSwapped(fromPosition: Int, toPosition: Int) {
+        Collections.swap(completedGoals.value!!, fromPosition, toPosition)
+        goalsChanged()
+    }
+
+    fun notifyCompletedGoalRecovered(position: Int) {
+        goals.value!!.add(completedGoals.value!![position])
+        completedGoals.value!!.removeAt(position)
+        goalsChanged()
+    }
+
+    fun notifyCompletedGoalRemoved(position: Int) {
+        completedGoals.value!!.removeAt(position)
         goalsChanged()
     }
 

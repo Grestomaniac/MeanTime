@@ -13,11 +13,11 @@
 
     <string name="ids">id = %1$d</string>
     <string name="enter_name">Name:</string>
-    <string name="enter_duration">Duration</string>
-    <string name="with_melody">With melody</string>
-    <string name="melody">Melody</string>
-    <string name="vibration_on">Vibration on</string>
-    <string name="melody_on">Melody on</string>
+    <string name="enter_duration">Duration:</string>
+    <string name="with_melody">With melody:</string>
+    <string name="melody">Melody:</string>
+    <string name="vibration_on">Vibration on:</string>
+    <string name="melody_on">Melody on:</string>
 
     <string name="choose_task_sound">Choose task notification sound</string>
     <string name="default_ringtone">Default</string>
@@ -77,5 +77,7 @@
     <string name="no_goals_found">No goals found for this task, create new?</string>
     <string name="goal_name">Goal name:</string>
     <string name="goal_description">Goal description:</string>
+    <string name="active_goals">Active</string>
+    <string name="completed_goals">Completed</string>
 
 </resources>

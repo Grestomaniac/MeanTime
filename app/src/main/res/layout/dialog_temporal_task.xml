@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.sillyapps.meantime.AppConstants"/>
+        <variable
+            name="task"
+            type="com.sillyapps.meantime.data.Task"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/item_dialog"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/temporalTaskNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:text="@string/enter_name"
+            app:layout_constraintBottom_toBottomOf="@+id/temporalTaskName"
+            app:layout_constraintEnd_toStartOf="@+id/temporalTaskName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/temporalTaskName"
+            android:textColor="@color/textColor"/>
+
+        <EditText
+            android:id="@+id/temporalTaskName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:ems="10"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/temporalTaskNameText"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textColor="@color/textColor"
+
+            android:text="@={task.name}"
+            tools:text="Task 1"/>
+
+        <TextView
+            android:id="@+id/durationLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/enter_duration"
+            android:textColor="@color/textColor"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/temporalTaskName" />
+
+
+        <CheckBox
+            android:id="@+id/uncertainCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="@={task.uncertain}"
+            android:text="@string/duration_is_uncertain"
+            android:textColor="@color/textColor"
+            app:layout_constraintBottom_toBottomOf="@+id/durationLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintTop_toTopOf="@+id/durationLabel" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/timePickerLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/uncertainCheckBox"
+            app:interactive="@{!task.uncertain}">
+
+            <NumberPicker
+                android:id="@+id/timePickerHours"
+
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:foregroundTint="@color/textColor"
+                app:layout_constraintBottom_toBottomOf="@+id/timePickerMinutes"
+                app:layout_constraintEnd_toStartOf="@+id/timePickerMinutes"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/timePickerMinutes" />
+
+            <NumberPicker
+                android:id="@+id/timePickerMinutes"
+
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/timePickerSeconds"
+                app:layout_constraintStart_toEndOf="@+id/timePickerHours"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <NumberPicker
+                android:id="@+id/timePickerSeconds"
+
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/timePickerMinutes"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/timePickerMinutes"
+                app:layout_constraintTop_toTopOf="@+id/timePickerMinutes" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/vibration_on"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/vibration_on"
+            android:textColor="@color/textColor"
+
+            app:layout_constraintEnd_toStartOf="@+id/sound_on"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/timePickerLayout"
+
+            android:checked="@={task.vibrationOn}"/>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/sound_on"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sound_on"
+            android:textColor="@color/textColor"
+            app:layout_constraintBottom_toBottomOf="@+id/vibration_on"
+            app:layout_constraintEnd_toStartOf="@+id/vibration_on"
+            app:layout_constraintStart_toEndOf="@+id/vibration_on"
+            app:layout_constraintTop_toTopOf="@+id/vibration_on"
+            android:checked="@={task.soundOn}"/>
+
+        <ImageButton
+            android:id="@+id/okButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@color/textColor"
+            android:tint="@color/colorPrimaryDark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/vibration_on"
+            app:layout_constraintTop_toBottomOf="@+id/sound_on"
+            app:srcCompat="@drawable/ic_check" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

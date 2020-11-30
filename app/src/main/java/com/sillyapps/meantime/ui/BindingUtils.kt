@@ -4,6 +4,7 @@ import android.content.res.ColorStateList
 import android.net.Uri
 import android.provider.OpenableColumns
 import android.view.View
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -100,4 +101,12 @@ fun View.setActive(isActive: Boolean) {
     else {
         foregroundTintList = null
     }
+}
+
+@BindingAdapter("isInteractive")
+fun ImageButton.setInteractive(interactive: Boolean) {
+    visibility = if (interactive) View.VISIBLE
+                    else View.INVISIBLE
+    isEnabled = interactive
+
 }

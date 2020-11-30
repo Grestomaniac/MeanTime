@@ -9,8 +9,11 @@ import com.sillyapps.meantime.BR
 import com.sillyapps.meantime.data.AppPermissionWarnings
 import com.sillyapps.meantime.data.State
 import com.sillyapps.meantime.data.Task
+import com.sillyapps.meantime.ui.SingleLiveEvent
 import com.sillyapps.meantime.ui.TimePickerViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import java.util.concurrent.atomic.AtomicBoolean
 
 class MainViewModel @ViewModelInject constructor(private val dayManager: DayManager): ViewModel(), TimePickerViewModel {
 
@@ -22,15 +25,16 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
     private val _serviceRunning: MutableLiveData<Boolean> = MutableLiveData(false)
     val serviceRunning: LiveData<Boolean> = _serviceRunning
 
+    private val _dayState: MutableLiveData<State> = MutableLiveData()
+    val dayState: LiveData<State> = _dayState
+
     private val _task: MutableLiveData<Task> = MutableLiveData()
     val task: LiveData<Task> = _task
     private var taskPosition = AppConstants.NOT_ASSIGNED
 
-    private val _noTemplate: MutableLiveData<Boolean> = MutableLiveData(false)
-    val noTemplate: LiveData<Boolean> = _noTemplate
+    val currentTaskStateChanged: SingleLiveEvent<Void> = SingleLiveEvent()
 
-    private val _currentTaskStateChanged: MutableLiveData<Boolean> = MutableLiveData(false)
-    val currentTaskStateChanged: LiveData<Boolean> = _currentTaskStateChanged
+    val taskAdded: SingleLiveEvent<Void> = SingleLiveEvent()
 
     private val _appPermissionWarnings: MutableLiveData<AppPermissionWarnings> = MutableLiveData(
         AppPermissionWarnings()
@@ -46,21 +50,17 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
     private val dataUpdateCallback = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
             when (propertyId) {
-                BR.timeRemain -> {
-                    _uiTimeRemain.value = dayManager.thisDay!!.timeRemain
-                }
+                BR.timeRemain -> _uiTimeRemain.value = dayManager.thisDay!!.timeRemain
 
-                BR.isRunning -> {
-                    _serviceRunning.value = dayManager.thisDay!!.isRunning
-                }
+                BR.isRunning -> _serviceRunning.value = dayManager.thisDay!!.isRunning
 
-                AppBR.currentTaskStateChanged -> {
-                    _currentTaskStateChanged.value = true
-                }
+                BR.dayState -> _dayState.value = dayManager.thisDay!!.dayState
 
-                AppBR.dayEnded -> {
-                    loadDay(DayManager.RequestType.GET_NEXT)
-                }
+                AppBR.currentTaskStateChanged -> currentTaskStateChanged.call()
+
+                AppBR.taskAdded -> taskAdded.call()
+
+                AppBR.dayEnded -> loadDay(DayManager.RequestType.GET_NEXT)
             }
         }
     }
@@ -71,21 +71,13 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
 
     fun loadDay(request: DayManager.RequestType = DayManager.RequestType.GET_CURRENT) {
         viewModelScope.launch {
-            // No template
-            if (dayManager.loadCurrentDay(request)) {
-                _serviceRunning.value = false
-                tasks.value = null
+            dayManager.loadCurrentDay(request)
 
-                _noTemplate.value = true
-            }
-            else {
-                _serviceRunning.value = dayManager.thisDay!!.isRunning
-                tasks.value = dayManager.thisDay!!.tasks
-                _noTemplate.value = false
-                pauseDay()
+            _serviceRunning.value = dayManager.thisDay!!.isRunning
+            tasks.value = dayManager.thisDay!!.tasks
 
-                dayManager.thisDay!!.addOnPropertyChangedCallback(dataUpdateCallback)
-            }
+            dayManager.thisDay!!.addOnPropertyChangedCallback(dataUpdateCallback)
+
             _refreshing.value = false
         }
     }
@@ -112,6 +104,20 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
 
     fun stopButtonPressed() {
         dayManager.getNextTask(true)
+    }
+
+    fun createTemporalTask() {
+        _task.value = Task(temporal = true)
+    }
+
+    fun addTemporalTask(duration: Long) {
+        _task.value?.let {
+            viewModelScope.launch {
+                it.duration = duration
+                it.goalsId = dayManager.getTaskGoalsIdByName(it.name)
+                dayManager.thisDay!!.addTemporalTask(it)
+            }
+        }
     }
 
     fun onStopButtonLongClick(): Boolean {
@@ -157,10 +163,6 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
         return dayManager.thisDay!!.currentTaskPos
     }
 
-    fun currentTaskStateHandled() {
-        _currentTaskStateChanged.value = false
-    }
-
     override fun setTaskDuration(duration: Long) {
         if (duration == getTaskDuration()) {
             return
@@ -179,7 +181,7 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
     }
 
     private fun pauseDay() {
-        _paused.value = dayManager.thisDay!!.state == State.DISABLED
+        _paused.value = dayManager.thisDay!!.dayState == State.DISABLED
     }
 
 }

@@ -25,4 +25,5 @@ object AppBR {
     const val dayEnded = 1002
     const val currentTaskStateChanged = 1003
     const val dayPausedOrUnPaused = 1004
+    const val taskAdded = 1005
 }

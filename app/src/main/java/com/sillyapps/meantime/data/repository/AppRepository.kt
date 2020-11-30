@@ -1,14 +1,12 @@
 package com.sillyapps.meantime.data.repository
 
 import androidx.lifecycle.LiveData
-import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.data.*
 import com.sillyapps.meantime.data.local.ApplicationPreferencesDao
 import com.sillyapps.meantime.data.local.SchemeDao
 import com.sillyapps.meantime.data.local.TaskGoalsDao
 import com.sillyapps.meantime.data.local.TemplateDao
 import com.sillyapps.meantime.ui.mainscreen.DayManager
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -124,12 +122,12 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
         return appPrefDao.getDay()
     }
 
-    suspend fun getTaskGoals(taskGoalsId: Int): TaskGoals {
+    suspend fun getTaskGoals(taskGoalsId: Int): TaskGoals? {
         return taskGoalsDao.getTaskGoals(taskGoalsId)
     }
 
     suspend fun updateGoals(taskGoals: TaskGoals) {
-        taskGoalsDao.updateGoals(taskGoals.id, taskGoals.goals)
+        taskGoalsDao.updateGoals(taskGoals)
     }
 
     suspend fun getTaskGoalIdByName(taskName: String): Int {

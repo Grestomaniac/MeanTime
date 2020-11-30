@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-@Database(entities = [Template::class, Scheme::class, ApplicationPreferences::class, TaskGoals::class], version = 6, exportSchema = false)
+@Database(entities = [Template::class, Scheme::class, ApplicationPreferences::class, TaskGoals::class], version = 7)
 @TypeConverters(AppTypeConverter::class)
 abstract class AppDatabase: RoomDatabase() {
 
@@ -33,9 +33,18 @@ abstract class AppDatabase: RoomDatabase() {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
-        val MIGRATION_5_6 = object : Migration(5, 6) {
+        private val MIGRATION_5_6 = object : Migration(5, 6) {
             override fun migrate(database: SupportSQLiteDatabase) {
+
                 database.execSQL("create table goal_table (id integer primary key not null, name text not null, goals text not null)")
+            }
+        }
+
+        private val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                val convertedEmptyList = AppTypeConverter.convertGoalsListToJson(mutableListOf())
+                database.execSQL("alter table goal_table rename column goals to activeGoals")
+                database.execSQL("alter table goal_table add column completedGoals text not null default $convertedEmptyList")
             }
         }
 
@@ -49,7 +58,7 @@ abstract class AppDatabase: RoomDatabase() {
                         AppDatabase::class.java,
                         "app_database")
                         .addCallback(DatabaseCallback())
-                        .addMigrations(MIGRATION_5_6)
+                        .addMigrations(MIGRATION_5_6, MIGRATION_6_7)
                         .build()
                     INSTANCE = instance
                 }

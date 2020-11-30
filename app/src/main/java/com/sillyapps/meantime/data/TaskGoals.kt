@@ -14,9 +14,9 @@ class TaskGoals(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String = "",
-    val goals: MutableList<Goal> = mutableListOf()
-): BaseObservable() {
-}
+    val activeGoals: MutableList<Goal> = mutableListOf(),
+    val completedGoals: MutableList<Goal> = mutableListOf()
+): BaseObservable()
 
 class Goal(
     name: String = "",
