@@ -22,7 +22,7 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
 
     private var tickInterval = AppConstants.NORMAL_INTERVAL
     private var coroutineCounter: Job? = null
-    private var untilCriticalTimer: Job? = null
+    /*private var untilCriticalTimer: Job? = null*/
 
     var currentTaskGoalsIsNotEmpty: Boolean = false
 
@@ -114,46 +114,42 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
 
     private fun cancelTimers() {
         coroutineCounter?.cancel()
-        untilCriticalTimer?.cancel()
+        /*untilCriticalTimer?.cancel()*/
     }
 
     fun screenIsOff() {
-        if (thisDay!!.timeRemain < AppConstants.CRITICAL_TIME_REMAINED) {
+        /*if (thisDay!!.timeRemain < AppConstants.CRITICAL_TIME_REMAINED) {
             return
         }
         else {
             tickInterval = AppConstants.BATTERY_SAVING_INTERVAL
-            startUntilCriticalTimer()
-        }
+        }*/
     }
 
     fun screenIsOn() {
-        tickInterval = AppConstants.NORMAL_INTERVAL
+        /*tickInterval = AppConstants.NORMAL_INTERVAL
         untilCriticalTimer?.cancel()
         coroutineCounter?.cancel()
-        startCoroutineCounter()
+        startCoroutineCounter()*/
     }
 
     private fun startCoroutineCounter() {
         coroutineCounter = CoroutineScope(Dispatchers.Main).launch {
             while (true) {
-                val timeRemained = thisDay!!.currentTask.continueTask()
-                if (timeRemained < 0) {
-                    getNextTask()
-                }
-                else {
-                    thisDay!!.updateTimeRemained(timeRemained)
-                }
+                tick()
 
                 delay(tickInterval)
             }
         }
     }
 
-    private fun startUntilCriticalTimer() {
-        untilCriticalTimer = CoroutineScope(Dispatchers.Default).launch {
-            delay(thisDay!!.timeRemain - AppConstants.CRITICAL_TIME_REMAINED)
-            tickInterval = AppConstants.NORMAL_INTERVAL
+    private fun tick() {
+        val timeRemained = thisDay!!.currentTask.continueTask()
+        if (timeRemained < 0) {
+            getNextTask()
+        }
+        else {
+            thisDay!!.updateTimeRemained(timeRemained)
         }
     }
 

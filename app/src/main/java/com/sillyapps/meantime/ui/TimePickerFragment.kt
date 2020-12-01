@@ -25,6 +25,7 @@ class TimePickerFragment(private val viewModel: TimePickerViewModel): DialogFrag
         binding = DialogTimePickerBinding.inflate(inflater, container, false)
         setupTimePickers()
 
+        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         return binding.root
     }
 

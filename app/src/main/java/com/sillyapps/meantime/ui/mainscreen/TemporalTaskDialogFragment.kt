@@ -30,6 +30,7 @@ class TemporalTaskDialogFragment: DialogFragment() {
         binding = DialogTemporalTaskBinding.inflate(inflater, container, false)
         binding.task = viewModel.task.value
 
+        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         return binding.root
     }
 

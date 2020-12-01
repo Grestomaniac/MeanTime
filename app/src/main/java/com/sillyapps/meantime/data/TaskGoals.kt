@@ -2,6 +2,7 @@ package com.sillyapps.meantime.data
 
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.sillyapps.meantime.BR
@@ -14,7 +15,9 @@ class TaskGoals(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String = "",
+    @ColumnInfo(name = "active_goals")
     val activeGoals: MutableList<Goal> = mutableListOf(),
+    @ColumnInfo(name = "completed_goals")
     val completedGoals: MutableList<Goal> = mutableListOf()
 ): BaseObservable()
 

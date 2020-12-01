@@ -14,7 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        style="@style/AppTheme">
+        android:background="@color/primaryLightColor">
 
         <TextView
             android:id="@+id/completedTaskName"
@@ -40,20 +40,23 @@
             app:layout_constraintStart_toStartOf="@+id/completedTaskName"
             app:layout_constraintTop_toBottomOf="@+id/completedTaskName" />
 
-        <ImageButton
+        <Button
             android:id="@+id/bigAssButton"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="32dp"
             app:layout_constraintBottom_toTopOf="@+id/nextTaskInfoLayout"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/completedTextView"
-            app:srcCompat="@drawable/ic_check" />
+
+            android:text="@string/ok"
+            android:textColor="@color/secondaryTextColor"
+            android:textSize="40sp"
+            android:background="@drawable/big_button"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/dayCompletedLayout"
@@ -118,7 +121,8 @@
             android:text="@string/end_day"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            style="@style/ButtonStyle"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="buttonSize">60dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
-
+    <dimen name="buttonSize">57dp</dimen>
+    <dimen name="centerButtonSize">70dp</dimen>
+    <dimen name="normal_margin">16dp</dimen>
+    <dimen name="button_padding">8dp</dimen>
 </resources>

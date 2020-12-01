@@ -12,29 +12,29 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:background="@drawable/dialog">
 
         <TextView
             android:id="@+id/taskName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:layout_marginStart="40dp"
             android:text="@{task.name}"
 
-            app:layout_constraintEnd_toStartOf="@+id/revertChangesButton"
             app:layout_constraintStart_toStartOf="@+id/vibrationOnField"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Task1" />
 
         <ImageButton
             android:id="@+id/revertChangesButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             app:layout_constraintBottom_toBottomOf="@+id/taskName"
             app:layout_constraintEnd_toEndOf="@+id/vibrationOnField"
             app:layout_constraintTop_toTopOf="@+id/taskName"
-            app:srcCompat="@drawable/ic_refresh" />
+            app:srcCompat="@drawable/ic_refresh"
+            style="@style/ActionButtonStyle"/>
 
         <TextView
             android:id="@+id/durationText"
@@ -52,7 +52,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
 
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="@+id/vibrationOnField"
             app:layout_constraintStart_toEndOf="@+id/durationText"
 
@@ -108,7 +108,7 @@
             android:id="@+id/progressText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/progress"
+            android:text="@string/task_progress"
             app:layout_constraintEnd_toStartOf="@+id/progressInPercents"
             app:layout_constraintStart_toStartOf="@+id/vibrationOnField"
             app:layout_constraintTop_toTopOf="@+id/progressInPercents" />

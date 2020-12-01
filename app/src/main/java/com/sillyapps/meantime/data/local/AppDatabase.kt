@@ -42,9 +42,10 @@ abstract class AppDatabase: RoomDatabase() {
 
         private val MIGRATION_6_7 = object : Migration(6, 7) {
             override fun migrate(database: SupportSQLiteDatabase) {
-                val convertedEmptyList = AppTypeConverter.convertGoalsListToJson(mutableListOf())
-                database.execSQL("alter table goal_table rename column goals to activeGoals")
-                database.execSQL("alter table goal_table add column completedGoals text not null default $convertedEmptyList")
+                database.execSQL("create table goal_table_new (id integer primary key not null, name text not null, active_goals text not null, completed_goals text not null default '')")
+                database.execSQL("insert into goal_table_new(id, name, active_goals) select id, name, goals from goal_table")
+                database.execSQL("drop table goal_table")
+                database.execSQL("alter table goal_table_new rename to goal_table")
             }
         }
 

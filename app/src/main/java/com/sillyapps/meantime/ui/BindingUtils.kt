@@ -76,6 +76,11 @@ fun TextView.setSoundString(uriPath: String) {
     cursor?.close()
 }
 
+@BindingAdapter("dialogBackground")
+fun View.setDialogBackground(drawableId: Int) {
+    background = ContextCompat.getDrawable(context, drawableId)
+}
+
 @BindingAdapter("warningColor")
 fun ImageView.setWarningColor(colorId: Int) {
     val resolvedColor = ContextCompat.getColor(context, colorId)

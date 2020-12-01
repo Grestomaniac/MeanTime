@@ -3,6 +3,7 @@ package com.sillyapps.meantime
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(binding.navView, navController)
 
         appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
+
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -16,8 +16,7 @@
             android:id="@+id/explorer"
 
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorPrimaryDark">
+            android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/switchLayout"
@@ -25,7 +24,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:background="@color/colorItemActive"
+                android:background="@color/primaryDarkColor"
                 android:paddingBottom="16dp">
 
                 <androidx.appcompat.widget.SwitchCompat
@@ -84,7 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:layout_margin="@dimen/fab_margin"
+            android:layout_margin="@dimen/normal_margin"
             android:src="@drawable/ic_add"
             app:fabSize="normal"
             android:layout_gravity="bottom|end" />

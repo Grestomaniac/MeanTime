@@ -39,7 +39,7 @@
     <string name="duration">Duration:</string>
     <string name="start_time">Start time:</string>
     <string name="active">Active for:</string>
-    <string name="progress">Progress:</string>
+    <string name="task_progress">Progress:</string>
     <string name="muffled">Muffled</string>
     <string name="sound_on">Sound on</string>
 
@@ -79,5 +79,6 @@
     <string name="goal_description">Goal description:</string>
     <string name="active_goals">Active</string>
     <string name="completed_goals">Completed</string>
+    <string name="ok">OK</string>
 
 </resources>

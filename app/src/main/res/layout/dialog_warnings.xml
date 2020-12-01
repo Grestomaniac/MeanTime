@@ -14,8 +14,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="8dp"
 
-        android:background="@color/colorPrimaryDark">
-
+        android:background="@drawable/dialog">
 
         <TextView
             android:id="@+id/description"
@@ -26,8 +25,7 @@
 
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:textColor="@android:color/primary_text_dark"/>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/batteryOptimizationLayout"
@@ -46,10 +44,10 @@
                 android:id="@+id/batteryImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/batteryText"
+
                 app:layout_constraintStart_toStartOf="parent"
-
-                app:layout_constraintTop_toTopOf="parent"
-
+                app:layout_constraintTop_toTopOf="@+id/batteryText"
                 app:srcCompat="@drawable/ic_battery"
                 app:warningColor="@{appWarnings.batteryWarningColor}"
                 tools:tint="@color/colorWarning" />
@@ -57,15 +55,14 @@
             <TextView
                 android:id="@+id/batteryText"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="@{appWarnings.batteryStringResource}"
-                app:warningColor="@{appWarnings.batteryWarningColor}"
-                app:layout_constraintBottom_toBottomOf="@+id/batteryImage"
                 app:layout_constraintEnd_toEndOf="parent"
-
                 app:layout_constraintStart_toEndOf="@+id/batteryImage"
-                app:layout_constraintTop_toTopOf="@+id/batteryImage"
+
+                app:layout_constraintTop_toTopOf="parent"
+                app:warningColor="@{appWarnings.batteryWarningColor}"
                 tools:text="@string/battery_optimization_on"
                 tools:textColor="@color/colorWarning" />
 
@@ -75,7 +72,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/battery_optimization_description"
-                android:textColor="@android:color/primary_text_dark"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/batteryImage" />
@@ -95,27 +91,27 @@
                 android:id="@+id/notificationImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/notificationText"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_notification"
 
+                app:layout_constraintTop_toTopOf="@+id/notificationText"
+                app:srcCompat="@drawable/ic_notification"
                 app:warningColor="@{appWarnings.notificationWarningColor}"
-                tools:tint="@color/colorWarning"/>
+                tools:tint="@color/colorWarning" />
 
             <TextView
                 android:id="@+id/notificationText"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                app:layout_constraintBottom_toBottomOf="@+id/notificationImage"
+                android:text="@{appWarnings.notificationStringResource}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/notificationImage"
-                app:layout_constraintTop_toTopOf="@+id/notificationImage"
 
+                app:layout_constraintTop_toTopOf="parent"
                 app:warningColor="@{appWarnings.notificationWarningColor}"
-                android:text="@{appWarnings.notificationStringResource}"
-                tools:textColor="@color/colorWarning"
-                tools:text="@string/notifications_off"/>
+                tools:text="@string/notifications_off"
+                tools:textColor="@color/colorWarning" />
 
             <TextView
                 android:id="@+id/notificationWarningDescription"
@@ -126,8 +122,7 @@
 
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/notificationImage"
-                android:textColor="@android:color/primary_text_dark"/>
+                app:layout_constraintTop_toBottomOf="@+id/notificationImage"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

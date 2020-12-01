@@ -52,7 +52,6 @@ class GoalFragment: Fragment() {
     private fun setupActiveGoals() {
         val clickListener = object : ItemClickListener {
             override fun onClickItem(index: Int) {
-                viewModel.editGoal(index)
                 showGoalDialog(index)
             }
 
@@ -78,9 +77,16 @@ class GoalFragment: Fragment() {
         val touchHelper = ItemTouchHelper(itemTouchHelperCallback)
         touchHelper.attachToRecyclerView(binding.goals)
 
-        viewModel.goals.observe(viewLifecycleOwner, {
+        viewModel.activeGoals.observe(viewLifecycleOwner, {
             adapter.submitList(it)
         })
+
+        viewModel.newGoalAdded.observe(viewLifecycleOwner) {
+            adapter.notifyItemInserted(adapter.itemCount)
+            binding.goalsTabLayout.apply {
+                selectTab(getTabAt(0))
+            }
+        }
     }
 
     private fun setupCompletedGoals() {
@@ -126,8 +132,8 @@ class GoalFragment: Fragment() {
         binding.goalsTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 tab?.let {
-                    val goalTab = GoalViewModel.GoalTab.values()[tab.position]
-                    viewModel.selectTab(goalTab)
+                    val tabPosition = tab.position
+                    viewModel.selectTab(tabPosition)
                 }
 
             }
@@ -136,11 +142,18 @@ class GoalFragment: Fragment() {
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
+                tab?.let {
+                    when (tab.position) {
+                        0 -> binding.goals.apply { scrollToPosition(adapter!!.itemCount-1) }
+                        else -> binding.completedGoals.apply { scrollToPosition(adapter!!.itemCount-1) }
+                    }
+                }
             }
         })
     }
 
     private fun showGoalDialog(goalPosition: Int = AppConstants.NOT_ASSIGNED) {
+        viewModel.editGoal(goalPosition)
         GoalDialogFragment().show(childFragmentManager, "Goal dialog")
     }
 }

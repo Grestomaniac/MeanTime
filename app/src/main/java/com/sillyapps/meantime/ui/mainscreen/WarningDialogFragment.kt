@@ -29,10 +29,11 @@ class WarningDialogFragment: DialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DialogWarningsBinding.inflate(inflater, container, false)
         binding.appWarnings = viewModel.appPermissionWarnings.value
 
+        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         return binding.root
     }
 

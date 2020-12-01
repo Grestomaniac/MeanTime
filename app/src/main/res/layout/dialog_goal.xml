@@ -12,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
+        android:background="@drawable/dialog"
         android:padding="16dp">
 
         <TextView
@@ -27,14 +27,16 @@
             android:id="@+id/goalName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:inputType="text"
+            android:ems="15"
+            android:inputType="textMultiLine"
+            android:lines="2"
+            android:text="@={viewModel.goal.name}"
             app:layout_constraintEnd_toEndOf="parent"
+
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/goalNameText"
 
-            android:text="@={viewModel.goal.name}"/>
+            style="@style/InputTextStyle"/>
 
         <TextView
             android:id="@+id/goalDescriptionText"
@@ -49,16 +51,16 @@
             android:id="@+id/goalDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:inputType="text"
-            android:minLines="3"
+            android:ems="15"
+            android:inputType="textMultiLine"
+            android:lines="5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
 
             app:layout_constraintTop_toBottomOf="@+id/goalDescriptionText"
 
-            android:text="@={viewModel.goal.description}"/>
+            android:text="@={viewModel.goal.description}"
+            style="@style/InputTextStyle"/>
 
         <Button
             android:id="@+id/saveGoalButton"
@@ -66,6 +68,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/save"
+            style="@style/ButtonStyle"
+
             app:layout_constraintEnd_toEndOf="@+id/goalDescription"
             app:layout_constraintTop_toBottomOf="@+id/goalDescription" />
 

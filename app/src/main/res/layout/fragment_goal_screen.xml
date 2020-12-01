@@ -6,7 +6,6 @@
 
     <data>
         <import type="android.view.View"/>
-        <import type="com.sillyapps.meantime.ui.goalscreen.GoalViewModel.GoalTab"/>
 
         <variable
             name="viewModel"
@@ -27,7 +26,10 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+
+                android:background="@color/primaryDarkColor"
+                app:tabSelectedTextColor="@color/primaryTextColor">
 
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="match_parent"
@@ -57,7 +59,7 @@
                 app:stackFromEnd="true"
                 tools:listitem="@layout/item_goal"
 
-                android:visibility="@{viewModel.tabSelected == GoalTab.ACTIVE ? View.VISIBLE : View.GONE}"/>
+                android:visibility="@{viewModel.tabSelected == 0 ? View.VISIBLE : View.GONE}"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/completedGoals"
@@ -75,7 +77,7 @@
                 app:stackFromEnd="true"
                 tools:listitem="@layout/item_goal"
 
-                android:visibility="@{viewModel.tabSelected == GoalTab.COMPLETED ? View.VISIBLE : View.GONE}"/>
+                android:visibility="@{viewModel.tabSelected == 1 ? View.VISIBLE : View.GONE}"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -84,7 +86,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:layout_margin="@dimen/fab_margin"
+            android:layout_margin="@dimen/normal_margin"
             android:src="@drawable/ic_add"
             app:fabSize="normal"
             android:layout_gravity="bottom|end"/>

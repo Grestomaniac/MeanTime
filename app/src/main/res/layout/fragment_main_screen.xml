@@ -15,14 +15,13 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimary">
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorItemActive"
+            android:background="@color/primaryDarkColor"
             android:paddingBottom="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -65,6 +64,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/timeRemained"
                 app:srcCompat="@drawable/ic_warning"
+                android:tint="@color/colorWarning"
 
                 android:visibility="@{viewmodel.appPermissionWarnings.haveAnyWarnings ? View.VISIBLE : View.GONE}"/>
 
@@ -72,19 +72,19 @@
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/refreshDay"
+            isActive="@{viewmodel.paused}"
             android:layout_width="0dp"
+
             android:layout_height="0dp"
-
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
 
-            app:layout_constraintBottom_toTopOf="@+id/buttonsContainer"
+            android:layout_marginEnd="16dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-
-            isActive="@{viewmodel.paused}"
-            android:visibility="visible"
             tools:visibility="visible">
 
             <androidx.recyclerview.widget.RecyclerView
@@ -107,64 +107,68 @@
 
             <ImageButton
                 android:id="@+id/play_button"
-                style="@style/ButtonStyle"
-                android:layout_width="@dimen/buttonSize"
-                android:layout_height="@dimen/buttonSize"
-                android:layout_marginBottom="16dp"
+                style="@style/ActionButtonStyle"
+                android:layout_width="@dimen/centerButtonSize"
 
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_height="@dimen/centerButtonSize"
+                android:onClick="@{() -> viewmodel.startButtonPressed()}"
+                android:src="@drawable/ic_play"
+
+                app:isInteractive="@{viewmodel.dayState != State.ACTIVE}"
+                app:layout_constraintBottom_toBottomOf="@+id/addTemporalTaskButton"
+
                 app:layout_constraintEnd_toEndOf="@+id/button_pause"
                 app:layout_constraintStart_toStartOf="@+id/button_pause"
 
-                android:onClick="@{() -> viewmodel.startButtonPressed()}"
-                android:src="@drawable/ic_play_circle_outline_black_24dp"
-
-                app:isInteractive="@{viewmodel.dayState != State.ACTIVE}"
+                app:layout_constraintTop_toTopOf="@+id/addTemporalTaskButton"
                 tools:visibility="visible" />
 
             <ImageButton
                 android:id="@+id/button_pause"
-                style="@style/ButtonStyle"
-                android:layout_width="@dimen/buttonSize"
-                android:layout_height="@dimen/buttonSize"
+                style="@style/ActionButtonStyle"
+                android:layout_width="@dimen/centerButtonSize"
 
+                android:layout_height="@dimen/centerButtonSize"
                 android:onClick="@{() -> viewmodel.pauseButtonPressed()}"
-                android:src="@drawable/ic_pause_circle_outline_black_24dp"
+
+                android:src="@drawable/ic_pause"
+                android:tint="@color/secondaryTextColor"
 
                 app:isInteractive="@{viewmodel.dayState == State.ACTIVE}"
-                app:layout_constraintBottom_toBottomOf="@+id/play_button"
 
+                app:layout_constraintBottom_toBottomOf="@+id/addTemporalTaskButton"
                 app:layout_constraintEnd_toStartOf="@+id/addTemporalTaskButton"
-
                 app:layout_constraintStart_toEndOf="@+id/button_stop"
+
+                app:layout_constraintTop_toTopOf="@+id/addTemporalTaskButton"
                 tools:visibility="invisible" />
 
             <ImageButton
                 android:id="@+id/button_stop"
-                style="@style/ButtonStyle"
+                style="@style/ActionButtonStyle"
                 android:layout_width="@dimen/buttonSize"
                 android:layout_height="@dimen/buttonSize"
-                android:layout_margin="@dimen/fab_margin"
 
+                android:layout_margin="@dimen/normal_margin"
                 android:onClick="@{() -> viewmodel.stopButtonPressed()}"
                 android:src="@drawable/ic_stop_black_24dp"
+
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/addTemporalTaskButton"
+                style="@style/ActionButtonStyle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
 
-                android:layout_margin="@dimen/fab_margin"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/normal_margin"
                 android:src="@drawable/ic_add"
                 app:fabSize="normal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

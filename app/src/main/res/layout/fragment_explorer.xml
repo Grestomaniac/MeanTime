@@ -23,8 +23,7 @@
             android:id="@+id/explorer"
 
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorPrimaryDark">
+            android:layout_height="match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/items"
@@ -52,7 +51,7 @@
             android:layout_height="wrap_content"
             android:visibility="@{editMode ? View.VISIBLE : View.GONE}"
 
-            android:layout_margin="@dimen/fab_margin"
+            android:layout_margin="@dimen/normal_margin"
             android:src="@drawable/ic_add"
             app:fabSize="normal"
             android:layout_gravity="bottom|end" />

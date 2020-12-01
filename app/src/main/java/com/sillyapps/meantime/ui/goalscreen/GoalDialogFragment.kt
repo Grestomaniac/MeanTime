@@ -20,10 +20,11 @@ class GoalDialogFragment: DialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DialogGoalBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
 
+        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         return binding.root
     }
 
