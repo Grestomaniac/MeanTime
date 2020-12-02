@@ -60,6 +60,9 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation "androidx.fragment:fragment-ktx:1.2.5"
 
+    //Preferences
+    implementation "androidx.preference:preference-ktx:1.1.1"
+
     //Logging
     //Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'

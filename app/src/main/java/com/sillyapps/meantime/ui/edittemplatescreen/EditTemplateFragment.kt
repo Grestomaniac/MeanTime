@@ -1,15 +1,19 @@
 package com.sillyapps.meantime.ui.edittemplatescreen
 
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.view.children
 import androidx.navigation.fragment.findNavController
 import com.sillyapps.meantime.R
 import com.sillyapps.meantime.databinding.FragmentEditTemplateBinding
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.sillyapps.meantime.tintMenuIcons
 import com.sillyapps.meantime.ui.ItemTouchHelperCallback
 import com.sillyapps.meantime.ui.ItemClickListener
 import com.sillyapps.meantime.ui.edittemplatescreen.recyclerview.TemplateEditorAdapter
@@ -26,7 +30,7 @@ class EditTemplateFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         viewDataBinding = FragmentEditTemplateBinding.inflate(inflater, container, false).apply {
             viewmodel = viewModel
         }
@@ -46,6 +50,7 @@ class EditTemplateFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.edit_template_menu, menu)
+        tintMenuIcons(menu.children, requireContext())
     }
 
     override fun onOptionsItemSelected(item: MenuItem) =

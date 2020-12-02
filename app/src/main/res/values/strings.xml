@@ -80,5 +80,6 @@
     <string name="active_goals">Active</string>
     <string name="completed_goals">Completed</string>
     <string name="ok">OK</string>
+    <string name="night_mode">Night mode</string>
 
 </resources>

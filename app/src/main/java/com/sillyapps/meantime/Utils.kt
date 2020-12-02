@@ -1,6 +1,12 @@
 package com.sillyapps.meantime
 
-import androidx.databinding.ObservableArrayList
+import android.content.Context
+import android.content.res.Configuration
+import android.graphics.PorterDuff
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import java.util.*
 
 fun getLocalCurrentTimeMillis(): Long {
@@ -52,4 +58,30 @@ fun formatIfNeeded(hours: Int, minutes: Int, secondsFormatted: String = ""): Str
         stringMinutes = "0$minutes"
     }
     return "$stringHours:$stringMinutes$secondsFormatted"
+}
+
+fun tintMenuIcons(items: Sequence<MenuItem>, context: Context) {
+    for (item in items) {
+        item.icon.apply {
+            item.icon.setTintMode(PorterDuff.Mode.SRC_ATOP)
+            item.icon.setTint(ContextCompat.getColor(context, R.color.primaryTextColor))
+        }
+    }
+}
+
+fun AppCompatActivity.setDarkThemeIfNeeded() {
+    val systemNightModeEnabled = resources.configuration.uiMode and
+            Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+
+    if (systemNightModeEnabled) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+    }
+    else {
+        val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val appNightModeEnabled = preferences.getBoolean(PreferencesKeys.NIGHT_MODE_IS_ON, false)
+        if (appNightModeEnabled)
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        else
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+    }
 }

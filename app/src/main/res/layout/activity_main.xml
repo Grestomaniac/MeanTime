@@ -23,9 +23,7 @@
                 android:name="androidx.navigation.fragment.NavHostFragment"
 
                 app:defaultNavHost="true"
-                app:navGraph="@navigation/navigation"
-
-                />
+                app:navGraph="@navigation/navigation"/>
 
         </FrameLayout>
 
@@ -34,6 +32,8 @@
             android:layout_height="match_parent"
             android:id="@+id/navView"
             android:layout_gravity="start"
+            app:itemTextColor="@drawable/nav_view_item_text_color"
+            app:itemIconTint="@drawable/nav_view_item_text_color"
 
             app:menu="@menu/nav_drawer_menu"
             android:fitsSystemWindows="true"/>

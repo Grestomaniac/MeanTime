@@ -7,6 +7,7 @@
     <color name="secondaryLightColor">#819ca9</color>
     <color name="secondaryDarkColor">#29434e</color>
     <color name="primaryTextColor">#000000</color>
+    <color name="primaryTextColorSelected">#29434e</color>
     <color name="secondaryTextColor">#ffffff</color>
 
     <color name="colorItemWaiting">#fdcb9e</color>

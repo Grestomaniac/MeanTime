@@ -27,3 +27,7 @@ object AppBR {
     const val dayPausedOrUnPaused = 1004
     const val taskAdded = 1005
 }
+
+object PreferencesKeys {
+    const val NIGHT_MODE_IS_ON = "NightMode"
+}

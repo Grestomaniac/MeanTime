@@ -16,4 +16,8 @@
         android:title="@string/schema"
         android:icon="@drawable/ic_android"/>
 
+    <item android:id="@+id/nightModeSwitcher"
+        android:title="@string/night_mode"
+        android:icon="@drawable/ic_night"/>
+
 </menu>
