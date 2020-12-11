@@ -122,6 +122,10 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
         return appPrefDao.getDay()
     }
 
+    suspend fun saveDay(day: Day?) {
+        appPrefDao.setCurrentDay(day)
+    }
+
     suspend fun getTaskGoals(taskGoalsId: Int): TaskGoals? {
         return taskGoalsDao.getTaskGoals(taskGoalsId)
     }

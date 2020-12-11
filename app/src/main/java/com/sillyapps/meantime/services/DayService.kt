@@ -8,9 +8,9 @@ import androidx.core.app.NotificationCompat
 import androidx.databinding.Observable
 import com.sillyapps.meantime.*
 import com.sillyapps.meantime.broadcastrecievers.ScreenOnOffBroadcastReceiver
+import com.sillyapps.meantime.data.State
 import com.sillyapps.meantime.ui.alarmscreen.AlarmActivity
 import com.sillyapps.meantime.ui.mainscreen.DayManager
-import com.sillyapps.meantime.utils.FileLogger
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.lang.IllegalArgumentException
@@ -19,62 +19,76 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class DayService: Service() {
     companion object {
-        val SERVICE_ID = 1
-        val ACTION_STOP = "STOP"
-        val ACTION_START = "START"
+        const val SERVICE_ID = 1
+        const val ACTION_STOP = "STOP"
+        const val ACTION_START = "START"
+        const val ACTION_RESUME = "RESUME"
+        const val ACTION_PAUSE = "PAUSE"
     }
 
     @Inject lateinit var dayManager: DayManager
     private lateinit var intentToActivity: PendingIntent
 
     private lateinit var notificationBuilder: NotificationCompat.Builder
+    private lateinit var pausedNotificationBuilder: NotificationCompat.Builder
 
     private lateinit var pauseIntent: PendingIntent
     private lateinit var stopIntent: PendingIntent
+    private lateinit var resumeIntent: PendingIntent
+
     private lateinit var notificationManager: NotificationManager
 
     private lateinit var screenOnOffReceiver: ScreenOnOffBroadcastReceiver
 
+    private val notificationUpdateCallback = object : Observable.OnPropertyChangedCallback() {
+        override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+            when (propertyId) {
+                BR.timeRemain -> updateTimer()
+
+                AppBR.taskFinishedNaturally -> turnOnAlarm()
+
+                BR.dayState -> handleStateChange()
+            }
+        }
+    }
 
     override fun onCreate() {
         super.onCreate()
-        FileLogger.d("Service created")
 
         notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
         registerScreenOnOffReceiver()
         setupObservers()
 
-        setupButtonsIntents()
+        setupButtonIntents()
         setupNotification()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        FileLogger.d("Service onStartCommand")
         if (intent != null) {
             when (intent.action) {
                 ACTION_STOP -> {
-                    dayManager.getNextTask(true)
+                    dayManager.stopTask()
                     updateTimer()
-                    FileLogger.d("Service is stopped")
                 }
-                ACTION_START -> {
-                    FileLogger.d("MainActivity requests for service")
+
+                ACTION_PAUSE -> {
+                    dayManager.pauseDay()
+                    pauseService()
                 }
-                else -> {
-                    FileLogger.d("Unknown intent")
+
+                ACTION_RESUME -> {
+                    Timber.d("Day resuming")
+                    dayManager.start()
+                    resumeService()
                 }
             }
-        }
-        else {
-            FileLogger.d("with a null intent. It has been probably restarted by the system")
         }
 
         return START_STICKY
     }
 
     private fun registerScreenOnOffReceiver() {
-        Timber.d("Receiver registered")
         screenOnOffReceiver = ScreenOnOffBroadcastReceiver()
         val intentFilter = IntentFilter().apply {
             addAction(Intent.ACTION_SCREEN_ON)
@@ -104,9 +118,17 @@ class DayService: Service() {
         startForeground(SERVICE_ID, notificationBuilder.build())
     }
 
-    private fun setupButtonsIntents() {
+    private fun setupButtonIntents() {
         stopIntent = Intent(this, DayService::class.java).let {
             it.action = ACTION_STOP
+            PendingIntent.getService(this, 0, it, 0)
+        }
+        pauseIntent = Intent(this, DayService::class.java).let {
+            it.action = ACTION_PAUSE
+            PendingIntent.getService(this, 0, it, 0)
+        }
+        resumeIntent = Intent(this, DayService::class.java).let {
+            it.action = ACTION_RESUME
             PendingIntent.getService(this, 0, it, 0)
         }
     }
@@ -124,26 +146,19 @@ class DayService: Service() {
             .setAutoCancel(false)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
+            .addAction(R.drawable.ic_pause, getString(R.string.pause), pauseIntent)
             .addAction(R.drawable.ic_stop_black_24dp, getString(R.string.stop), stopIntent)
-    }
 
-    private val notificationUpdateCallback = object : Observable.OnPropertyChangedCallback() {
-        override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-            when (propertyId) {
-                BR.timeRemain -> {
-                    updateTimer()
-                }
-
-                AppBR.taskFinishedNaturally -> {
-                    turnOnAlarm()
-
-                }
-
-                BR.isRunning -> {
-                    stopService()
-                }
-            }
-        }
+        /*pausedNotificationBuilder = NotificationCompat.Builder(this, AppConstants.SERVICE_MAIN_NOTIFICATION_CHANNEL)
+            .setContentTitle(currentDay.currentTask.name)
+            .setContentText(timeRemain)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentIntent(intentToActivity)
+            .setAutoCancel(false)
+            .setOngoing(true)
+            .setOnlyAlertOnce(true)
+            .addAction(R.drawable.ic_play, getString(R.string.start), resumeIntent)*/
     }
 
     private fun updateTimer() {
@@ -155,13 +170,32 @@ class DayService: Service() {
         notificationManager.notify(SERVICE_ID, notificationBuilder.build())
     }
 
-    private fun stopService() {
-        val serviceShouldRun = dayManager.thisDay!!.isRunning
-        Timber.d("Service should run is $serviceShouldRun")
-        if (!serviceShouldRun) {
-            Timber.d("Stopping")
-            stopSelf()
+    private fun handleStateChange() {
+        Timber.d("State changed to ${dayManager.thisDay!!.dayState}")
+        when (dayManager.thisDay!!.dayState) {
+            State.COMPLETED -> stopService()
+            State.DISABLED -> pauseService()
+            State.ACTIVE -> resumeService()
+            else -> return
         }
+    }
+
+    private fun stopService() {
+        Timber.d("Service stopped")
+        stopForeground(true)
+        stopSelf()
+    }
+
+    private fun pauseService() {
+        val currentDay = dayManager.thisDay!!
+        val timeRemain = convertMillisToStringFormatWithSeconds(currentDay.timeRemain)
+        pausedNotificationBuilder.setContentText(timeRemain)
+        pausedNotificationBuilder.setContentTitle(currentDay.currentTask.name)
+        notificationManager.notify(SERVICE_ID, pausedNotificationBuilder.build())
+    }
+
+    private fun resumeService() {
+        updateTimer()
     }
 
     private fun turnOnAlarm() {
@@ -176,8 +210,9 @@ class DayService: Service() {
     }
 
     override fun onDestroy() {
-        Timber.d("Service destroyed")
-        unregisterScreenOnOffReceiver()
         super.onDestroy()
+        unregisterScreenOnOffReceiver()
+        stopForeground(true)
+        Timber.d("Service destroyed")
     }
 }

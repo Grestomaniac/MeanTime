@@ -21,22 +21,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
             android:layout_marginEnd="16dp"
+            android:text="@{viewmodel.completedTask.name}"
+            app:layout_constraintBottom_toTopOf="@+id/completedTextView"
+
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-
-            android:text="@{viewmodel.completedTask.name}"
-            tools:text="Task 1"/>
+            tools:text="Task 1" />
 
         <TextView
             android:id="@+id/completedTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:text="@string/completed"
+            app:layout_constraintBottom_toTopOf="@+id/bigAssButton"
             app:layout_constraintEnd_toEndOf="@+id/completedTaskName"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="@+id/completedTaskName"
             app:layout_constraintTop_toBottomOf="@+id/completedTaskName" />
 
@@ -54,6 +56,7 @@
             app:layout_constraintBottom_toTopOf="@+id/nextTaskTextView"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/completedTextView" />
 
@@ -61,13 +64,13 @@
             android:id="@+id/dayEndedTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
             android:text="@string/day_ended"
             android:visibility="@{viewmodel.dayEnded ? View.VISIBLE : View.INVISIBLE}"
-            app:layout_constraintBottom_toTopOf="@+id/endDayButton"
 
+            app:layout_constraintBottom_toBottomOf="@+id/nextTaskName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/nextTaskName"
             tools:visibility="invisible" />
 
         <TextView
@@ -75,35 +78,38 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:layout_marginBottom="16dp"
             android:text="@{viewmodel.nextTaskName}"
             android:visibility="@{viewmodel.dayEnded ? View.INVISIBLE : View.VISIBLE}"
-            app:layout_constraintBottom_toTopOf="@+id/endDayButton"
 
+            app:layout_constraintBottom_toTopOf="@+id/endDayButton"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nextTaskTextView"
             tools:text="Task 2" />
 
         <TextView
             android:id="@+id/nextTaskTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
             android:text="@string/next_task"
-            app:layout_constraintBottom_toTopOf="@+id/dayEndedTextView"
+            app:layout_constraintBottom_toTopOf="@+id/nextTaskName"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bigAssButton" />
 
         <Button
             android:id="@+id/endDayButton"
             style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
             android:text="@string/end_day"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nextTaskName" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -147,7 +147,8 @@
             android:layout_margin="@dimen/normal_margin"
             android:src="@drawable/ic_check"
             app:fabSize="normal"
-            android:layout_gravity="bottom|end" />
+            android:layout_gravity="bottom|end"
+            style="@style/ActionButtonStyle"/>
 
     </FrameLayout>
 

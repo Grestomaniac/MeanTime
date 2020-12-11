@@ -13,6 +13,7 @@ import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.R
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.databinding.ActivityAlarmBinding
+import com.sillyapps.meantime.setDarkThemeIfNeeded
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -27,6 +28,7 @@ class AlarmActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setDarkThemeIfNeeded()
         viewModel.reload()
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_alarm)

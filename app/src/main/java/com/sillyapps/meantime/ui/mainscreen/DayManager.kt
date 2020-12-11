@@ -8,6 +8,7 @@ import com.sillyapps.meantime.data.State
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.data.repository.AppRepository
 import kotlinx.coroutines.*
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -57,6 +58,7 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     }
 
     fun start() {
+        Timber.d("Day started")
         when (thisDay!!.dayState) {
             State.WAITING -> startNewDay()
             State.DISABLED -> resumeDay()
@@ -64,9 +66,17 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
         }
     }
 
+    fun stopTask() {
+        when (thisDay!!.dayState) {
+            State.ACTIVE, State.DISABLED -> getNextTask(true)
+            else -> return
+        }
+    }
+
     fun pauseDay() {
         coroutineCounter?.cancel()
         thisDay!!.pause()
+        CoroutineScope(Dispatchers.IO).launch { repository.saveDay(thisDay) }
     }
 
     fun getNextTask(stop: Boolean = false) {
@@ -109,7 +119,10 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     }
 
     fun resetDay() {
-        thisDay!!.stopDayManually()
+        when (thisDay!!.dayState) {
+            State.ACTIVE, State.DISABLED -> thisDay!!.stopDayManually()
+            else -> return
+        }
     }
 
     private fun cancelTimers() {

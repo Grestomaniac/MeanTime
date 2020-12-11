@@ -12,8 +12,6 @@ import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.ui.SingleLiveEvent
 import com.sillyapps.meantime.ui.TimePickerViewModel
 import kotlinx.coroutines.launch
-import timber.log.Timber
-import java.util.concurrent.atomic.AtomicBoolean
 
 class MainViewModel @ViewModelInject constructor(private val dayManager: DayManager): ViewModel(), TimePickerViewModel {
 
@@ -75,6 +73,7 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
 
             _serviceRunning.value = dayManager.thisDay!!.isRunning
             tasks.value = dayManager.thisDay!!.tasks
+            _dayState.value = dayManager.thisDay!!.dayState
 
             dayManager.thisDay!!.addOnPropertyChangedCallback(dataUpdateCallback)
 
@@ -103,7 +102,7 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
     }
 
     fun stopButtonPressed() {
-        dayManager.getNextTask(true)
+        dayManager.stopTask()
     }
 
     fun createTemporalTask() {

@@ -17,11 +17,9 @@ import com.sillyapps.meantime.databinding.FragmentMainScreenBinding
 import com.sillyapps.meantime.services.DayService
 import com.sillyapps.meantime.ui.mainscreen.recyclerview.RunningTasksAdapter
 import com.sillyapps.meantime.ui.ItemClickListener
-import com.sillyapps.meantime.ui.ItemTouchHelperCallback
 import com.sillyapps.meantime.ui.mainscreen.recyclerview.SwipeToStartCallback
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_main_screen.*
-import timber.log.Timber
 
 @AndroidEntryPoint
 class MainScreenFragment: Fragment() {
@@ -32,10 +30,10 @@ class MainScreenFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (viewModel.serviceRunning.value!!) {
+        /*if (viewModel.serviceRunning.value!!) {
             val currentTaskGoalsId = viewModel.getCurrentTaskGoalsId()
             currentTaskGoalsId?.let { navigateToGoalFragment(it) }
-        }
+        }*/
     }
 
     override fun onCreateView(
