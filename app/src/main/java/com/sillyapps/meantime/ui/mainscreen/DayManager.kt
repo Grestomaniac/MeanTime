@@ -58,7 +58,6 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     }
 
     fun start() {
-        Timber.d("Day started")
         when (thisDay!!.dayState) {
             State.WAITING -> startNewDay()
             State.DISABLED -> resumeDay()
@@ -79,7 +78,7 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
         CoroutineScope(Dispatchers.IO).launch { repository.saveDay(thisDay) }
     }
 
-    fun getNextTask(stop: Boolean = false) {
+    private fun getNextTask(stop: Boolean = false) {
         thisDay!!.selectNextTask(stop)
         checkIfCurrentTaskGoalsIsEmpty()
     }
@@ -92,7 +91,7 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     }
 
     fun recalculateStartTimes(position: Int) {
-        thisDay!!.recalculateStartTimes(position)
+        thisDay!!.taskDropped(position)
     }
 
     suspend fun getTaskGoalsIdByName(taskName: String): Int {

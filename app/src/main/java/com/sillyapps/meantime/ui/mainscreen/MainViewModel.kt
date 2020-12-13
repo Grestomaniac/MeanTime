@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class MainViewModel @ViewModelInject constructor(private val dayManager: DayManager): ViewModel(), TimePickerViewModel {
 
-    val tasks: MutableLiveData<MutableList<Task>> = MutableLiveData(mutableListOf())
+    val uiTasks: MutableLiveData<MutableList<Task>> = MutableLiveData(mutableListOf())
 
     private val _uiTimeRemain: MutableLiveData<Long> = MutableLiveData(0)
     val uiTimeRemain: LiveData<Long> = _uiTimeRemain
@@ -23,8 +23,8 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
     private val _serviceRunning: MutableLiveData<Boolean> = MutableLiveData(false)
     val serviceRunning: LiveData<Boolean> = _serviceRunning
 
-    private val _dayState: MutableLiveData<State> = MutableLiveData()
-    val dayState: LiveData<State> = _dayState
+    private val _uiDayState: MutableLiveData<State> = MutableLiveData()
+    val uiDayState: LiveData<State> = _uiDayState
 
     private val _task: MutableLiveData<Task> = MutableLiveData()
     val task: LiveData<Task> = _task
@@ -33,6 +33,8 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
     val currentTaskStateChanged: SingleLiveEvent<Void> = SingleLiveEvent()
 
     val taskAdded: SingleLiveEvent<Void> = SingleLiveEvent()
+
+    val dayPaused: SingleLiveEvent<Void> = SingleLiveEvent()
 
     private val _appPermissionWarnings: MutableLiveData<AppPermissionWarnings> = MutableLiveData(
         AppPermissionWarnings()
@@ -52,11 +54,13 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
 
                 BR.isRunning -> _serviceRunning.value = dayManager.thisDay!!.isRunning
 
-                BR.dayState -> _dayState.value = dayManager.thisDay!!.dayState
+                BR.dayState -> _uiDayState.value = dayManager.thisDay!!.dayState
 
                 AppBR.currentTaskStateChanged -> currentTaskStateChanged.call()
 
                 AppBR.taskAdded -> taskAdded.call()
+
+                AppBR.dayPaused -> dayPaused.call()
 
                 AppBR.dayEnded -> loadDay(DayManager.RequestType.GET_NEXT)
             }
@@ -71,11 +75,13 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
         viewModelScope.launch {
             dayManager.loadCurrentDay(request)
 
-            _serviceRunning.value = dayManager.thisDay!!.isRunning
-            tasks.value = dayManager.thisDay!!.tasks
-            _dayState.value = dayManager.thisDay!!.dayState
-
-            dayManager.thisDay!!.addOnPropertyChangedCallback(dataUpdateCallback)
+            dayManager.thisDay?.apply {
+                _serviceRunning.value = isRunning
+                uiTasks.value = tasks
+                _uiDayState.value = dayState
+                _uiTimeRemain.value = timeRemain
+                addOnPropertyChangedCallback(dataUpdateCallback)
+            }
 
             _refreshing.value = false
         }
@@ -138,7 +144,7 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
 
     fun onTaskClicked(position: Int) {
         taskPosition = position
-        _task.value = tasks.value!![position]
+        _task.value = uiTasks.value!![position]
     }
 
     fun onTaskDialogClosed() {
@@ -147,6 +153,8 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
     }
 
     fun onTaskRevertChanges() {
+        if (_task.value!!.canNotBeSwappedOrDisabled()) return
+
         _task.value!!.revertChanges()
         recalculateStartTimes(taskPosition)
     }

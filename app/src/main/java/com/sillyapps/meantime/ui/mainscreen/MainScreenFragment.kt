@@ -17,6 +17,7 @@ import com.sillyapps.meantime.databinding.FragmentMainScreenBinding
 import com.sillyapps.meantime.services.DayService
 import com.sillyapps.meantime.ui.mainscreen.recyclerview.RunningTasksAdapter
 import com.sillyapps.meantime.ui.ItemClickListener
+import com.sillyapps.meantime.ui.mainscreen.recyclerview.DayItemTouchHelperCallback
 import com.sillyapps.meantime.ui.mainscreen.recyclerview.SwipeToStartCallback
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_main_screen.*
@@ -104,11 +105,12 @@ class MainScreenFragment: Fragment() {
         val touchHelper = ItemTouchHelper(itemTouchHelperCallback)
         touchHelper.attachToRecyclerView(viewDataBinding.runningTasks)
 
-        viewModel.tasks.observe(viewLifecycleOwner, {
+        viewModel.uiTasks.observe(viewLifecycleOwner, {
             adapter.submitList(it)
         })
 
         viewModel.currentTaskStateChanged.observe(viewLifecycleOwner) {
+
             adapter.notifyItemChanged(viewModel.getCurrentTaskPosition())
         }
 

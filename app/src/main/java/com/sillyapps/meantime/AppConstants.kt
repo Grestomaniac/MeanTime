@@ -24,8 +24,9 @@ object AppBR {
     const val taskFinishedNaturally = 1001
     const val dayEnded = 1002
     const val currentTaskStateChanged = 1003
-    const val dayPausedOrUnPaused = 1004
-    const val taskAdded = 1005
+    const val dayPaused = 1004
+    const val dayResumed = 1005
+    const val taskAdded = 1006
 }
 
 object PreferencesKeys {

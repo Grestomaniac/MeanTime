@@ -1,4 +1,4 @@
-package com.sillyapps.meantime.ui.mainscreen
+package com.sillyapps.meantime.ui.mainscreen.recyclerview
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView

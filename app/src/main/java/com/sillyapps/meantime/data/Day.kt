@@ -2,10 +2,8 @@ package com.sillyapps.meantime.data
 
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
-import com.sillyapps.meantime.AppBR
-import com.sillyapps.meantime.AppConstants
-import com.sillyapps.meantime.BR
-import com.sillyapps.meantime.getLocalCurrentTimeMillis
+import com.sillyapps.meantime.*
+import timber.log.Timber
 import java.util.*
 
 class Day(val tasks: MutableList<Task> = mutableListOf(),
@@ -43,6 +41,9 @@ class Day(val tasks: MutableList<Task> = mutableListOf(),
             notifyPropertyChanged(BR.isRunning)
         }
 
+    var timePaused = 0L
+    var isCurrentTaskReplacedWhilePaused: Boolean = false
+
     var currentTask: Task = Task()
 
     var completedTaskPos: Int = -1
@@ -66,12 +67,13 @@ class Day(val tasks: MutableList<Task> = mutableListOf(),
         else {
             currentTask.start()
             notifyPropertyChanged(AppBR.currentTaskStateChanged)
-            recalculateStartTimes(currentTaskPos+1)
+            updateStartTimes(currentTaskPos+1)
         }
     }
 
     fun selectNextTask(stop: Boolean = false) {
         completeCurrentTask(stop)
+        timePaused = 0L
 
         if (atLastTask()) {
             endDay()
@@ -80,6 +82,19 @@ class Day(val tasks: MutableList<Task> = mutableListOf(),
 
         currentTaskPos++
         startCurrentTask()
+    }
+
+    private fun completeCurrentTask(stop: Boolean) {
+        if (stop) {
+            currentTask.stop()
+            updateStartTimes(currentTaskPos+1)
+        }
+        else {
+            currentTask.complete()
+            completedTaskPos = currentTaskPos
+            notifyPropertyChanged(AppBR.taskFinishedNaturally)
+        }
+        notifyPropertyChanged(AppBR.currentTaskStateChanged)
     }
 
     private fun endDay() {
@@ -104,14 +119,29 @@ class Day(val tasks: MutableList<Task> = mutableListOf(),
 
     fun pause() {
         dayState = State.DISABLED
-        notifyPropertyChanged(AppBR.dayPausedOrUnPaused)
+        currentTask.pause()
+
+        notifyPropertyChanged(AppBR.dayPaused)
+        notifyPropertyChanged(AppBR.currentTaskStateChanged)
     }
 
     fun resume() {
-        Task.lastSystemTime = System.currentTimeMillis()
         dayState = State.ACTIVE
-        val timePaused = System.currentTimeMillis() - Task.lastSystemTime
-        currentTask.addPausedOffset(timePaused)
+        timePaused += (System.currentTimeMillis() - Task.lastSystemTime)
+
+        if (currentTask.state == State.DISABLED) {
+            selectNextTask(true)
+            return
+        }
+        resumeCurrentTask()
+
+        recalculateStartTimes(currentTaskPos)
+    }
+
+    private fun resumeCurrentTask() {
+        currentTask = tasks[currentTaskPos]
+        currentTask.resume()
+        notifyPropertyChanged(AppBR.currentTaskStateChanged)
     }
 
     fun getCompletedTask(offset: Int = 0): Task {
@@ -124,45 +154,39 @@ class Day(val tasks: MutableList<Task> = mutableListOf(),
 
     private fun resetTasks() {
         tasks[0].startTime = dayStartTime
-        for (i in 1 until tasks.size) {
-            tasks[i].startTime = tasks[i-1].getNextStartTime()
-        }
+        updateStartTimes(1)
     }
 
-    private fun completeCurrentTask(stop: Boolean) {
-        if (stop) {
-            currentTask.stop()
-            updateTasks(currentTaskPos)
+    private fun recalculateStartTimes(position: Int) {
+        if (position == 0) {
+            tasks[position].startTime = getLocalCurrentTimeMillis()
+            updateStartTimes(position+1)
+            return
         }
-        else {
-            currentTask.complete()
-            completedTaskPos = currentTaskPos
-            notifyPropertyChanged(AppBR.taskFinishedNaturally)
+        else if (position == currentTaskPos) {
+            tasks[position].startTime = getLocalCurrentTimeMillis()
+            updateStartTimes(position+1)
+            return
         }
-        notifyPropertyChanged(AppBR.currentTaskStateChanged)
+        updateStartTimes(position)
     }
 
-    private fun updateTasks(from: Int) {
-        for (i in from+1 until tasks.size) {
-            tasks[i].startTime = tasks[i-1].getNextStartTime()
-        }
-    }
-
-    fun recalculateStartTimes(position: Int) {
-        var pos = position
-        if (pos == 0) {
-            tasks[pos].resetStartTime()
-            pos++
-        }
-        for (i in pos until tasks.size) {
+    private fun updateStartTimes(position: Int) {
+        for (i in position until tasks.size) {
             tasks[i].resetStartTime(tasks[i-1].getNextStartTime())
         }
+    }
+
+    fun taskDropped(position: Int) {
+        if (position == currentTaskPos) {
+            isCurrentTaskReplacedWhilePaused = true
+        }
+        recalculateStartTimes(position)
     }
 
     fun notifyTaskDisabled(position: Int) {
         tasks[position].disable()
         recalculateStartTimes(position)
-        notifyChange()
     }
 
     fun notifyTasksSwapped(upperPosition: Int, bottomPosition: Int) {

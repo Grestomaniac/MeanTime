@@ -83,16 +83,12 @@ class Task(
             notifyPropertyChanged(BR.muffled)
         }
 
-    var stateBit: Byte = 0b00000001
-
     @Bindable
     var progress: Long = 0L
         set(value) {
             field = value
             notifyPropertyChanged(BR.progress)
         }
-
-    var timePaused: Long = 0L
 
     fun resetStartTime(time: Long = 0L) {
         startTime = time
@@ -103,12 +99,8 @@ class Task(
             AppConstants.UNCERTAIN
         }
         else {
-            startTime + editableDuration
+            startTime + editableDuration - progress
         }
-    }
-
-    fun addPausedOffset(pausedTime: Long) {
-        timePaused = pausedTime
     }
 
     fun continueTask(): Long {
@@ -125,9 +117,18 @@ class Task(
         startTime = getLocalCurrentTimeMillis()
     }
 
+    fun pause() {
+        state = State.WAITING
+        lastSystemTime = System.currentTimeMillis()
+    }
+
+    fun resume() {
+        state = State.ACTIVE
+        lastSystemTime = System.currentTimeMillis()
+    }
+
     fun disable() {
         when (state) {
-            State.COMPLETED, State.ACTIVE -> return
             State.DISABLED -> {
                 editableDuration = duration
                 state = State.WAITING
@@ -136,6 +137,7 @@ class Task(
                 editableDuration = 0L
                 state = State.DISABLED
             }
+            else -> return
         }
     }
 

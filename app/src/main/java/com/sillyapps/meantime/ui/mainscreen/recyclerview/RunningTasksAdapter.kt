@@ -45,7 +45,6 @@ class RunningTasksAdapter(private val clickListener: ItemClickListener, private 
 
     override fun onItemDropped(toPosition: Int) {
         viewModel.recalculateStartTimes(toPosition)
-        notifyItemRangeChanged(toPosition, itemCount-toPosition)
     }
 
     override fun onItemSwiped(position: Int, direction: Int) {
@@ -58,7 +57,7 @@ class RunningTasksAdapter(private val clickListener: ItemClickListener, private 
             return
         }
         viewModel.notifyTaskDisabled(position)
-        notifyItemRangeChanged(position, itemCount-position)
+        notifyItemChanged(position)
     }
 
     class ViewHolder private constructor(private val binding: ItemMainScreenTaskBinding): RecyclerView.ViewHolder(binding.root) {

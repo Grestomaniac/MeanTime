@@ -114,7 +114,7 @@
                 android:onClick="@{() -> viewmodel.startButtonPressed()}"
                 android:src="@drawable/ic_play"
 
-                app:isInteractive="@{viewmodel.dayState != State.ACTIVE}"
+                app:isInteractive="@{viewmodel.uiDayState != State.ACTIVE}"
                 app:layout_constraintBottom_toBottomOf="@+id/addTemporalTaskButton"
 
                 app:layout_constraintEnd_toEndOf="@+id/button_pause"
@@ -134,7 +134,7 @@
                 android:src="@drawable/ic_pause"
                 android:tint="@color/secondaryTextColor"
 
-                app:isInteractive="@{viewmodel.dayState == State.ACTIVE}"
+                app:isInteractive="@{viewmodel.uiDayState == State.ACTIVE}"
 
                 app:layout_constraintBottom_toBottomOf="@+id/addTemporalTaskButton"
                 app:layout_constraintEnd_toStartOf="@+id/addTemporalTaskButton"

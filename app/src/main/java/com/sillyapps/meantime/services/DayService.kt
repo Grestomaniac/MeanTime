@@ -48,6 +48,10 @@ class DayService: Service() {
                 AppBR.taskFinishedNaturally -> turnOnAlarm()
 
                 BR.dayState -> handleStateChange()
+
+                BR.isRunning -> {
+                    stopService()
+                }
             }
         }
     }
@@ -78,7 +82,6 @@ class DayService: Service() {
                 }
 
                 ACTION_RESUME -> {
-                    Timber.d("Day resuming")
                     dayManager.start()
                     resumeService()
                 }
@@ -149,7 +152,7 @@ class DayService: Service() {
             .addAction(R.drawable.ic_pause, getString(R.string.pause), pauseIntent)
             .addAction(R.drawable.ic_stop_black_24dp, getString(R.string.stop), stopIntent)
 
-        /*pausedNotificationBuilder = NotificationCompat.Builder(this, AppConstants.SERVICE_MAIN_NOTIFICATION_CHANNEL)
+        pausedNotificationBuilder = NotificationCompat.Builder(this, AppConstants.SERVICE_MAIN_NOTIFICATION_CHANNEL)
             .setContentTitle(currentDay.currentTask.name)
             .setContentText(timeRemain)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -158,7 +161,7 @@ class DayService: Service() {
             .setAutoCancel(false)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
-            .addAction(R.drawable.ic_play, getString(R.string.start), resumeIntent)*/
+            .addAction(R.drawable.ic_play, getString(R.string.start), resumeIntent)
     }
 
     private fun updateTimer() {
@@ -171,9 +174,7 @@ class DayService: Service() {
     }
 
     private fun handleStateChange() {
-        Timber.d("State changed to ${dayManager.thisDay!!.dayState}")
         when (dayManager.thisDay!!.dayState) {
-            State.COMPLETED -> stopService()
             State.DISABLED -> pauseService()
             State.ACTIVE -> resumeService()
             else -> return
@@ -181,8 +182,6 @@ class DayService: Service() {
     }
 
     private fun stopService() {
-        Timber.d("Service stopped")
-        stopForeground(true)
         stopSelf()
     }
 
@@ -212,7 +211,5 @@ class DayService: Service() {
     override fun onDestroy() {
         super.onDestroy()
         unregisterScreenOnOffReceiver()
-        stopForeground(true)
-        Timber.d("Service destroyed")
     }
 }
