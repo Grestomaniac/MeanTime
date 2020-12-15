@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -18,7 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, NavController.OnDestinationChangedListener {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navView: NavigationView
@@ -33,6 +35,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val navController = findNavController(R.id.nav_host_fragment)
         NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
         navView = binding.navView
+        navView.setNavigationItemSelectedListener(this)
+        navController.addOnDestinationChangedListener(this)
 
         appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
     }
@@ -43,6 +47,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        if (navView.checkedItem == item) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+            return false
+        }
         when (item.itemId) {
             R.id.nightModeSwitcher -> {
                 val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
@@ -53,25 +61,32 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 else
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-
+                drawerLayout.closeDrawer(GravityCompat.START)
                 return false
             }
 
             R.id.mainScreenFragment -> {
                 findNavController(R.id.nav_host_fragment).navigate(R.id.mainScreenFragment)
-                return true
             }
 
             R.id.explorerFragment -> {
                 findNavController(R.id.nav_host_fragment).navigate(R.id.explorerFragment)
-                return true
             }
 
             R.id.schemeFragment -> {
                 findNavController(R.id.nav_host_fragment).navigate(R.id.schemeFragment)
-                return true
             }
         }
-        return false
+
+        drawerLayout.closeDrawer(GravityCompat.START)
+        return true
+    }
+
+    override fun onDestinationChanged(
+        controller: NavController,
+        destination: NavDestination,
+        arguments: Bundle?
+    ) {
+        navView.setCheckedItem(destination.id)
     }
 }

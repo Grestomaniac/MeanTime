@@ -2,22 +2,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/mainScreenFragment"
-        android:title="@string/main_screen"
-        android:icon="@drawable/ic_android"
-        />
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/mainScreenFragment"
+            android:title="@string/main_screen"
+            android:icon="@drawable/ic_android"
+            />
 
-    <item android:id="@+id/explorerFragment"
-        android:title="@string/template_editor"
-        android:icon="@drawable/ic_android"/>
+        <item android:id="@+id/explorerFragment"
+            android:title="@string/template_editor"
+            android:icon="@drawable/ic_android"/>
 
-    <item android:id="@+id/schemeFragment"
-        android:title="@string/schema"
-        android:icon="@drawable/ic_android"/>
+        <item android:id="@+id/schemeFragment"
+            android:title="@string/schema"
+            android:icon="@drawable/ic_android"/>
 
-    <item android:id="@+id/nightModeSwitcher"
-        android:title="@string/night_mode"
-        android:icon="@drawable/ic_night"/>
+        <item android:id="@+id/nightModeSwitcher"
+            android:title="@string/night_mode"
+            android:icon="@drawable/ic_night"/>
+    </group>
 
 </menu>
