@@ -59,7 +59,10 @@
                 app:reverseLayout="true"
 
                 app:stackFromEnd="true"
-                tools:listitem="@layout/item_goal" />
+                tools:listitem="@layout/item_goal"
+
+                android:paddingBottom="8dp"
+                android:clipToPadding="false"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/completedGoals"

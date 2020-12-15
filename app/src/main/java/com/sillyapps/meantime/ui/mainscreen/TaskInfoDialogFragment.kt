@@ -19,7 +19,7 @@ class TaskInfoDialogFragment: DialogFragment() {
 
     private lateinit var binding: DialogTaskInfoBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DialogTaskInfoBinding.inflate(inflater, container, false)
         binding.task = viewModel.task.value
 
