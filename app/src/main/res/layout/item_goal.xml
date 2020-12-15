@@ -7,25 +7,16 @@
         <variable
             name="goal"
             type="com.sillyapps.meantime.data.Goal" />
-
-        <variable
-            name="clickListener"
-            type="com.sillyapps.meantime.ui.ItemClickListener"/>
-
-        <variable
-            name="adapterPosition"
-            type="Integer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:layout_marginTop="16dp"
-        android:onClick="@{() -> clickListener.onClickItem(adapterPosition)}"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="8dp"
         android:padding="4dp"
 
-        android:background="@drawable/item_waiting">
+        app:isDefault="@{goal.goalIsDefault}">
 
         <TextView
             android:id="@+id/goalNameLabel"
@@ -40,7 +31,7 @@
             app:layout_constraintTop_toTopOf="parent"
 
             android:textStyle="bold"
-            android:maxLines="2"
+            android:lines="2"
             tools:text="Goal 1" />
 
         <TextView

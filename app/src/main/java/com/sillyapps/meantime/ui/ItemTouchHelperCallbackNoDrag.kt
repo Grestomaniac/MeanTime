@@ -12,7 +12,7 @@ class ItemTouchHelperCallbackNoDrag(private val mAdapter: ItemTouchHelperAdapter
         viewHolder: RecyclerView.ViewHolder
     ): Int {
         val dragFlags = 0
-        val swipeFlags = ItemTouchHelper.END
+        val swipeFlags = ItemTouchHelper.END or ItemTouchHelper.START
 
         return makeMovementFlags(dragFlags, swipeFlags)
     }
@@ -26,7 +26,7 @@ class ItemTouchHelperCallbackNoDrag(private val mAdapter: ItemTouchHelperAdapter
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        mAdapter.onItemDismiss(viewHolder.adapterPosition)
+        mAdapter.onItemDismiss(viewHolder.adapterPosition, direction)
     }
 
     override fun isItemViewSwipeEnabled(): Boolean {
@@ -59,6 +59,6 @@ class ItemTouchHelperCallbackNoDrag(private val mAdapter: ItemTouchHelperAdapter
 
 interface ItemTouchHelperAdapterNoDrag {
 
-    fun onItemDismiss(position: Int)
+    fun onItemDismiss(position: Int, direction: Int)
 
 }

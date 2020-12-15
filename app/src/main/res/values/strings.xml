@@ -83,5 +83,7 @@
     <string name="night_mode">Night mode</string>
     <string name="pause">Pause</string>
     <string name="start">Start</string>
+    <string name="goals">Goals:</string>
+    <string name="based_on_name">Based on name</string>
 
 </resources>

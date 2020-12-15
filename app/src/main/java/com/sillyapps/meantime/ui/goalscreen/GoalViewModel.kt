@@ -29,10 +29,12 @@ class GoalViewModel @ViewModelInject constructor(private val repository: AppRepo
     private var goalPos = AppConstants.NOT_ASSIGNED
 
     val newGoalAdded: SingleLiveEvent<Void> = SingleLiveEvent()
+    val viewModelLoaded: SingleLiveEvent<Void> = SingleLiveEvent()
 
     fun load(taskGoalId: Int) {
         viewModelScope.launch {
             taskGoals.value = repository.getTaskGoals(taskGoalId)
+            viewModelLoaded.call()
         }
     }
 
@@ -40,12 +42,14 @@ class GoalViewModel @ViewModelInject constructor(private val repository: AppRepo
         _tabSelected.value = tabPosition
     }
 
-    fun notifyActiveGoalSwapped(fromPosition: Int, toPosition: Int) {
-        Collections.swap(activeGoals.value!!, fromPosition, toPosition)
-        goalsChanged()
+    fun getDefaultGoalPosition(): Int {
+        return taskGoals.value!!.defaultGoalPos
     }
 
     fun notifyActiveGoalRemoved(position: Int) {
+        if (position == taskGoals.value!!.defaultGoalPos) {
+            taskGoals.value!!.unselectDefaultGoal()
+        }
         completedGoals.value!!.add(activeGoals.value!![position])
         activeGoals.value!!.removeAt(position)
         goalsChanged()
@@ -69,14 +73,24 @@ class GoalViewModel @ViewModelInject constructor(private val repository: AppRepo
         goalsChanged()
     }
 
-    fun editGoal(position: Int) {
+    fun notifyTaskSelected(position: Int) {
+        taskGoals.value!!.selectDefaultGoal(position)
+        goalsChanged()
+    }
+
+    fun createNewGoal() {
+        goalPos = AppConstants.NOT_ASSIGNED
+        goal.value = Goal()
+    }
+
+    fun editActiveGoal(position: Int) {
         goalPos = position
-        if (goalPos == AppConstants.NOT_ASSIGNED) {
-            goal.value = Goal()
-        }
-        else {
-            goal.value = activeGoals.value!![position].copy()
-        }
+        goal.value = activeGoals.value!![position].copy()
+    }
+
+    fun editCompletedGoal(position: Int) {
+        goalPos = activeGoals.value!!.size + position
+        goal.value = completedGoals.value!![position].copy()
     }
 
     fun saveGoal() {
@@ -85,8 +99,11 @@ class GoalViewModel @ViewModelInject constructor(private val repository: AppRepo
             activeGoals.value!!.add(goal.value!!)
             newGoalAdded.call()
         }
-        else {
+        else if (goalPos < activeGoals.value!!.size) {
             activeGoals.value!![goalPos].fillWith(goal.value!!)
+        }
+        else {
+            completedGoals.value!![activeGoals.value!!.size-goalPos]
         }
     }
 

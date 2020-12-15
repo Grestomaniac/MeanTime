@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="viewModel"
-            type="com.sillyapps.meantime.ui.edittemplatescreen.EditTemplateViewModel"/>
+            name="task"
+            type="com.sillyapps.meantime.data.Task"/>
     </data>
 
     <FrameLayout
@@ -21,9 +21,8 @@
 
             <TextView
                 android:id="@+id/enter_name"
-                style="@style/AppTheme"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
 
                 android:layout_marginEnd="8dp"
@@ -33,78 +32,54 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/name" />
 
-            <EditText
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/name"
-                style="@style/AppTheme"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@={viewModel.task.name}"
-
                 android:layout_marginEnd="16dp"
+
                 android:inputType="text"
+                android:text="@={task.name}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/enter_name"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/enter_duration"
-                style="@style/AppTheme"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="8dp"
-                android:text="@string/enter_duration"
-                app:layout_constraintBottom_toBottomOf="@+id/duration"
-                app:layout_constraintEnd_toStartOf="@+id/duration"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/duration" />
-
-            <TextView
-                android:id="@+id/duration"
-                style="@style/AppTheme"
-
+            <com.sillyapps.meantime.ui.TimePicker
+                android:id="@+id/timePickerLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/enter_duration"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/name"
-
-                app:timeWithSeconds="@{viewModel.task.duration}"
-                tools:text="00:00:00"/>
+                app:task="@{task}" />
 
             <TextView
                 android:id="@+id/enter_melody"
-                style="@style/AppTheme"
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="8dp"
                 android:text="@string/melody"
                 app:layout_constraintBottom_toBottomOf="@+id/melody"
-                app:layout_constraintEnd_toStartOf="@+id/melody"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/melody" />
 
             <TextView
                 android:id="@+id/melody"
-                style="@style/AppTheme"
 
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/enter_melody"
                 app:layout_constraintTop_toBottomOf="@+id/melody_on"
 
-                app:soundText="@{viewModel.task.sound}"
+                app:soundText="@{task.sound}"
                 tools:text="Dean Town" />
 
             <androidx.appcompat.widget.SwitchCompat
@@ -115,12 +90,11 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="@string/vibration_on"
-                android:checked="@={viewModel.task.vibrationOn}"
+                android:checked="@={task.vibrationOn}"
 
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/duration" />
+                app:layout_constraintTop_toBottomOf="@+id/timePickerLayout" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/melody_on"
@@ -130,12 +104,30 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="@string/melody_on"
-                android:checked="@={viewModel.task.soundOn}"
+                android:checked="@={task.soundOn}"
 
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/vibration_on" />
+
+            <TextView
+                android:id="@+id/taskGoalText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/goals"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/enter_melody" />
+
+            <TextView
+                android:id="@+id/taskGoal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:text="@string/based_on_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/taskGoalText"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

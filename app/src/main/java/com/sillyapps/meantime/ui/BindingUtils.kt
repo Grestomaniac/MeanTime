@@ -101,10 +101,10 @@ fun ConstraintLayout.setInteractive(isInteractive: Boolean) {
 
 @BindingAdapter("isActive")
 fun View.setActive(isActive: Boolean) {
-    if (isActive)
-        foregroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.colorNotActive))
+    foregroundTintList = if (isActive)
+        ColorStateList.valueOf(ContextCompat.getColor(context, R.color.colorNotActive))
     else {
-        foregroundTintList = null
+        null
     }
 }
 

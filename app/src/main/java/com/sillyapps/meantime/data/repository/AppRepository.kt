@@ -126,6 +126,10 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
         appPrefDao.setCurrentDay(day)
     }
 
+    fun observeAllTaskGoals(): LiveData<List<TaskGoals>> {
+        return taskGoalsDao.observeAllTaskGoals()
+    }
+
     suspend fun getTaskGoals(taskGoalsId: Int): TaskGoals? {
         return taskGoalsDao.getTaskGoals(taskGoalsId)
     }

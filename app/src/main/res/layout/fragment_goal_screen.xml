@@ -48,18 +48,18 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
 
+                android:visibility="@{viewModel.tabSelected == 0 ? View.VISIBLE : View.GONE}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-
                 app:layout_constraintStart_toStartOf="parent"
+
                 app:layout_constraintTop_toBottomOf="@+id/goalsTabLayout"
                 app:reverseLayout="true"
 
                 app:stackFromEnd="true"
-                tools:listitem="@layout/item_goal"
-
-                android:visibility="@{viewModel.tabSelected == 0 ? View.VISIBLE : View.GONE}"/>
+                tools:listitem="@layout/item_goal" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/completedGoals"

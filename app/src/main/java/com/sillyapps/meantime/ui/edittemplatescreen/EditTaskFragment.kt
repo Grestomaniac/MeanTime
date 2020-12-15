@@ -5,20 +5,20 @@ import android.content.Intent
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.sillyapps.meantime.R
+import com.sillyapps.meantime.convertToMillis
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.databinding.FragmentEditTaskBinding
 import com.sillyapps.meantime.ui.TimePickerFragment
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class EditTaskFragment : DialogFragment() {
@@ -29,32 +29,36 @@ class EditTaskFragment : DialogFragment() {
         defaultViewModelProviderFactory
     }
 
-    private lateinit var viewDataBinding: FragmentEditTaskBinding
+    private lateinit var binding: FragmentEditTaskBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        viewDataBinding = FragmentEditTaskBinding.inflate(inflater, container, false)
-        viewDataBinding.viewModel = viewModel
+    ): View {
+        binding = FragmentEditTaskBinding.inflate(inflater, container, false)
+        binding.task = viewModel.task.value
 
-        return viewDataBinding.root
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        binding.lifecycleOwner = this.viewLifecycleOwner
 
-        viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
-        viewDataBinding.duration.setOnClickListener { showTimePickerDialog() }
-        viewDataBinding.melody.setOnClickListener { showRingtonePicker() }
-        viewDataBinding.okFab.setOnClickListener { validateData() }
-    }
+        val nameAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_dropdown_item_1line)
+        binding.name.setAdapter(nameAdapter)
 
-    private fun showTimePickerDialog() {
-        TimePickerFragment(viewModel).show(parentFragmentManager, "Pick time")
+        binding.melody.setOnClickListener { showRingtonePicker() }
+        binding.okFab.setOnClickListener { validateData() }
+
+        viewModel.goalTasksNames.observe(viewLifecycleOwner) {
+            nameAdapter.addAll(it)
+        }
     }
 
     private fun validateData() {
+        viewModel.setTaskDuration(binding.timePickerLayout.getDuration())
+
         when(viewModel.isTaskDataValid()) {
             Task.WhatIsWrong.NOTHING -> saveTask()
             Task.WhatIsWrong.NAME -> showInfoToUser(R.string.name_is_empty)

@@ -25,7 +25,7 @@ class RunningTasksAdapter(private val clickListener: ItemClickListener, private 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item, position, clickListener)
+        holder.bind(item, clickListener)
     }
 
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
@@ -63,11 +63,9 @@ class RunningTasksAdapter(private val clickListener: ItemClickListener, private 
     class ViewHolder private constructor(private val binding: ItemMainScreenTaskBinding): RecyclerView.ViewHolder(binding.root) {
         var notDraggable: Boolean = false
 
-        fun bind(item: Task, position: Int, clickListener: ItemClickListener) {
+        fun bind(item: Task, clickListener: ItemClickListener) {
             binding.task = item
-            binding.taskAdapterPosition = position
-            binding.clickListener = clickListener
-
+            binding.root.setOnClickListener { clickListener.onClickItem(adapterPosition) }
             notDraggable = item.canNotBeSwappedOrDisabled()
         }
 

@@ -21,7 +21,7 @@ class TemplateEditorAdapter(private val viewModel: EditTemplateViewModel, privat
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item, position, onClickListener)
+        holder.bind(item, onClickListener)
     }
 
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
@@ -49,10 +49,9 @@ class TemplateEditorAdapter(private val viewModel: EditTemplateViewModel, privat
 
     class ViewHolder private constructor(private val binding: ItemEditorTaskBinding): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Task, position: Int, onClickListener: ItemClickListener) {
+        fun bind(item: Task, onClickListener: ItemClickListener) {
             binding.task = item
-            binding.taskAdapterPosition = position
-            binding.onCLickListener = onClickListener
+            binding.root.setOnClickListener { onClickListener.onClickItem(adapterPosition) }
         }
 
         companion object {

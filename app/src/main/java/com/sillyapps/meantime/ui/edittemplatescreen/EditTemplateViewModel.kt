@@ -7,6 +7,7 @@ import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.R
 import com.sillyapps.meantime.convertToMillis
 import com.sillyapps.meantime.data.Task
+import com.sillyapps.meantime.data.TaskGoals
 import com.sillyapps.meantime.data.Template
 import com.sillyapps.meantime.data.repository.AppRepository
 import com.sillyapps.meantime.ui.Result
@@ -21,6 +22,9 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
     var templateId = savedStateHandle.get<Int>("templateId")!!
     val templateName: MutableLiveData<String> = MutableLiveData("")
     val tasks: MutableLiveData<MutableList<Task>> = MutableLiveData(mutableListOf())
+
+    private val goalTasks: LiveData<List<TaskGoals>> = repository.observeAllTaskGoals()
+    val goalTasksNames: LiveData<List<String>> = goalTasks.map { it.map { goal -> goal.name } }
 
     val task: MutableLiveData<Task> = MutableLiveData()
 

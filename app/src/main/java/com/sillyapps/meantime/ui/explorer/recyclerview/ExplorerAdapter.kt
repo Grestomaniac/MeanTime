@@ -20,22 +20,21 @@ class ExplorerAdapter(private val viewModel: TemplateExplorerViewModel, private 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item, position, clickListener)
+        holder.bind(item, clickListener)
     }
 
-    override fun onItemDismiss(position: Int) {
+    override fun onItemDismiss(position: Int, direction: Int) {
         viewModel.deleteTemplate(position)
         notifyItemRemoved(position)
     }
 
     class ViewHolder private constructor(private val binding: ItemTemplateBinding): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Template, position: Int, clickListener: ItemClickListener) {
+        fun bind(item: Template, clickListener: ItemClickListener) {
             binding.let {
                 it.template = item
-                it.clickListener = clickListener
-                it.position = position
-                it.itemTemplate.setOnLongClickListener { clickListener.onLongClick(position) }
+                it.root.setOnClickListener { clickListener.onClickItem(adapterPosition) }
+                it.root.setOnLongClickListener { clickListener.onLongClick(adapterPosition) }
             }
         }
 

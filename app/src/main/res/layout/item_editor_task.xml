@@ -8,19 +8,11 @@
             name="task"
             type="com.sillyapps.meantime.data.Task"/>
 
-        <variable
-            name="onCLickListener"
-            type="com.sillyapps.meantime.ui.ItemClickListener" />
-
-        <variable
-            name="taskAdapterPosition"
-            type="Integer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> onCLickListener.onClickItem(taskAdapterPosition)}"
         android:id="@+id/item_task"
         android:background="@drawable/item_waiting"
         android:layout_marginTop="@dimen/normal_margin">

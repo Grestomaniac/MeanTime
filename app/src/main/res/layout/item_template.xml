@@ -7,14 +7,6 @@
         <variable
             name="template"
             type="com.sillyapps.meantime.data.Template"/>
-
-        <variable
-            name="clickListener"
-            type="com.sillyapps.meantime.ui.ItemClickListener" />
-
-        <variable
-            name="position"
-            type="Integer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,9 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:id="@+id/item_template"
-        app:isDefault="@{template.chosenAsDefault}"
-
-        android:onClick="@{() -> clickListener.onClickItem(position)}">
+        app:isDefault="@{template.chosenAsDefault}">
 
         <TextView
             android:id="@+id/enter_name"

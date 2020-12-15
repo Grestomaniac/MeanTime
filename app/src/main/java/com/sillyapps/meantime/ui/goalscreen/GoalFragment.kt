@@ -12,8 +12,10 @@ import com.google.android.material.tabs.TabLayout
 import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.databinding.FragmentGoalScreenBinding
 import com.sillyapps.meantime.ui.ItemClickListener
-import com.sillyapps.meantime.ui.ItemTouchHelperCallback
+import com.sillyapps.meantime.ui.ItemTouchHelperCallbackNoDrag
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
+import java.text.FieldPosition
 
 @AndroidEntryPoint
 class GoalFragment: Fragment() {
@@ -23,6 +25,8 @@ class GoalFragment: Fragment() {
     private lateinit var binding: FragmentGoalScreenBinding
 
     private val args: GoalFragmentArgs by navArgs()
+
+    private lateinit var smoothScroller: CenterSmoothScroller
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,16 +50,21 @@ class GoalFragment: Fragment() {
 
         setupTabLayout()
 
-        binding.addGoalFab.setOnClickListener { showGoalDialog() }
+        binding.addGoalFab.setOnClickListener {
+            viewModel.createNewGoal()
+            showGoalDialog()
+        }
     }
 
     private fun setupActiveGoals() {
         val clickListener = object : ItemClickListener {
             override fun onClickItem(index: Int) {
-                showGoalDialog(index)
+                viewModel.editActiveGoal(index)
+                showGoalDialog()
             }
 
             override fun onLongClick(index: Int): Boolean {
+                viewModel.notifyTaskSelected(index)
                 return true
             }
         }
@@ -66,25 +75,35 @@ class GoalFragment: Fragment() {
             }
 
             override fun onItemMoved(fromPosition: Int, toPosition: Int) {
-                viewModel.notifyActiveGoalSwapped(fromPosition, toPosition)
+
             }
         }
 
         val adapter = GoalsAdapter(clickListener, callbacks)
         binding.goals.adapter = adapter
 
-        val itemTouchHelperCallback = ItemTouchHelperCallback(adapter)
+        val itemTouchHelperCallback = ItemTouchHelperCallbackNoDrag(adapter)
         val touchHelper = ItemTouchHelper(itemTouchHelperCallback)
         touchHelper.attachToRecyclerView(binding.goals)
+        smoothScroller = CenterSmoothScroller(binding.goals.context)
 
         viewModel.activeGoals.observe(viewLifecycleOwner, {
             adapter.submitList(it)
+            Timber.d("activegoals loaded")
         })
 
         viewModel.newGoalAdded.observe(viewLifecycleOwner) {
             adapter.notifyItemInserted(adapter.itemCount)
             binding.goalsTabLayout.apply {
                 selectTab(getTabAt(0))
+                scrollToPosition(adapter.itemCount-1)
+            }
+        }
+
+        viewModel.viewModelLoaded.observe(viewLifecycleOwner) {
+            val defaultGoalPosition = viewModel.getDefaultGoalPosition()
+            if (defaultGoalPosition != AppConstants.NOT_ASSIGNED) {
+                scrollToPosition(defaultGoalPosition)
             }
         }
     }
@@ -92,7 +111,8 @@ class GoalFragment: Fragment() {
     private fun setupCompletedGoals() {
         val clickListener = object : ItemClickListener {
             override fun onClickItem(index: Int) {
-
+                viewModel.editCompletedGoal(index)
+                showGoalDialog()
             }
 
             override fun onLongClick(index: Int): Boolean {
@@ -118,7 +138,7 @@ class GoalFragment: Fragment() {
         val adapter = GoalsAdapter(clickListener, callbacks)
         binding.completedGoals.adapter = adapter
 
-        val itemTouchHelperCallback = ItemTouchHelperCallback(adapter)
+        val itemTouchHelperCallback = ItemTouchHelperCallbackNoDrag(adapter)
         val touchHelper = ItemTouchHelper(itemTouchHelperCallback)
         touchHelper.attachToRecyclerView(binding.completedGoals)
 
@@ -152,8 +172,12 @@ class GoalFragment: Fragment() {
         })
     }
 
-    private fun showGoalDialog(goalPosition: Int = AppConstants.NOT_ASSIGNED) {
-        viewModel.editGoal(goalPosition)
+    private fun scrollToPosition(position: Int) {
+        smoothScroller.targetPosition = position
+        binding.goals.layoutManager?.startSmoothScroll(smoothScroller)
+    }
+
+    private fun showGoalDialog() {
         GoalDialogFragment().show(childFragmentManager, "Goal dialog")
     }
 }

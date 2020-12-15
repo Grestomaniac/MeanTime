@@ -55,7 +55,7 @@ class SchemeAdapter(private val viewModel: SchemeViewModel, private val onClickL
 
         fun bind(item: SimplifiedTemplate, onClickListener: ItemClickListener?) {
             binding.template = item
-            binding.clickListener = onClickListener
+            binding.root.setOnClickListener { onClickListener?.onClickItem(adapterPosition) }
         }
 
         companion object {

@@ -6,24 +6,14 @@
     <data>
         <variable
             name="task"
-            type="com.sillyapps.meantime.data.Task" />
-
-        <variable
-            name="taskAdapterPosition"
-            type="Integer" />
-
-        <variable
-            name="clickListener"
-            type="com.sillyapps.meantime.ui.ItemClickListener" />
+            type="com.sillyapps.meantime.data.Task"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/normal_margin"
-        app:state="@{task.state}"
-
-        android:onClick="@{() -> clickListener.onClickItem(taskAdapterPosition)}">
+        app:state="@{task.state}">
 
         <TextView
             android:id="@+id/time"
