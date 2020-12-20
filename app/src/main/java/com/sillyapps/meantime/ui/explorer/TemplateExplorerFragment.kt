@@ -77,7 +77,6 @@ class TemplateExplorerFragment : Fragment() {
                 viewModel.selectDefaultTemplate(index)
                 return true
             }
-
         }
     }
 
@@ -96,7 +95,7 @@ class TemplateExplorerFragment : Fragment() {
 
     private fun returnResultToSchemeFragment(position: Int) {
         findNavController().apply {
-            val template = viewModel.getSimplifiedTemplate(position)
+            val template = viewModel.getTemplateId(position)
             findNavController().previousBackStackEntry?.savedStateHandle?.set(SchemeFragment.TEMPLATE_KEY, template)
             popBackStack()
         }

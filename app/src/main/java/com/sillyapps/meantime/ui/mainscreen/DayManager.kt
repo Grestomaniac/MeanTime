@@ -1,14 +1,14 @@
 package com.sillyapps.meantime.ui.mainscreen
 
 import androidx.databinding.Observable
+import androidx.lifecycle.LiveData
 import com.sillyapps.meantime.AppBR
 import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.data.Day
 import com.sillyapps.meantime.data.State
-import com.sillyapps.meantime.data.Task
+import com.sillyapps.meantime.data.TaskGoals
 import com.sillyapps.meantime.data.repository.AppRepository
 import kotlinx.coroutines.*
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -47,17 +47,12 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
             it.removeOnPropertyChangedCallback(dataUpdateCallback)
         }
 
-        val day = repository.getDay(request)
-
-        if (day == null) {
-            thisDay = Day()
-            return
-        }
-        thisDay = day
+        thisDay = repository.getDay(request) ?: Day()
         thisDay!!.addOnPropertyChangedCallback(dataUpdateCallback)
     }
 
     fun start() {
+        if (thisDay!!.tasks.isEmpty()) return
         when (thisDay!!.dayState) {
             State.WAITING -> startNewDay()
             State.DISABLED -> resumeDay()
@@ -88,6 +83,10 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
             val currentTaskGoals = repository.getTaskGoals(thisDay!!.currentTask.goalsId)
             currentTaskGoals?.let { currentTaskGoalsIsNotEmpty = it.activeGoals.isNotEmpty() }
         }
+    }
+
+    fun observeTaskGoals(): LiveData<List<TaskGoals>> {
+        return repository.observeAllTaskGoals()
     }
 
     fun recalculateStartTimes(position: Int) {

@@ -6,18 +6,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.sillyapps.meantime.data.SimplifiedTemplate
-import com.sillyapps.meantime.data.Task
-import com.sillyapps.meantime.data.Template
-import com.sillyapps.meantime.databinding.ItemEditorTaskBinding
+import com.sillyapps.meantime.data.SchemeTemplate
+import com.sillyapps.meantime.data.SchemeTemplateInfo
 import com.sillyapps.meantime.databinding.ItemSchemeTemplateBinding
 import com.sillyapps.meantime.ui.ItemTouchHelperAdapter
 import com.sillyapps.meantime.ui.ItemClickListener
-import com.sillyapps.meantime.ui.explorer.recyclerview.TemplatesDiffCallback
-import timber.log.Timber
 
-class SchemeAdapter(private val viewModel: SchemeViewModel, private val onClickListener: ItemClickListener? = null): ListAdapter<SimplifiedTemplate, SchemeAdapter.ViewHolder>(
-    SimplifiedTemplatesDiffCallback()
+class SchemeAdapter(private val viewModel: SchemeViewModel, private val onClickListener: ItemClickListener? = null): ListAdapter<SchemeTemplate, SchemeAdapter.ViewHolder>(
+    SchemeTemplateDiffCallback()
 ), ItemTouchHelperAdapter {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -53,8 +49,8 @@ class SchemeAdapter(private val viewModel: SchemeViewModel, private val onClickL
 
     class ViewHolder private constructor(private val binding: ItemSchemeTemplateBinding): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: SimplifiedTemplate, onClickListener: ItemClickListener?) {
-            binding.template = item
+        fun bind(item: SchemeTemplate, onClickListener: ItemClickListener?) {
+            binding.schemeTemplate = item
             binding.root.setOnClickListener { onClickListener?.onClickItem(adapterPosition) }
         }
 
@@ -69,12 +65,12 @@ class SchemeAdapter(private val viewModel: SchemeViewModel, private val onClickL
     }
 }
 
-class SimplifiedTemplatesDiffCallback: DiffUtil.ItemCallback<SimplifiedTemplate>() {
-    override fun areItemsTheSame(oldItem: SimplifiedTemplate, newItem: SimplifiedTemplate): Boolean {
-        return oldItem.id == newItem.id
+class SchemeTemplateDiffCallback: DiffUtil.ItemCallback<SchemeTemplate>() {
+    override fun areItemsTheSame(oldItem: SchemeTemplate, newItem: SchemeTemplate): Boolean {
+        return oldItem === newItem
     }
 
-    override fun areContentsTheSame(oldItem: SimplifiedTemplate, newItem: SimplifiedTemplate): Boolean {
-        return oldItem.name == newItem.name
+    override fun areContentsTheSame(oldItem: SchemeTemplate, newItem: SchemeTemplate): Boolean {
+        return oldItem.templateInfo.id == newItem.templateInfo.id
     }
 }

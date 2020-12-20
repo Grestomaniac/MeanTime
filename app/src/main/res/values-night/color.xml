@@ -10,8 +10,8 @@
     <color name="primaryTextColorSelected">#D6D6D6</color>
     <color name="secondaryTextColor">#000000</color>
 
-    <color name="colorItemActive">#72673F</color>
-    <color name="colorItemCompleted">#265E59</color>
+    <color name="colorItemActive">#15043A</color>
+    <color name="colorItemCompleted">#041739</color>
 
     <color name="colorWarning">#9D3030</color>
     <color name="colorAlright">#3E7C37</color>

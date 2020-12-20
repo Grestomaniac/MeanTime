@@ -11,136 +11,44 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/dialog"
-        android:padding="8dp">
+        android:padding="16dp">
 
-        <TextView
-            android:id="@+id/temporalTaskNameText"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:gravity="center"
-            android:text="@string/enter_name"
-            app:layout_constraintBottom_toBottomOf="@+id/temporalTaskName"
-            app:layout_constraintEnd_toStartOf="@+id/temporalTaskName"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/temporalTaskName"/>
-
-        <EditText
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/temporalTaskName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:ems="10"
             android:inputType="text"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/temporalTaskNameText"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
 
-            android:text="@={task.name}"
-            tools:text="Task 1"/>
+            android:hint="@string/enter_name"
+            android:text="@={task.name}"/>
 
-        <TextView
-            android:id="@+id/durationLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/enter_duration"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/temporalTaskName" />
-
-
-        <CheckBox
-            android:id="@+id/uncertainCheckBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="@={task.uncertain}"
-            android:text="@string/duration_is_uncertain"
-            app:layout_constraintBottom_toBottomOf="@+id/durationLabel"
-            app:layout_constraintEnd_toEndOf="parent"
-
-            app:layout_constraintTop_toTopOf="@+id/durationLabel" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.sillyapps.meantime.ui.TimePicker
             android:id="@+id/timePickerLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/uncertainCheckBox"
-            app:interactive="@{!task.uncertain}">
+            app:layout_constraintTop_toBottomOf="@id/temporalTaskName"
 
-            <NumberPicker
-                android:id="@+id/timePickerHours"
-
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/timePickerMinutes"
-                app:layout_constraintEnd_toStartOf="@+id/timePickerMinutes"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/timePickerMinutes" />
-
-            <NumberPicker
-                android:id="@+id/timePickerMinutes"
-
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/timePickerSeconds"
-                app:layout_constraintStart_toEndOf="@+id/timePickerHours"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <NumberPicker
-                android:id="@+id/timePickerSeconds"
-
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/timePickerMinutes"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/timePickerMinutes"
-                app:layout_constraintTop_toTopOf="@+id/timePickerMinutes" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/vibration_on"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/vibration_on"
-
-            app:layout_constraintEnd_toStartOf="@+id/sound_on"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/timePickerLayout"
-
-            android:checked="@={task.vibrationOn}"/>
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/sound_on"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/sound_on"
-            app:layout_constraintBottom_toBottomOf="@+id/vibration_on"
-            app:layout_constraintEnd_toStartOf="@+id/vibration_on"
-            app:layout_constraintStart_toEndOf="@+id/vibration_on"
-            app:layout_constraintTop_toTopOf="@+id/vibration_on"
-            android:checked="@={task.soundOn}"/>
+            android:layout_marginTop="8dp"/>
 
         <Button
             android:id="@+id/okButton"
+            style="@style/ButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/vibration_on"
-            app:layout_constraintTop_toBottomOf="@+id/sound_on"
+            android:layout_marginTop="8dp"
 
             android:text="@string/save"
-            style="@style/ButtonStyle"/>
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/timePickerLayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

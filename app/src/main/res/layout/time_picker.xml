@@ -20,18 +20,22 @@
             android:layout_height="0dp"
 
             android:text="@string/enter_duration"
+            app:layout_constraintEnd_toStartOf="@+id/uncertain"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"/>
 
         <CheckBox
             android:id="@+id/uncertain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/duration_is_uncertain"
-
             android:checked="@={task.uncertain}"
+
+            android:text="@string/duration_is_uncertain"
             app:layout_constraintBottom_toBottomOf="@+id/enter_duration"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/enter_duration"
             app:layout_constraintTop_toTopOf="@+id/enter_duration" />
 
         <androidx.constraintlayout.widget.ConstraintLayout

@@ -84,5 +84,6 @@
     <string name="goals">Goals:</string>
     <string name="based_on_name">Based on name</string>
     <string name="warnings">Warnings</string>
+    <string name="tasks">Tasks:</string>
 
 </resources>

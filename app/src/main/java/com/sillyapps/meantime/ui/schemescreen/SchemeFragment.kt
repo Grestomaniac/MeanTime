@@ -8,12 +8,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.sillyapps.meantime.R
-import com.sillyapps.meantime.data.SimplifiedTemplate
 import com.sillyapps.meantime.databinding.FragmentSchemeBinding
 import com.sillyapps.meantime.tintMenuIcons
 import com.sillyapps.meantime.ui.ItemTouchHelperCallback
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class SchemeFragment: Fragment() {
@@ -26,7 +24,7 @@ class SchemeFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSchemeBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         setHasOptionsMenu(true)
@@ -42,10 +40,10 @@ class SchemeFragment: Fragment() {
         binding.addTemplateFab.setOnClickListener { pickTemplate() }
 
         findNavController().currentBackStackEntry?.savedStateHandle?.let {
-            it.getLiveData<SimplifiedTemplate>(TEMPLATE_KEY).observe(
+            it.getLiveData<Int>(TEMPLATE_KEY).observe(
                 viewLifecycleOwner) { result ->
                 viewModel.addTemplate(result)
-                it.remove<SimplifiedTemplate>(TEMPLATE_KEY)
+                it.remove<Int>(TEMPLATE_KEY)
             }
         }
     }
@@ -72,10 +70,12 @@ class SchemeFragment: Fragment() {
         val touchHelper = ItemTouchHelper(itemTouchHelperCallback)
         touchHelper.attachToRecyclerView(binding.items)
 
-        viewModel.schemeTemplates.observe(viewLifecycleOwner, {
+        viewModel.templates.observe(viewLifecycleOwner, {
             adapter.submitList(it)
         })
-
+        viewModel.templateAdded.observe(viewLifecycleOwner) {
+            adapter.notifyItemInserted(adapter.itemCount)
+        }
     }
 
     private fun onSaveButtonClick() {

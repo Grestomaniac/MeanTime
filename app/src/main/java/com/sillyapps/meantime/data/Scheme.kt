@@ -3,6 +3,7 @@ package com.sillyapps.meantime.data
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.sillyapps.meantime.BR
 
@@ -11,11 +12,14 @@ class Scheme(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String = "DEFAULT",
-    val orderList: MutableList<SimplifiedTemplate> = mutableListOf(),
+    val orderList: MutableList<SchemeTemplateInfo> = mutableListOf(),
     var currentTemplatePos: Int = 0,
     isActive: Boolean = false,
     repeat: Boolean = false
 ): BaseObservable() {
+
+    @Ignore
+    val schemeTemplates: MutableList<SchemeTemplate> = mutableListOf()
 
     @Bindable
     var isActive: Boolean = isActive
@@ -70,3 +74,5 @@ class Scheme(
         currentTemplatePos = 0
     }
 }
+
+class SchemeTemplate(val templateInfo: SchemeTemplateInfo, val template: Template): BaseObservable()

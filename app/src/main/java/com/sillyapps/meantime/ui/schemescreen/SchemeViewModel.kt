@@ -1,50 +1,57 @@
 package com.sillyapps.meantime.ui.schemescreen
 
-import androidx.databinding.ObservableInt
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.sillyapps.meantime.data.Scheme
-import com.sillyapps.meantime.data.SimplifiedTemplate
+import com.sillyapps.meantime.data.SchemeTemplate
+import com.sillyapps.meantime.data.SchemeTemplateInfo
 import com.sillyapps.meantime.data.Template
 import com.sillyapps.meantime.data.repository.AppRepository
+import com.sillyapps.meantime.ui.SingleLiveEvent
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.*
 
 class SchemeViewModel @ViewModelInject constructor(private val repository: AppRepository): ViewModel() {
 
-    var scheme = MutableLiveData<Scheme>()
+    val scheme = MutableLiveData<Scheme>()
 
-    var schemeTemplates: LiveData<List<SimplifiedTemplate>> = scheme.map { it.orderList }
+    val templates: LiveData<MutableList<SchemeTemplate>> = scheme.map { it.schemeTemplates }
+
+    val templateAdded = SingleLiveEvent<Void>()
 
     init {
         viewModelScope.launch {
-            scheme.postValue(repository.getCurrentScheme())
+            scheme.value = repository.getCurrentSchemeWithTemplates()
         }
     }
 
     fun notifyItemsSwapped(fromPosition: Int, toPosition: Int) {
-        Collections.swap(scheme.value!!.orderList, fromPosition, toPosition)
+        Collections.swap(templates.value!!, fromPosition, toPosition)
     }
 
     fun notifyItemRemoved(position: Int) {
-        scheme.value!!.orderList.removeAt(position)
+        templates.value!!.removeAt(position)
     }
 
     fun notifyItemDisabled(position: Int) {
-        scheme.value!!.orderList[position].disable()
+        templates.value!![position].templateInfo.disable()
     }
 
-    fun addTemplate(template: SimplifiedTemplate) {
-        scheme.value!!.orderList.add(template)
+    fun addTemplate(templateId: Int) {
+        viewModelScope.launch {
+            templates.value!!.add(SchemeTemplate(SchemeTemplateInfo(templateId), repository.loadTemplate(templateId)!!))
+            templateAdded.call()
+        }
     }
 
     fun saveScheme() {
-        viewModelScope.launch { repository.updateCurrentScheme(scheme.value!!) }
+        viewModelScope.launch {
+            scheme.value?.apply {
+                orderList.clear()
+                schemeTemplates.mapTo(orderList) { it.templateInfo }
+                repository.updateCurrentScheme(this)
+            }
+        }
     }
 
-    override fun onCleared() {
-        Timber.d("SchemeViewModel is cleared")
-        super.onCleared()
-    }
 }

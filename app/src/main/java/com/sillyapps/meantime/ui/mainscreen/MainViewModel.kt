@@ -9,6 +9,7 @@ import com.sillyapps.meantime.BR
 import com.sillyapps.meantime.data.AppPermissionWarnings
 import com.sillyapps.meantime.data.State
 import com.sillyapps.meantime.data.Task
+import com.sillyapps.meantime.data.TaskGoals
 import com.sillyapps.meantime.ui.SingleLiveEvent
 import com.sillyapps.meantime.ui.TimePickerViewModel
 import kotlinx.coroutines.launch
@@ -46,6 +47,8 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
 
     private val _paused = MutableLiveData(false)
     val paused: LiveData<Boolean> = _paused
+
+    val taskGoals: LiveData<List<TaskGoals>> = dayManager.observeTaskGoals()
 
     private val dataUpdateCallback = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
@@ -115,10 +118,13 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
         _task.value = Task(temporal = true)
     }
 
-    fun addTemporalTask(duration: Long) {
+    fun validateTaskData(): Task.WhatIsWrong {
+        return task.value!!.isDataValid()
+    }
+
+    fun addTemporalTask() {
         _task.value?.let {
             viewModelScope.launch {
-                it.duration = duration
                 it.goalsId = dayManager.getTaskGoalsIdByName(it.name)
                 dayManager.thisDay!!.addTemporalTask(it)
             }
@@ -168,6 +174,10 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
 
     fun getCurrentTaskPosition(): Int {
         return dayManager.thisDay!!.currentTaskPos
+    }
+
+    fun setTemporalTaskDuration(duration: Long) {
+        task.value!!.duration = duration
     }
 
     override fun setTaskDuration(duration: Long) {

@@ -74,7 +74,22 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
         schemeDao.update(scheme)
     }
 
-    suspend fun getCurrentScheme(): Scheme? {
+    suspend fun getCurrentSchemeWithTemplates(): Scheme? {
+        return getCurrentScheme()?.apply {
+            for (schemeInfo in orderList) {
+                val template = loadTemplate(schemeInfo.id)
+
+                // Template is deleted
+                if (template == null) {
+                    orderList.remove(schemeInfo)
+                    continue
+                }
+                schemeTemplates.add(SchemeTemplate(schemeInfo, template))
+            }
+        }
+    }
+
+    private suspend fun getCurrentScheme(): Scheme? {
         val currentSchemeId = appPrefDao.getDefaultSchemeId()
         return schemeDao.getScheme(currentSchemeId)
     }
@@ -88,17 +103,17 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
 
     private suspend fun getTemplateFromScheme(getNextTemplate: Boolean = true): Int? {
         var templateId = -1
-        val scheme = getCurrentScheme()
-        scheme?.let { _scheme ->
-            if (_scheme.isActive) {
+
+        getCurrentScheme()?.let { scheme ->
+            if (scheme.isActive) {
                 if (getNextTemplate) {
-                    _scheme.getNextTemplateId()?.let { templateId = it }
+                    scheme.getNextTemplateId()?.let { templateId = it }
                 }
                 else {
-                    templateId = _scheme.getCurrentTemplateId()
+                    templateId = scheme.getCurrentTemplateId()
                 }
 
-                schemeDao.update(_scheme)
+                schemeDao.update(scheme)
                 return templateId
             }
         }

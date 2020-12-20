@@ -52,6 +52,7 @@ class EditTaskFragment : DialogFragment() {
         binding.okFab.setOnClickListener { validateData() }
 
         viewModel.goalTasksNames.observe(viewLifecycleOwner) {
+            nameAdapter.clear()
             nameAdapter.addAll(it)
         }
     }

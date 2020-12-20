@@ -111,4 +111,6 @@ class EditTemplateFragment : Fragment() {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
+
+
 }

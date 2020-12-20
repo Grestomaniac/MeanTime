@@ -112,7 +112,9 @@ class Day(val tasks: MutableList<Task> = mutableListOf(),
     }
 
     fun addTemporalTask(task: Task) {
-        task.startTime = tasks.last().getNextStartTime()
+        if (tasks.isNotEmpty()) {
+            task.startTime = tasks.last().getNextStartTime()
+        }
         tasks.add(task)
         notifyPropertyChanged(AppBR.taskAdded)
     }

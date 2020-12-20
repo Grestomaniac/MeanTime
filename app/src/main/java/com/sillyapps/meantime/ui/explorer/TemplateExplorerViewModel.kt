@@ -2,7 +2,6 @@ package com.sillyapps.meantime.ui.explorer
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.sillyapps.meantime.data.SimplifiedTemplate
 import com.sillyapps.meantime.data.repository.AppRepository
 import kotlinx.coroutines.launch
 
@@ -24,9 +23,9 @@ class TemplateExplorerViewModel @ViewModelInject constructor(private val reposit
         }
     }
 
-    fun getSimplifiedTemplate(position: Int): SimplifiedTemplate {
+    fun getTemplateId(position: Int): Int {
         val template = items.value!![position]
-        return template.simplify()
+        return template.id
     }
 
 }
