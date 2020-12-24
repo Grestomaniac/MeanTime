@@ -14,7 +14,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/normal_margin"
         android:layout_marginHorizontal="8dp"
-        app:state="@{task.state}">
+        app:state="@{task.state}"
+
+        tools:background="@drawable/item_waiting">
 
         <TextView
             android:id="@+id/time"
@@ -62,7 +64,7 @@
             app:layout_constraintTop_toTopOf="@+id/time"
 
             app:timeWithSeconds="@{task.progress}"
-            tools:text="01:00" />
+            tools:text="01:00:00" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

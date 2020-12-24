@@ -56,7 +56,6 @@ class Day(val tasks: MutableList<Task> = mutableListOf(),
         Task.lastSystemTime = System.currentTimeMillis()
 
         startCurrentTask()
-        timeRemain = currentTask.editableDuration
         isRunning = true
     }
 

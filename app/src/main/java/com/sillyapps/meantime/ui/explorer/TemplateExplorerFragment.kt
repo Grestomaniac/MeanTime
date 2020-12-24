@@ -27,7 +27,7 @@ class TemplateExplorerFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         viewDataBinding = FragmentExplorerBinding.inflate(inflater, container, false).apply {
             viewmodel = viewModel
             editMode = args.editMode

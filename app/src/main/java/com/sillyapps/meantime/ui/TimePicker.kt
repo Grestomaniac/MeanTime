@@ -11,10 +11,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.navGraphViewModels
-import com.sillyapps.meantime.App
-import com.sillyapps.meantime.AppConstants
-import com.sillyapps.meantime.R
-import com.sillyapps.meantime.convertToMillis
+import com.sillyapps.meantime.*
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.databinding.DialogTimePickerBinding
 import com.sillyapps.meantime.databinding.TimePickerBinding
@@ -60,7 +57,8 @@ class TimePicker @JvmOverloads constructor(context: Context, attrs: AttributeSet
 
     fun fillTimePicker(task: Task) {
         binding.task = task
-        val durationInMillis = task.duration
+        val durationInMillis = task.editableDuration
+        Timber.d("Duration is ${convertMillisToStringFormat(durationInMillis)}")
 
         binding.apply {
             val overallSeconds = (durationInMillis / 1000).toInt()

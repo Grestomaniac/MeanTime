@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.sillyapps.meantime.AppConstants"/>
+        <import type="android.widget.EditText"/>
         <variable
             name="task"
             type="com.sillyapps.meantime.data.Task"/>
@@ -20,7 +20,7 @@
             android:id="@+id/temporalTaskName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:inputType="text"
+            android:inputType="@{task.temporal ? EditText.AUTOFILL_TYPE_TEXT : EditText.AUTOFILL_TYPE_NONE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

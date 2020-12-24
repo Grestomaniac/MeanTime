@@ -1,31 +1,25 @@
 package com.sillyapps.meantime.ui.mainscreen
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.NumberPicker
+import android.widget.EditText
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.R
-import com.sillyapps.meantime.convertToMillis
 import com.sillyapps.meantime.data.Task
-import com.sillyapps.meantime.databinding.DialogTaskInfoBinding
-import com.sillyapps.meantime.databinding.DialogTemporalTaskBinding
-import com.sillyapps.meantime.ui.TimePickerFragment
+import com.sillyapps.meantime.databinding.DialogAddTaskBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class TemporalTaskDialogFragment: DialogFragment() {
+class TaskDialogFragment: DialogFragment() {
 
     private val viewModel: MainViewModel by viewModels( ownerProducer = { requireParentFragment() } )
 
-    private lateinit var binding: DialogTemporalTaskBinding
+    private lateinit var binding: DialogAddTaskBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +27,7 @@ class TemporalTaskDialogFragment: DialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = DialogTemporalTaskBinding.inflate(inflater, container, false)
+        binding = DialogAddTaskBinding.inflate(inflater, container, false)
         binding.task = viewModel.task.value
 
         return binding.root
@@ -58,11 +52,11 @@ class TemporalTaskDialogFragment: DialogFragment() {
 
     private fun saveTask() {
         val taskDuration = binding.timePickerLayout.getDuration()
-        viewModel.setTemporalTaskDuration(taskDuration)
+        viewModel.setTaskDuration(taskDuration)
 
         when(viewModel.validateTaskData()) {
             Task.WhatIsWrong.NOTHING -> {
-                viewModel.addTemporalTask()
+                viewModel.saveTask()
                 dismiss()
             }
             Task.WhatIsWrong.NAME -> showInfoToUser(R.string.name_is_empty)

@@ -15,7 +15,7 @@ class Task(
     sound: String = AppConstants.DEFAULT_RINGTONE,
     var goalsId: Int = 0,
     val temporal: Boolean = false,
-    var uncertain: Boolean = false
+    uncertain: Boolean = false
 ): BaseObservable() {
 
     @Bindable
@@ -90,12 +90,19 @@ class Task(
             notifyPropertyChanged(BR.progress)
         }
 
+    @Bindable
+    var uncertain: Boolean = uncertain
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.uncertain)
+        }
+
     fun resetStartTime(time: Long = 0L) {
         startTime = time
     }
 
     fun getNextStartTime(): Long {
-        return if (editableDuration == AppConstants.UNCERTAIN || startTime == AppConstants.UNCERTAIN) {
+        return if (uncertain || startTime == AppConstants.UNCERTAIN) {
             AppConstants.UNCERTAIN
         }
         else {
@@ -109,6 +116,10 @@ class Task(
         progress += dt
         lastSystemTime = currentTime
 
+        return editableDuration - progress
+    }
+
+    fun getTimeRemained(): Long {
         return editableDuration - progress
     }
 
@@ -172,8 +183,15 @@ class Task(
         return WhatIsWrong.NOTHING
     }
 
+    fun copyDataFrom(task: Task) {
+        editableDuration = task.editableDuration
+        uncertain = task.uncertain
+        editableVibrationOn = task.editableVibrationOn
+        editableSoundOn = task.editableSoundOn
+    }
+
     fun copy(): Task {
-        return Task(startTime, name, duration, vibrationOn, soundOn, sound)
+        return Task(startTime, name, editableDuration, editableVibrationOn, editableSoundOn, uncertain=uncertain)
     }
 
     companion object {

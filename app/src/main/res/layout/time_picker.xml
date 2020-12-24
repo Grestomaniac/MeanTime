@@ -34,7 +34,6 @@
             android:text="@string/duration_is_uncertain"
             app:layout_constraintBottom_toBottomOf="@+id/enter_duration"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/enter_duration"
             app:layout_constraintTop_toTopOf="@+id/enter_duration" />
 

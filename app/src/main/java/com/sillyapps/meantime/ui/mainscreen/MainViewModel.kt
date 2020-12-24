@@ -14,7 +14,7 @@ import com.sillyapps.meantime.ui.SingleLiveEvent
 import com.sillyapps.meantime.ui.TimePickerViewModel
 import kotlinx.coroutines.launch
 
-class MainViewModel @ViewModelInject constructor(private val dayManager: DayManager): ViewModel(), TimePickerViewModel {
+class MainViewModel @ViewModelInject constructor(private val dayManager: DayManager): ViewModel() {
 
     val uiTasks: MutableLiveData<MutableList<Task>> = MutableLiveData(mutableListOf())
 
@@ -115,20 +115,44 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
     }
 
     fun createTemporalTask() {
+        taskPosition = AppConstants.NOT_ASSIGNED
         _task.value = Task(temporal = true)
+    }
+
+    fun onTaskClicked(position: Int) {
+        taskPosition = position
+        _task.value = uiTasks.value!![position].copy()
+    }
+
+    fun onTaskDialogClosed() {
+        _task.value = null
+        taskPosition = AppConstants.NOT_ASSIGNED
+    }
+
+    fun saveTask() {
+        _task.value?.let {
+            if (taskPosition == AppConstants.NOT_ASSIGNED) {
+                addTemporalTask(it)
+            }
+            else {
+                uiTasks.value!![taskPosition].copyDataFrom(it)
+                recalculateStartTimes(taskPosition+1)
+            }
+        }
+        if (taskPosition == dayManager.thisDay!!.currentTaskPos) {
+            dayManager.setProperTicker()
+        }
+    }
+
+    private fun addTemporalTask(task: Task) {
+        viewModelScope.launch {
+            task.goalsId = dayManager.getTaskGoalsIdByName(task.name)
+            dayManager.thisDay!!.addTemporalTask(task)
+        }
     }
 
     fun validateTaskData(): Task.WhatIsWrong {
         return task.value!!.isDataValid()
-    }
-
-    fun addTemporalTask() {
-        _task.value?.let {
-            viewModelScope.launch {
-                it.goalsId = dayManager.getTaskGoalsIdByName(it.name)
-                dayManager.thisDay!!.addTemporalTask(it)
-            }
-        }
     }
 
     fun onStopButtonLongClick(): Boolean {
@@ -146,16 +170,6 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
 
     fun notifyTaskDisabled(position: Int) {
         dayManager.notifyTaskDisabled(position)
-    }
-
-    fun onTaskClicked(position: Int) {
-        taskPosition = position
-        _task.value = uiTasks.value!![position]
-    }
-
-    fun onTaskDialogClosed() {
-        _task.value = null
-        taskPosition = AppConstants.NOT_ASSIGNED
     }
 
     fun onTaskRevertChanges() {
@@ -176,29 +190,13 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
         return dayManager.thisDay!!.currentTaskPos
     }
 
-    fun setTemporalTaskDuration(duration: Long) {
-        task.value!!.duration = duration
-    }
-
-    override fun setTaskDuration(duration: Long) {
-        if (duration == getTaskDuration()) {
-            return
-        }
-        _task.value!!.editableDuration = duration
-        recalculateStartTimes(taskPosition)
-    }
-
-    override fun getTaskDuration(): Long {
-        return _task.value!!.editableDuration
+    fun setTaskDuration(duration: Long) {
+        task.value!!.editableDuration = duration
     }
 
     override fun onCleared() {
         dayManager.thisDay?.removeOnPropertyChangedCallback(dataUpdateCallback)
         super.onCleared()
-    }
-
-    private fun pauseDay() {
-        _paused.value = dayManager.thisDay!!.dayState == State.DISABLED
     }
 
 }

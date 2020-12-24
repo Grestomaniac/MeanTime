@@ -121,11 +121,11 @@ class MainScreenFragment: Fragment() {
 
     private fun addTemporalTask() {
         viewModel.createTemporalTask()
-        TemporalTaskDialogFragment().show(childFragmentManager, "Temporal task dialog")
+        TaskDialogFragment().show(childFragmentManager, "Temporal task dialog")
     }
 
     private fun showTaskInfo() {
-        TaskInfoDialogFragment().show(childFragmentManager, "Task info")
+        TaskDialogFragment().show(childFragmentManager, "Task info")
     }
 
     private fun showWarningDialog() {

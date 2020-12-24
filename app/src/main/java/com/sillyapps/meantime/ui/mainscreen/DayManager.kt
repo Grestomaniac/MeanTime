@@ -19,7 +19,26 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
         GET_NEXT, REFRESH, GET_CURRENT
     }
 
+    private val defaultTicker: Ticker = object: Ticker {
+        override fun tick() {
+            val timeRemained = thisDay!!.currentTask.continueTask()
+            if (timeRemained < 0) {
+                getNextTask()
+            }
+            else {
+                thisDay!!.updateTimeRemained(timeRemained)
+            }
+        }
+    }
+
+    private val uncertainTicker: Ticker = object: Ticker {
+        override fun tick() {
+            thisDay!!.currentTask.continueTask()
+        }
+    }
+
     var thisDay: Day? = null
+    private var ticker: Ticker = defaultTicker
 
     private var tickInterval = AppConstants.NORMAL_INTERVAL
     private var coroutineCounter: Job? = null
@@ -75,6 +94,7 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
 
     private fun getNextTask(stop: Boolean = false) {
         thisDay!!.selectNextTask(stop)
+        setProperTicker()
         checkIfCurrentTaskGoalsIsEmpty()
     }
 
@@ -144,24 +164,30 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
         startCoroutineCounter()*/
     }
 
+    fun setProperTicker() {
+        if (thisDay!!.currentTask.uncertain) {
+            ticker = uncertainTicker
+            thisDay!!.timeRemain = AppConstants.UNCERTAIN
+        }
+        else {
+            ticker = defaultTicker
+            thisDay!!.timeRemain = thisDay!!.currentTask.getTimeRemained()
+        }
+    }
+
     private fun startCoroutineCounter() {
+        setProperTicker()
+
         coroutineCounter = CoroutineScope(Dispatchers.Main).launch {
             while (true) {
-                tick()
+                ticker.tick()
 
                 delay(tickInterval)
             }
         }
     }
 
-    private fun tick() {
-        val timeRemained = thisDay!!.currentTask.continueTask()
-        if (timeRemained < 0) {
-            getNextTask()
-        }
-        else {
-            thisDay!!.updateTimeRemained(timeRemained)
-        }
+    interface Ticker {
+        fun tick()
     }
-
 }

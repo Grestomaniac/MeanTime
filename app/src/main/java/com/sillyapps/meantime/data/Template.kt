@@ -31,10 +31,6 @@ data class Template(
     fun getTaskCount(): String {
         return activities.size.toString()
     }
-
-    fun simplify(): SchemeTemplateInfo {
-        return SchemeTemplateInfo(id)
-    }
 }
 
 class SchemeTemplateInfo(

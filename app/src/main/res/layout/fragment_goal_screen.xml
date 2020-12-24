@@ -80,6 +80,9 @@
                 app:stackFromEnd="true"
                 tools:listitem="@layout/item_goal"
 
+                android:paddingBottom="8dp"
+                android:clipToPadding="false"
+
                 android:visibility="@{viewModel.tabSelected == 1 ? View.VISIBLE : View.GONE}"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

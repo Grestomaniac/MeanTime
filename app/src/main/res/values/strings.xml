@@ -85,5 +85,9 @@
     <string name="based_on_name">Based on name</string>
     <string name="warnings">Warnings</string>
     <string name="tasks">Tasks:</string>
+    <string name="search">Search</string>
+    <string name="save_as">Save as</string>
+    <string name="open">Open</string>
+    <string name="get_next">Get next</string>
 
 </resources>
