@@ -3,7 +3,7 @@ package com.sillyapps.meantime.data
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.sillyapps.meantime.*
-import timber.log.Timber
+import com.sillyapps.meantime.utils.getLocalCurrentTimeMillis
 
 class Task(
     startTime: Long = 0L,

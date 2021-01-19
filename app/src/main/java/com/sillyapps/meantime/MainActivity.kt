@@ -1,6 +1,5 @@
 package com.sillyapps.meantime
 
-import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
@@ -15,9 +14,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.navigation.NavigationView
 import com.sillyapps.meantime.databinding.ActivityMainBinding
-import com.sillyapps.meantime.ui.mainscreen.MainScreenFragmentDirections
+import com.sillyapps.meantime.utils.setDarkThemeIfNeeded
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, NavController.OnDestinationChangedListener {

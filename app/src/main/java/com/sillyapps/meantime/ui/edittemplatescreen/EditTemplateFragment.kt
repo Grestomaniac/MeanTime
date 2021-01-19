@@ -1,11 +1,9 @@
 package com.sillyapps.meantime.ui.edittemplatescreen
 
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.navigation.fragment.findNavController
 import com.sillyapps.meantime.R
@@ -13,10 +11,11 @@ import com.sillyapps.meantime.databinding.FragmentEditTemplateBinding
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
-import com.sillyapps.meantime.tintMenuIcons
+import com.sillyapps.meantime.utils.tintMenuIcons
 import com.sillyapps.meantime.ui.ItemTouchHelperCallback
 import com.sillyapps.meantime.ui.ItemClickListener
 import com.sillyapps.meantime.ui.edittemplatescreen.recyclerview.TemplateEditorAdapter
+import com.sillyapps.meantime.utils.showInfoToUser
 
 @AndroidEntryPoint
 class EditTemplateFragment : Fragment() {
@@ -105,12 +104,5 @@ class EditTemplateFragment : Fragment() {
         if (result.success) showInfoToUser(R.string.template_saved)
         else showInfoToUser(result.messageId)
     }
-
-    private fun showInfoToUser(messageId: Int) {
-        val message = getString(messageId)
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-    }
-
-
 
 }

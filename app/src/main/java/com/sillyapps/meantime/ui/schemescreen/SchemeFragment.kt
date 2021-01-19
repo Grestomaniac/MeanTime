@@ -9,7 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.sillyapps.meantime.R
 import com.sillyapps.meantime.databinding.FragmentSchemeBinding
-import com.sillyapps.meantime.tintMenuIcons
+import com.sillyapps.meantime.utils.tintMenuIcons
 import com.sillyapps.meantime.ui.ItemTouchHelperCallback
 import dagger.hilt.android.AndroidEntryPoint
 

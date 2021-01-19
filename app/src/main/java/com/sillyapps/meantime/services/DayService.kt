@@ -11,8 +11,8 @@ import com.sillyapps.meantime.broadcastrecievers.ScreenOnOffBroadcastReceiver
 import com.sillyapps.meantime.data.State
 import com.sillyapps.meantime.ui.alarmscreen.AlarmActivity
 import com.sillyapps.meantime.ui.mainscreen.DayManager
+import com.sillyapps.meantime.utils.convertMillisToStringFormatWithSeconds
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 import java.lang.IllegalArgumentException
 import javax.inject.Inject
 

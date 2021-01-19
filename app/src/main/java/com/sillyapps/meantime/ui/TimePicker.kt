@@ -1,22 +1,15 @@
 package com.sillyapps.meantime.ui
 
 import android.content.Context
-import android.os.Bundle
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.NumberPicker
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
-import androidx.fragment.app.DialogFragment
-import androidx.navigation.navGraphViewModels
-import com.sillyapps.meantime.*
 import com.sillyapps.meantime.data.Task
-import com.sillyapps.meantime.databinding.DialogTimePickerBinding
 import com.sillyapps.meantime.databinding.TimePickerBinding
-import com.sillyapps.meantime.ui.edittemplatescreen.EditTemplateViewModel
-import dagger.hilt.android.AndroidEntryPoint
+import com.sillyapps.meantime.utils.convertMillisToStringFormat
+import com.sillyapps.meantime.utils.convertToMillis
 import timber.log.Timber
 
 class TimePicker @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttrs: Int = 0): ConstraintLayout(context, attrs, defStyleAttrs) {

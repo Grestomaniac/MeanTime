@@ -1,15 +1,16 @@
 package com.sillyapps.meantime.ui.explorer
 
 import android.os.Bundle
+import android.view.*
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.sillyapps.meantime.R
 import com.sillyapps.meantime.databinding.FragmentExplorerBinding
+import com.sillyapps.meantime.utils.tintMenuIcons
 import com.sillyapps.meantime.ui.ItemTouchHelperCallbackNoDrag
 import com.sillyapps.meantime.ui.explorer.recyclerview.ExplorerAdapter
 import com.sillyapps.meantime.ui.ItemClickListener
@@ -32,6 +33,8 @@ class TemplateExplorerFragment : Fragment() {
             viewmodel = viewModel
             editMode = args.editMode
         }
+
+        setHasOptionsMenu(true)
         return viewDataBinding.root
     }
 
@@ -42,6 +45,11 @@ class TemplateExplorerFragment : Fragment() {
 
         setupAdapter()
         setupFloatingButton()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.explorer_menu, menu)
+        tintMenuIcons(menu.children, requireContext())
     }
 
     private fun setupFloatingButton() {

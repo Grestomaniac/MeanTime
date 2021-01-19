@@ -11,7 +11,6 @@ import com.sillyapps.meantime.data.State
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.data.TaskGoals
 import com.sillyapps.meantime.ui.SingleLiveEvent
-import com.sillyapps.meantime.ui.TimePickerViewModel
 import kotlinx.coroutines.launch
 
 class MainViewModel @ViewModelInject constructor(private val dayManager: DayManager): ViewModel() {

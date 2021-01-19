@@ -5,19 +5,18 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.R
-import com.sillyapps.meantime.convertToMillis
+import com.sillyapps.meantime.utils.convertToMillis
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.data.TaskGoals
 import com.sillyapps.meantime.data.Template
 import com.sillyapps.meantime.data.repository.AppRepository
 import com.sillyapps.meantime.ui.Result
-import com.sillyapps.meantime.ui.TimePickerViewModel
+import com.sillyapps.meantime.utils.removeExtraSpaces
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.*
 
 class EditTemplateViewModel @ViewModelInject constructor(private val repository: AppRepository,
-                                                         @Assisted private val savedStateHandle: SavedStateHandle): ViewModel(), TimePickerViewModel {
+                                                         @Assisted private val savedStateHandle: SavedStateHandle): ViewModel() {
 
     var templateId = savedStateHandle.get<Int>("templateId")!!
     val templateName: MutableLiveData<String> = MutableLiveData("")
@@ -54,6 +53,7 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
     fun addCreatedTask() {
         tasks.value!!.let {
             val newTask = task.value!!
+            newTask.name = removeExtraSpaces(newTask.name)
 
             if (taskPosition == AppConstants.NOT_ASSIGNED) {
                 it.add(newTask)
@@ -65,7 +65,7 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
             }
         }
         tasks.value = tasks.value
-        taskPosition = -1
+        taskPosition = AppConstants.NOT_ASSIGNED
     }
 
     fun editTask(position: Int) {
@@ -81,12 +81,8 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
         task.value = Task(nextStartTime)
     }
 
-    override fun setTaskDuration(duration: Long) {
+    fun setTaskDuration(duration: Long) {
         task.value!!.duration = duration
-    }
-
-    override fun getTaskDuration(): Long {
-        return task.value!!.duration
     }
 
     fun setTaskSound(sound: String) {
@@ -120,8 +116,6 @@ class EditTemplateViewModel @ViewModelInject constructor(private val repository:
         return Result(true)
 
     }
-
-
 
     fun recalculateStartTimes(position: Int) {
         tasks.value?.let {

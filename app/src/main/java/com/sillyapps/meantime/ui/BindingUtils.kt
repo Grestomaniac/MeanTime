@@ -13,11 +13,9 @@ import androidx.core.view.children
 import androidx.databinding.BindingAdapter
 import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.R
-import com.sillyapps.meantime.convertMillisToStringFormat
-import com.sillyapps.meantime.convertMillisToStringFormatWithSeconds
+import com.sillyapps.meantime.utils.convertMillisToStringFormat
+import com.sillyapps.meantime.utils.convertMillisToStringFormatWithSeconds
 import com.sillyapps.meantime.data.State
-import com.sillyapps.meantime.data.Task
-import timber.log.Timber
 
 @BindingAdapter("isDefault")
 fun ConstraintLayout.setDefault(isDefault: Boolean) {

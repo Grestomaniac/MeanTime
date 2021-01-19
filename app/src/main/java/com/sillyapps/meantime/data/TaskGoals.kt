@@ -7,6 +7,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.BR
+import com.sillyapps.meantime.utils.formatString
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
@@ -16,9 +17,12 @@ class TaskGoals(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String = "",
+    val formattedName: String = formatString(name),
     var defaultGoalPos: Int = AppConstants.NOT_ASSIGNED,
+
     @ColumnInfo(name = "active_goals")
     val activeGoals: MutableList<Goal> = mutableListOf(),
+
     @ColumnInfo(name = "completed_goals")
     val completedGoals: MutableList<Goal> = mutableListOf()
 ): BaseObservable() {

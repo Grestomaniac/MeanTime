@@ -2,9 +2,18 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="@string/open"/>
-    <item android:title="@string/save"/>
-    <item android:title="@string/save_as"/>
-    <item android:title="@string/get_next"/>
+    <item
+        android:id="@+id/option_open"
+        android:title="@string/open"/>
+
+    <item android:id="@+id/option_save"
+        android:title="@string/save"/>
+
+    <item android:id="@+id/option_save_as"
+        android:title="@string/save_as"/>
+
+    <item
+        android:id="@+id/option_load_next"
+        android:title="@string/get_next"/>
 
 </menu>

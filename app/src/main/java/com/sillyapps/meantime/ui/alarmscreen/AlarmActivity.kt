@@ -13,7 +13,7 @@ import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.R
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.databinding.ActivityAlarmBinding
-import com.sillyapps.meantime.setDarkThemeIfNeeded
+import com.sillyapps.meantime.utils.setDarkThemeIfNeeded
 import dagger.hilt.android.AndroidEntryPoint
 
 

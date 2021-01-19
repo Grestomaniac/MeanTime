@@ -14,10 +14,9 @@ import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.sillyapps.meantime.R
-import com.sillyapps.meantime.convertToMillis
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.databinding.FragmentEditTaskBinding
-import com.sillyapps.meantime.ui.TimePickerFragment
+import com.sillyapps.meantime.utils.showInfoToUser
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -70,11 +69,6 @@ class EditTaskFragment : DialogFragment() {
     private fun saveTask() {
         viewModel.addCreatedTask()
         findNavController().popBackStack()
-    }
-
-    private fun showInfoToUser(messageId: Int) {
-        val message = getString(messageId)
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
     private fun showRingtonePicker() {
