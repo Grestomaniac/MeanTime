@@ -7,6 +7,7 @@ import com.sillyapps.meantime.data.local.SchemeDao
 import com.sillyapps.meantime.data.local.TaskGoalsDao
 import com.sillyapps.meantime.data.local.TemplateDao
 import com.sillyapps.meantime.ui.mainscreen.DayManager
+import com.sillyapps.meantime.utils.formatString
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -154,7 +155,7 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
     }
 
     suspend fun getTaskGoalIdByName(taskName: String): Int {
-        var taskGoalsId = taskGoalsDao.getTaskGoalsIdByName(taskName)
+        var taskGoalsId = taskGoalsDao.getTaskGoalsIdByName(formatString(taskName))
         if (taskGoalsId == null) {
             taskGoalsId = taskGoalsDao.insertTaskGoals(TaskGoals(0, taskName)).toInt()
         }

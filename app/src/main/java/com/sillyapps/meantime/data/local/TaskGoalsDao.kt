@@ -27,7 +27,7 @@ interface TaskGoalsDao {
     @Update
     suspend fun updateGoals(taskGoals: TaskGoals)
 
-    @Query("select id from goal_table where name = :taskName")
+    @Query("select id from goal_table where formattedName = :taskName")
     suspend fun getTaskGoalsIdByName(taskName: String): Int?
 
     @Delete

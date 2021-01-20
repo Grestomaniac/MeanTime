@@ -9,11 +9,16 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.sqlite.db.SimpleSQLiteQuery
 import com.hypertrack.hyperlog.HyperLog
 import com.sillyapps.meantime.data.local.AppDatabase
 import com.sillyapps.meantime.utils.FileLogger
+import com.sillyapps.meantime.utils.formatString
 
 import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 

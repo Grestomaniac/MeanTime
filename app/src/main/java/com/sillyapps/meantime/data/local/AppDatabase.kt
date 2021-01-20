@@ -11,13 +11,14 @@ import com.sillyapps.meantime.data.ApplicationPreferences
 import com.sillyapps.meantime.data.Scheme
 import com.sillyapps.meantime.data.TaskGoals
 import com.sillyapps.meantime.data.Template
+import com.sillyapps.meantime.utils.formatString
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-@Database(entities = [Template::class, Scheme::class, ApplicationPreferences::class, TaskGoals::class], version = 8)
+@Database(entities = [Template::class, Scheme::class, ApplicationPreferences::class, TaskGoals::class], version = 9)
 @TypeConverters(AppTypeConverter::class)
 abstract class AppDatabase: RoomDatabase() {
 
@@ -58,6 +59,23 @@ abstract class AppDatabase: RoomDatabase() {
             }
         }
 
+        private val MIGRATION_8_9 = object : Migration(8, 9) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("create table goal_table_new (id integer primary key not null, name text not null, formattedName text not null default '', defaultGoalPos integer not null, active_goals text not null, completed_goals text not null)")
+                database.execSQL("insert into goal_table_new(id, name, defaultGoalPos, active_goals, completed_goals) select id, name, defaultGoalPos, active_goals,  completed_goals from goal_table")
+                database.execSQL("drop table goal_table")
+                database.execSQL("alter table goal_table_new rename to goal_table")
+
+                val cursor = database.query("select * from goal_table")
+                while (cursor.moveToNext()) {
+                    val position = cursor.getLong(cursor.getColumnIndexOrThrow("id"))
+                    val id = cursor.getColumnIndexOrThrow("name")
+                    val formattedName = formatString(cursor.getString(id))
+                    database.execSQL("update goal_table set formattedName = '$formattedName' where id = '$position'")
+                }
+            }
+        }
+
         fun getInstance(context: Context): AppDatabase {
             synchronized(this) {
                 var instance = INSTANCE
@@ -68,7 +86,7 @@ abstract class AppDatabase: RoomDatabase() {
                         AppDatabase::class.java,
                         "app_database")
                         .addCallback(DatabaseCallback())
-                        .addMigrations(MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8)
+                        .addMigrations(MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9)
                         .build()
                     INSTANCE = instance
                 }

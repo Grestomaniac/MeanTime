@@ -178,7 +178,7 @@ class Task(
 
     fun isDataValid(): WhatIsWrong {
         if (name == "") return WhatIsWrong.NAME
-        if ((duration == 0L) and (!uncertain)) return WhatIsWrong.DURATION
+        if ((editableDuration == 0L) and (!uncertain)) return WhatIsWrong.DURATION
 
         return WhatIsWrong.NOTHING
     }
