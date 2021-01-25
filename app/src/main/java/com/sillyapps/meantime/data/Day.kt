@@ -42,7 +42,6 @@ class Day(val tasks: MutableList<Task> = mutableListOf(),
         }
 
     var timePaused = 0L
-    var isCurrentTaskReplacedWhilePaused: Boolean = false
 
     var currentTask: Task = Task()
 
@@ -67,6 +66,12 @@ class Day(val tasks: MutableList<Task> = mutableListOf(),
             currentTask.start()
             notifyPropertyChanged(AppBR.currentTaskStateChanged)
             updateStartTimes(currentTaskPos+1)
+
+            timeRemain = if (currentTask.uncertain) {
+                AppConstants.UNCERTAIN
+            } else {
+                currentTask.taskTimeRemained
+            }
         }
     }
 
@@ -153,6 +158,10 @@ class Day(val tasks: MutableList<Task> = mutableListOf(),
         timeRemain = newTime
     }
 
+    fun updateTaskRelativeProgress() {
+        currentTask.updateRelativeProgress()
+    }
+
     private fun resetTasks() {
         tasks[0].startTime = dayStartTime
         updateStartTimes(1)
@@ -160,7 +169,12 @@ class Day(val tasks: MutableList<Task> = mutableListOf(),
 
     private fun recalculateStartTimes(position: Int) {
         if (position == 0) {
-            tasks[position].startTime = getLocalCurrentTimeMillis()
+            if (isRunning) {
+                tasks[position].startTime = getLocalCurrentTimeMillis()
+            }
+            else {
+                tasks[position].startTime = 0L
+            }
             updateStartTimes(position+1)
             return
         }
@@ -179,9 +193,6 @@ class Day(val tasks: MutableList<Task> = mutableListOf(),
     }
 
     fun taskDropped(position: Int) {
-        if (position == currentTaskPos) {
-            isCurrentTaskReplacedWhilePaused = true
-        }
         recalculateStartTimes(position)
     }
 

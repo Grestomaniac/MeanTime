@@ -6,7 +6,6 @@
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/secondaryColor</item>
 
-        <item name="fontFamily">@font/coiny</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/primaryTextColor</item>
     </style>
@@ -35,10 +34,15 @@
         <item name="android:paddingEnd">@dimen/button_padding</item>
     </style>
 
+    <style name="ItemButtonStyle" parent="AppTheme">
+        <item name="tint">@color/primaryTextColor</item>
+        <item name="tintMode">src_atop</item>
+    </style>
+
     <style name="ActionButtonStyle" parent="AppTheme">
-        <item name="android:background">@drawable/action_button</item>
         <item name="tint">@color/secondaryTextColor</item>
         <item name="tintMode">src_atop</item>
+        <item name="android:background">@drawable/action_button</item>
     </style>
 
     <style name="WarningStyle" parent="AppTheme">

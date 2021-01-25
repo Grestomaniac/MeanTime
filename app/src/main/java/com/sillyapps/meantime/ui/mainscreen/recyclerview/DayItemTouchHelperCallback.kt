@@ -13,7 +13,7 @@ class DayItemTouchHelperCallback(mAdapter: ItemTouchHelperAdapter): ItemTouchHel
         viewHolder: RecyclerView.ViewHolder
     ): Int {
         if ((viewHolder as RunningTasksAdapter.ViewHolder).notDraggable) {
-            return makeMovementFlags(0, ItemTouchHelper.START)
+            return makeMovementFlags(0, 0)
         }
 
         return super.getMovementFlags(recyclerView, viewHolder)

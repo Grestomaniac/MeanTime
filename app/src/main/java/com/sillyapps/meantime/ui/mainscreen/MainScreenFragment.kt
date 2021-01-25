@@ -60,7 +60,6 @@ class MainScreenFragment: Fragment() {
         setupService()
 
         addTemporalTaskButton.setOnClickListener { addTemporalTask() }
-        viewDataBinding.warningButton.setOnClickListener { showWarningDialog() }
         viewDataBinding.buttonStop.setOnLongClickListener { viewModel.onStopButtonLongClick() }
     }
 
@@ -133,7 +132,6 @@ class MainScreenFragment: Fragment() {
         })
 
         viewModel.currentTaskStateChanged.observe(viewLifecycleOwner) {
-
             adapter.notifyItemChanged(viewModel.getCurrentTaskPosition())
         }
 

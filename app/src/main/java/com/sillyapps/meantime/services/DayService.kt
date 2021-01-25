@@ -13,6 +13,7 @@ import com.sillyapps.meantime.ui.alarmscreen.AlarmActivity
 import com.sillyapps.meantime.ui.mainscreen.DayManager
 import com.sillyapps.meantime.utils.convertMillisToStringFormatWithSeconds
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import java.lang.IllegalArgumentException
 import javax.inject.Inject
 
@@ -73,7 +74,9 @@ class DayService: Service() {
             when (intent.action) {
                 ACTION_STOP -> {
                     dayManager.stopTask()
-                    updateTimer()
+                    if (dayManager.thisDay!!.isRunning) {
+                        updateTimer()
+                    }
                 }
 
                 ACTION_PAUSE -> {

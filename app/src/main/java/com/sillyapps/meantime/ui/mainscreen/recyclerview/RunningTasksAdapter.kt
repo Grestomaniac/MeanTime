@@ -48,14 +48,6 @@ class RunningTasksAdapter(private val clickListener: ItemClickListener, private 
     }
 
     override fun onItemSwiped(position: Int, direction: Int) {
-        if (direction == ItemTouchHelper.START) {
-            onSwipeToStartCallback?.swiped(getItem(position).goalsId)
-            return
-        }
-
-        if (getItem(position).canNotBeSwappedOrDisabled()) {
-            return
-        }
         viewModel.notifyTaskDisabled(position)
         notifyItemChanged(position)
     }

@@ -17,59 +17,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/primaryDarkColor"
-            android:paddingBottom="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:id="@+id/textView2"
-                style="@style/AppTheme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                android:text="@string/time_remain"
-                app:layout_constraintEnd_toStartOf="@+id/timeRemained"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/timeRemained"
-                style="@style/AppTheme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textView2"
-                app:layout_constraintTop_toTopOf="@+id/textView2"
-
-                app:timeWithSeconds="@{viewmodel.uiTimeRemain}"
-                tools:text="00:00:00" />
-
-            <ImageButton
-                android:id="@+id/warning_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:background="@null"
-                app:layout_constraintBottom_toBottomOf="@+id/timeRemained"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/timeRemained"
-                app:srcCompat="@drawable/ic_warning"
-                android:tint="@color/colorWarning"
-
-                android:visibility="@{viewmodel.appPermissionWarnings.haveAnyWarnings ? View.VISIBLE : View.GONE}"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/refreshDay"
             isActive="@{viewmodel.paused}"
@@ -78,10 +25,10 @@
             android:layout_height="0dp"
             android:visibility="visible"
 
-            app:layout_constraintBottom_toBottomOf="@+id/buttonsContainer"
+            app:layout_constraintBottom_toTopOf="@+id/buttonsContainer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+            app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible">
 
             <androidx.recyclerview.widget.RecyclerView
@@ -89,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
 
-                android:paddingBottom="86dp"
+                android:paddingBottom="8dp"
                 android:clipToPadding="false"
 
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -103,7 +50,9 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@drawable/main_screen_navigation"
+            android:paddingTop="8dp">
 
             <ImageButton
                 android:id="@+id/play_button"
@@ -111,16 +60,16 @@
                 android:layout_width="@dimen/centerButtonSize"
 
                 android:layout_height="@dimen/centerButtonSize"
+                android:layout_marginBottom="8dp"
                 android:onClick="@{() -> viewmodel.startButtonPressed()}"
+
                 android:src="@drawable/ic_play"
-
                 app:isInteractive="@{viewmodel.uiDayState != State.ACTIVE}"
-                app:layout_constraintBottom_toBottomOf="@+id/addTemporalTaskButton"
 
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/button_pause"
-                app:layout_constraintStart_toStartOf="@+id/button_pause"
 
-                app:layout_constraintTop_toTopOf="@+id/addTemporalTaskButton"
+                app:layout_constraintStart_toStartOf="@+id/button_pause"
                 tools:visibility="visible" />
 
             <ImageButton
@@ -129,18 +78,18 @@
                 android:layout_width="@dimen/centerButtonSize"
 
                 android:layout_height="@dimen/centerButtonSize"
+
+                android:layout_marginBottom="8dp"
                 android:onClick="@{() -> viewmodel.pauseButtonPressed()}"
 
                 android:src="@drawable/ic_pause"
+
                 android:tint="@color/secondaryTextColor"
 
                 app:isInteractive="@{viewmodel.uiDayState == State.ACTIVE}"
-
-                app:layout_constraintBottom_toBottomOf="@+id/addTemporalTaskButton"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/addTemporalTaskButton"
                 app:layout_constraintStart_toEndOf="@+id/button_stop"
-
-                app:layout_constraintTop_toTopOf="@+id/addTemporalTaskButton"
                 tools:visibility="invisible" />
 
             <ImageButton
@@ -166,7 +115,7 @@
                 android:src="@drawable/ic_add"
                 app:fabSize="normal"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -16,7 +16,8 @@
         android:id="@+id/item_task"
         android:background="@drawable/item_waiting"
         android:layout_marginTop="@dimen/normal_margin"
-        android:layout_marginHorizontal="8dp">
+        android:layout_marginHorizontal="8dp"
+        android:paddingBottom="16dp">
 
         <TextView
             android:id="@+id/time"
@@ -24,34 +25,39 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/enter_name"
-            app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="16dp"
 
+            app:layout_constraintBottom_toBottomOf="@+id/enter_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintTop_toTopOf="@+id/enter_name"
             app:time="@{task.startTime}"
-            tools:text="17:00"/>
+            tools:text="17:00" />
 
         <TextView
             android:id="@+id/enter_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
 
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/time"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/time"
-            app:layout_constraintTop_toTopOf="@+id/time"
-
             android:text="@{task.name}"
+            app:layout_constraintEnd_toStartOf="@+id/time"
+            app:layout_constraintStart_toEndOf="@+id/taskIcon"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="Свободное время" />
+
+        <ImageView
+            android:id="@+id/taskIcon"
+            style="@style/ItemButtonStyle"
+            android:layout_width="@dimen/iconSize"
+            android:layout_height="@dimen/iconSize"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/enter_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/enter_name"
+            app:srcCompat="@drawable/ic_reorder" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

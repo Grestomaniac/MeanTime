@@ -11,6 +11,8 @@ import com.sillyapps.meantime.data.State
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.data.TaskGoals
 import com.sillyapps.meantime.ui.SingleLiveEvent
+import com.sillyapps.meantime.utils.formatString
+import com.sillyapps.meantime.utils.removeExtraSpaces
 import kotlinx.coroutines.launch
 
 class MainViewModel @ViewModelInject constructor(private val dayManager: DayManager): ViewModel() {
@@ -52,7 +54,7 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
     private val dataUpdateCallback = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
             when (propertyId) {
-                BR.timeRemain -> _uiTimeRemain.value = dayManager.thisDay!!.timeRemain
+                BR.timeRemain -> dayManager.thisDay!!.updateTaskRelativeProgress()
 
                 BR.isRunning -> _serviceRunning.value = dayManager.thisDay!!.isRunning
 
@@ -83,6 +85,7 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
                 _uiDayState.value = dayState
                 _uiTimeRemain.value = timeRemain
                 addOnPropertyChangedCallback(dataUpdateCallback)
+                updateTaskRelativeProgress()
             }
 
             _refreshing.value = false
@@ -145,6 +148,7 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
 
     private fun addTemporalTask(task: Task) {
         viewModelScope.launch {
+            task.name = removeExtraSpaces(task.name)
             task.goalsId = dayManager.getTaskGoalsIdByName(task.name)
             dayManager.thisDay!!.addTemporalTask(task)
         }

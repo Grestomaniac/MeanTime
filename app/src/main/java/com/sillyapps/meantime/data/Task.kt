@@ -1,9 +1,11 @@
 package com.sillyapps.meantime.data
 
+import android.util.Log
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.sillyapps.meantime.*
 import com.sillyapps.meantime.utils.getLocalCurrentTimeMillis
+import timber.log.Timber
 
 class Task(
     startTime: Long = 0L,
@@ -87,7 +89,22 @@ class Task(
     var progress: Long = 0L
         set(value) {
             field = value
+            taskTimeRemained = editableDuration - progress
             notifyPropertyChanged(BR.progress)
+        }
+
+    @Bindable
+    var taskTimeRemained: Long = editableDuration
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.taskTimeRemained)
+        }
+
+    @Bindable
+    var relativeProgress: Int = 0
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.relativeProgress)
         }
 
     @Bindable
@@ -116,11 +133,11 @@ class Task(
         progress += dt
         lastSystemTime = currentTime
 
-        return editableDuration - progress
+        return taskTimeRemained
     }
 
-    fun getTimeRemained(): Long {
-        return editableDuration - progress
+    fun updateRelativeProgress() {
+        relativeProgress = (progress.toFloat() / editableDuration * 100).toInt()
     }
 
     fun start() {
@@ -155,6 +172,8 @@ class Task(
     fun stop() {
         state = State.COMPLETED
         duration = progress
+        relativeProgress = 100
+        taskTimeRemained = 0L
     }
 
     fun complete() {
@@ -173,7 +192,7 @@ class Task(
     }
 
     fun getProgressInPercents(): String {
-        return (progress.toFloat() / editableDuration * 100).toInt().toString() + "%"
+        return (progress.toFloat() / editableDuration).toInt().toString() + "%"
     }
 
     fun isDataValid(): WhatIsWrong {

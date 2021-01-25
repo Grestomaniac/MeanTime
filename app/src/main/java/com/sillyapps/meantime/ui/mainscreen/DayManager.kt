@@ -95,7 +95,6 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     private fun getNextTask(stop: Boolean = false) {
         thisDay!!.selectNextTask(stop)
         setProperTicker()
-        checkIfCurrentTaskGoalsIsEmpty()
     }
 
     private fun checkIfCurrentTaskGoalsIsEmpty() {
@@ -128,7 +127,6 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     private fun startNewDay() {
         thisDay!!.start()
         startCoroutineCounter()
-        checkIfCurrentTaskGoalsIsEmpty()
     }
 
     private fun resumeDay() {
@@ -165,13 +163,10 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     }
 
     fun setProperTicker() {
-        if (thisDay!!.currentTask.uncertain) {
-            ticker = uncertainTicker
-            thisDay!!.timeRemain = AppConstants.UNCERTAIN
-        }
-        else {
-            ticker = defaultTicker
-            thisDay!!.timeRemain = thisDay!!.currentTask.getTimeRemained()
+        ticker = if (thisDay!!.currentTask.uncertain) {
+            uncertainTicker
+        } else {
+            defaultTicker
         }
     }
 

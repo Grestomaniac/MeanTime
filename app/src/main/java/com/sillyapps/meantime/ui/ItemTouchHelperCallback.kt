@@ -18,7 +18,7 @@ open class ItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter)
         viewHolder: RecyclerView.ViewHolder
     ): Int {
         val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
-        val swipeFlags = ItemTouchHelper.END or ItemTouchHelper.START
+        val swipeFlags = ItemTouchHelper.START
 
         return makeMovementFlags(dragFlags, swipeFlags)
     }

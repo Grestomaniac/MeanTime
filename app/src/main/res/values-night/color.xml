@@ -13,6 +13,8 @@
     <color name="colorItemActive">#15043A</color>
     <color name="colorItemCompleted">#041739</color>
 
+    <color name="colorNotActive">#3A3A3A</color>
+
     <color name="colorWarning">#9D3030</color>
     <color name="colorAlright">#3E7C37</color>
 
