@@ -13,7 +13,7 @@
 
     <string name="ids">id = %1$d</string>
     <string name="enter_name">Name:</string>
-    <string name="enter_duration">Duration:</string>
+    <string name="enter_duration">Enter duration:</string>
     <string name="with_melody">With melody:</string>
     <string name="melody">Melody:</string>
     <string name="vibration_on">Vibration on:</string>
@@ -36,7 +36,7 @@
     <string name="time_remain">Time remain:</string>
 
     <!--TaskInfoDialog-->
-    <string name="duration">Duration:</string>
+    <string name="duration">Enter duration:</string>
     <string name="start_time">Start time:</string>
     <string name="active">Active for:</string>
     <string name="task_progress">Progress:</string>
@@ -89,5 +89,6 @@
     <string name="save_as">Save as</string>
     <string name="open">Open</string>
     <string name="get_next">Get next</string>
+    <string name="colon">:</string>
 
 </resources>

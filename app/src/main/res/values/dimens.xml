@@ -2,8 +2,10 @@
 <resources>
 
     <dimen name="buttonSize">57dp</dimen>
-    <dimen name="centerButtonSize">72dp</dimen>
+    <dimen name="centerButtonSize">57dp</dimen>
     <dimen name="normal_margin">16dp</dimen>
     <dimen name="button_padding">8dp</dimen>
     <dimen name="iconSize">30dp</dimen>
+
+    <dimen name="timePickerItemSize">40dp</dimen>
 </resources>

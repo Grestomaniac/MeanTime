@@ -8,6 +8,7 @@
 
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="colorSurface">@color/primaryColor</item>
     </style>
 
     <style name="DialogStyle" parent="Theme.AppCompat.DayNight.Dialog.MinWidth">
@@ -24,6 +25,14 @@
 
     <style name="InputTextStyle" parent="AppTheme">
         <item name="android:gravity">top|start</item>
+    </style>
+
+    <style name="TimePickerStyle" parent="AppTheme">
+        <item name="android:inputType">time</item>
+        <item name="android:textSize">60dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:selectAllOnFocus">true</item>
+        <item name="android:focusableInTouchMode">true</item>
     </style>
 
     <style name="ButtonStyle" parent="AppTheme">

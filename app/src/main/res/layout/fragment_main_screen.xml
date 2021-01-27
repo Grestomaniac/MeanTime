@@ -52,7 +52,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:background="@drawable/main_screen_navigation"
-            android:paddingTop="8dp">
+            android:paddingTop="16dp">
 
             <ImageButton
                 android:id="@+id/play_button"
@@ -60,7 +60,7 @@
                 android:layout_width="@dimen/centerButtonSize"
 
                 android:layout_height="@dimen/centerButtonSize"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="16dp"
                 android:onClick="@{() -> viewmodel.startButtonPressed()}"
 
                 android:src="@drawable/ic_play"
@@ -70,7 +70,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/button_pause"
 
                 app:layout_constraintStart_toStartOf="@+id/button_pause"
-                tools:visibility="visible" />
+                tools:visibility="visible"/>
 
             <ImageButton
                 android:id="@+id/button_pause"
@@ -79,7 +79,7 @@
 
                 android:layout_height="@dimen/centerButtonSize"
 
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="16dp"
                 android:onClick="@{() -> viewmodel.pauseButtonPressed()}"
 
                 android:src="@drawable/ic_pause"

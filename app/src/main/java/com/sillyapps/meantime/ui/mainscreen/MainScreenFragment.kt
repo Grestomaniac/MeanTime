@@ -1,17 +1,21 @@
 package com.sillyapps.meantime.ui.mainscreen
 
+import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.view.*
+import android.widget.TimePicker
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.sillyapps.meantime.R
 import com.sillyapps.meantime.databinding.FragmentMainScreenBinding
 import com.sillyapps.meantime.services.DayService
@@ -60,6 +64,7 @@ class MainScreenFragment: Fragment() {
         setupService()
 
         addTemporalTaskButton.setOnClickListener { addTemporalTask() }
+
         viewDataBinding.buttonStop.setOnLongClickListener { viewModel.onStopButtonLongClick() }
     }
 

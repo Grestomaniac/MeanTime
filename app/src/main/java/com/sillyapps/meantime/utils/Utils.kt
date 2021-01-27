@@ -1,9 +1,15 @@
 package com.sillyapps.meantime.utils
 
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.res.Configuration
 import android.graphics.PorterDuff
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.MenuItem
+import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -11,7 +17,10 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.sillyapps.meantime.PreferencesKeys
 import com.sillyapps.meantime.R
+import com.sillyapps.meantime.hideKeyBoard
+import timber.log.Timber
 import java.util.*
+
 
 fun getLocalCurrentTimeMillis(): Long {
     val tz = TimeZone.getDefault()
@@ -85,7 +94,7 @@ fun removeExtraSpaces(string: String): String {
             sb.append(c)
             haveSpaceBefore = false
         }
-        else if (haveSpaceBefore) {
+        else if (!haveSpaceBefore) {
             sb.append(c)
             haveSpaceBefore = true
         }
@@ -108,11 +117,29 @@ fun AppCompatActivity.setDarkThemeIfNeeded() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
     }
     else {
-        val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(
+            applicationContext
+        )
         val appNightModeEnabled = preferences.getBoolean(PreferencesKeys.NIGHT_MODE_IS_ON, false)
         if (appNightModeEnabled)
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         else
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     }
+}
+
+fun View.getActivity(): AppCompatActivity? {
+    var context = context
+    while (context is ContextWrapper) {
+        if (context is AppCompatActivity) {
+            return context
+        }
+        context = context.baseContext
+    }
+    return null
+}
+
+fun formatTime(value: Int): String {
+    return if (value > 9) value.toString()
+    else "0$value"
 }

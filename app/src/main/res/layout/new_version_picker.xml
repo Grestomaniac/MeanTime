@@ -20,7 +20,6 @@
             android:layout_height="0dp"
 
             android:text="@string/enter_duration"
-
             app:layout_constraintEnd_toStartOf="@+id/uncertain"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -42,23 +41,26 @@
             android:id="@+id/timePickerLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             app:interactive="@{!task.uncertain}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/enter_duration">
 
-
-            <com.sillyapps.meantime.ui.TimePickerItem
+            <EditText
                 android:id="@+id/timePickerHours"
+
+                style="@style/TimePickerStyle"
+                android:background="@drawable/item_time_picker"
+                tools:text="00"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
+                app:layout_constraintBottom_toBottomOf="@+id/timePickerMinutes"
                 app:layout_constraintEnd_toStartOf="@+id/colon"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/timePickerMinutes"
-                app:maxValue="23"
-
                 app:layout_constraintHorizontal_chainStyle="packed"/>
 
             <TextView
@@ -66,50 +68,65 @@
                 android:layout_width="wrap_content"
 
                 android:layout_height="wrap_content"
-
                 android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
 
+                android:layout_marginEnd="8dp"
                 android:text="@string/colon"
                 android:textSize="60sp"
-                app:layout_constraintBottom_toBottomOf="@+id/timePickerMinutes"
+                app:layout_constraintBottom_toBottomOf="@+id/timePickerHours"
                 app:layout_constraintEnd_toStartOf="@+id/timePickerMinutes"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/timePickerHours"
-                app:layout_constraintTop_toTopOf="@+id/timePickerMinutes" />
+                app:layout_constraintTop_toTopOf="@+id/timePickerHours" />
 
-            <com.sillyapps.meantime.ui.TimePickerItem
+            <EditText
                 android:id="@+id/timePickerMinutes"
+
+                style="@style/TimePickerStyle"
+                android:background="@drawable/item_time_picker"
+                tools:text="00"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+
+                android:layout_marginTop="4dp"
+
                 app:layout_constraintEnd_toStartOf="@+id/colon2"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/colon"
-                app:layout_constraintTop_toTopOf="parent"
-                app:maxValue="59" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/colon2"
                 android:layout_width="wrap_content"
 
                 android:layout_height="wrap_content"
-
                 android:layout_marginStart="8dp"
+
                 android:layout_marginEnd="8dp"
                 android:text="@string/colon"
                 android:textSize="60sp"
-                app:layout_constraintBottom_toBottomOf="@+id/timePickerMinutes"
-                app:layout_constraintEnd_toStartOf="@+id/timePickerSeconds"
+                app:layout_constraintBottom_toBottomOf="@+id/timePickerHours"
+                app:layout_constraintEnd_toStartOf="@+id/picker"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/timePickerMinutes"
-                app:layout_constraintTop_toTopOf="@+id/timePickerMinutes" />
+                app:layout_constraintTop_toTopOf="@+id/timePickerHours" />
 
-            <com.sillyapps.meantime.ui.TimePickerItem
-                android:id="@+id/timePickerSeconds"
+            <EditText
+                android:id="@+id/picker"
+
+                style="@style/TimePickerStyle"
+                android:background="@drawable/item_time_picker"
+                tools:text="00"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
+                app:layout_constraintBottom_toBottomOf="@+id/timePickerMinutes"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/colon2"
-                app:layout_constraintTop_toTopOf="@+id/timePickerMinutes"
-                app:maxValue="59" />
+                app:layout_constraintTop_toTopOf="@+id/timePickerMinutes" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

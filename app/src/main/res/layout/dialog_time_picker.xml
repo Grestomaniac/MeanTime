@@ -25,13 +25,13 @@
 
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toStartOf="@+id/timePickerSeconds"
+            app:layout_constraintEnd_toStartOf="@+id/picker"
             app:layout_constraintStart_toEndOf="@+id/timePickerHours"
             app:layout_constraintTop_toTopOf="parent"
             android:solidColor="@color/primaryDarkColor"/>
 
         <NumberPicker
-            android:id="@+id/timePickerSeconds"
+            android:id="@+id/picker"
 
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -46,8 +46,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="@+id/timePickerSeconds"
-            app:layout_constraintStart_toStartOf="@+id/timePickerSeconds"
+            app:layout_constraintEnd_toEndOf="@+id/picker"
+            app:layout_constraintStart_toStartOf="@+id/picker"
             app:layout_constraintTop_toBottomOf="@+id/timePickerMinutes"
             app:srcCompat="@drawable/ic_check"
             style="@style/ButtonStyle"
