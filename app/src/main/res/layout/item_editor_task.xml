@@ -17,7 +17,9 @@
         android:background="@drawable/item_waiting"
         android:layout_marginTop="@dimen/normal_margin"
         android:layout_marginHorizontal="8dp"
-        android:paddingBottom="16dp">
+        android:paddingBottom="16dp"
+
+        android:elevation="@dimen/listItemElevation">
 
         <TextView
             android:id="@+id/time"

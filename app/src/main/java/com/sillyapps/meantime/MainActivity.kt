@@ -20,6 +20,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.navigation.NavigationView
 import com.sillyapps.meantime.databinding.ActivityMainBinding
+import com.sillyapps.meantime.ui.TimePickerItem
 import com.sillyapps.meantime.utils.setDarkThemeIfNeeded
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -114,6 +115,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     val outRect = Rect()
                     v.getGlobalVisibleRect(outRect)
                     if (!outRect.contains(it.rawX.toInt(), it.rawY.toInt())) {
+                        if (v.parent is TimePickerItem) {
+                            (v.parent as TimePickerItem).onFocusChange(v, false)
+                        }
                         v.clearFocus()
                         hideKeyBoard(v)
                     }

@@ -17,7 +17,36 @@
         app:state="@{task.state}"
 
         tools:background="@drawable/item_waiting"
-        android:paddingBottom="16dp">
+        android:paddingBottom="16dp"
+        android:elevation="@dimen/listItemElevation"
+        android:stateListAnimator="@animator/item_raise">
+
+        <ImageView
+            android:id="@+id/taskIcon"
+            style="@style/ItemButtonStyle"
+            android:layout_width="@dimen/iconSize"
+            android:layout_height="@dimen/iconSize"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/enter_name"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/enter_name"
+            app:srcCompat="@drawable/ic_reorder" />
+
+        <TextView
+            android:id="@+id/enter_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@{task.name}"
+            app:layout_constraintEnd_toStartOf="@+id/time"
+            app:layout_constraintStart_toEndOf="@+id/taskIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Таск с очень и очень длинным названием"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/time"
@@ -32,20 +61,6 @@
             app:time="@{task.startTime}"
             tools:text="17:00" />
 
-        <TextView
-            android:id="@+id/enter_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@{task.name}"
-            app:layout_constraintEnd_toStartOf="@+id/time"
-            app:layout_constraintStart_toEndOf="@+id/taskIcon"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Таск с очень и очень длинным названием" />
-
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleHorizontal"
@@ -58,19 +73,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/enter_name"
 
-            android:progress="@{task.relativeProgress}"/>
-
-        <ImageView
-            android:id="@+id/taskIcon"
-            style="@style/ItemButtonStyle"
-            android:layout_width="@dimen/iconSize"
-            android:layout_height="@dimen/iconSize"
-            android:layout_marginStart="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/enter_name"
-
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/enter_name"
-            app:srcCompat="@drawable/ic_reorder" />
+            android:progress="@{task.relativeProgress}"
+            android:max="100"/>
 
         <TextView
             android:id="@+id/progress"

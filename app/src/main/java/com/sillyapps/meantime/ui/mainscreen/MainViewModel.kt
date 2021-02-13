@@ -19,9 +19,6 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
 
     val uiTasks: MutableLiveData<MutableList<Task>> = MutableLiveData(mutableListOf())
 
-    private val _uiTimeRemain: MutableLiveData<Long> = MutableLiveData(0)
-    val uiTimeRemain: LiveData<Long> = _uiTimeRemain
-
     private val _serviceRunning: MutableLiveData<Boolean> = MutableLiveData(false)
     val serviceRunning: LiveData<Boolean> = _serviceRunning
 
@@ -83,7 +80,6 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
                 _serviceRunning.value = isRunning
                 uiTasks.value = tasks
                 _uiDayState.value = dayState
-                _uiTimeRemain.value = timeRemain
                 addOnPropertyChangedCallback(dataUpdateCallback)
                 updateTaskRelativeProgress()
             }
@@ -104,12 +100,9 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
         }
     }
 
-    fun startButtonPressed() {
-        dayManager.start()
-    }
-
-    fun pauseButtonPressed() {
-        dayManager.pauseDay()
+    fun startOrPauseButtonPressed() {
+        if (dayManager.thisDay!!.dayState == State.ACTIVE) dayManager.pauseDay()
+        else dayManager.start()
     }
 
     fun stopButtonPressed() {

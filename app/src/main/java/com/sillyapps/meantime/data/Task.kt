@@ -46,6 +46,7 @@ class Task(
     var editableDuration: Long = duration
         set(value) {
             field = value
+            taskTimeRemained = editableDuration - progress
             notifyPropertyChanged(BR.editableDuration)
         }
 
@@ -114,6 +115,8 @@ class Task(
             notifyPropertyChanged(BR.uncertain)
         }
 
+    var paused: Boolean = false
+
     fun resetStartTime(time: Long = 0L) {
         startTime = time
     }
@@ -123,7 +126,10 @@ class Task(
             AppConstants.UNCERTAIN
         }
         else {
-            startTime + editableDuration - progress
+            if (paused)
+                startTime + taskTimeRemained
+            else
+                startTime + editableDuration
         }
     }
 
@@ -151,6 +157,7 @@ class Task(
     }
 
     fun resume() {
+        paused = true
         state = State.ACTIVE
         lastSystemTime = System.currentTimeMillis()
     }
@@ -169,15 +176,11 @@ class Task(
         }
     }
 
-    fun stop() {
+    fun complete() {
         state = State.COMPLETED
         duration = progress
         relativeProgress = 100
         taskTimeRemained = 0L
-    }
-
-    fun complete() {
-        state = State.COMPLETED
     }
 
     fun revertChanges() {

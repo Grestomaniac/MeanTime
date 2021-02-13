@@ -18,7 +18,9 @@
 
         android:id="@+id/item_template"
         state="@{schemeTemplate.templateInfo.state}"
-        tools:background="@drawable/item_waiting">
+        tools:background="@drawable/item_waiting"
+
+        android:elevation="@dimen/listItemElevation">
 
         <TextView
             android:id="@+id/enter_name"

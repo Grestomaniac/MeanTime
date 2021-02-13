@@ -8,4 +8,7 @@
     <dimen name="iconSize">30dp</dimen>
 
     <dimen name="timePickerItemSize">40dp</dimen>
+    
+    <dimen name="actionButtonElevation">6dp</dimen>
+    <dimen name="listItemElevation">4dp</dimen>
 </resources>

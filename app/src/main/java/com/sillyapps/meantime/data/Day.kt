@@ -90,7 +90,7 @@ class Day(val tasks: MutableList<Task> = mutableListOf(),
 
     private fun completeCurrentTask(stop: Boolean) {
         if (stop) {
-            currentTask.stop()
+            currentTask.complete()
             updateStartTimes(currentTaskPos+1)
         }
         else {

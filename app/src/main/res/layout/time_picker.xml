@@ -19,19 +19,21 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
 
-            android:text="@string/enter_duration"
+            android:layout_marginStart="16dp"
 
+            android:text="@string/enter_duration"
             app:layout_constraintEnd_toStartOf="@+id/uncertain"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintHorizontal_chainStyle="spread_inside"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <CheckBox
             android:id="@+id/uncertain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="@={task.uncertain}"
+            android:layout_marginEnd="16dp"
 
+            android:checked="@={task.uncertain}"
             android:text="@string/duration_is_uncertain"
             app:layout_constraintBottom_toBottomOf="@+id/enter_duration"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,11 +44,10 @@
             android:id="@+id/timePickerLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             app:interactive="@{!task.uncertain}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/enter_duration">
+            app:layout_constraintTop_toBottomOf="@+id/uncertain">
 
 
             <com.sillyapps.meantime.ui.TimePickerItem
@@ -55,11 +56,12 @@
                 android:layout_height="wrap_content"
 
                 app:layout_constraintEnd_toStartOf="@+id/colon"
+                app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/timePickerMinutes"
-                app:maxValue="23"
+                app:longClickIncAmount="1"
 
-                app:layout_constraintHorizontal_chainStyle="packed"/>
+                app:maxValue="23" />
 
             <TextView
                 android:id="@+id/colon"
@@ -85,6 +87,8 @@
                 app:layout_constraintEnd_toStartOf="@+id/colon2"
                 app:layout_constraintStart_toEndOf="@+id/colon"
                 app:layout_constraintTop_toTopOf="parent"
+
+                app:longClickIncAmount="15"
                 app:maxValue="59" />
 
             <TextView
@@ -109,6 +113,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/colon2"
                 app:layout_constraintTop_toTopOf="@+id/timePickerMinutes"
+
+                app:longClickIncAmount="15"
                 app:maxValue="59" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

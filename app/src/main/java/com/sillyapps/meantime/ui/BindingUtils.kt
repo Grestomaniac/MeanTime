@@ -11,6 +11,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.databinding.BindingAdapter
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.R
 import com.sillyapps.meantime.utils.convertMillisToStringFormat
@@ -112,4 +113,13 @@ fun ImageButton.setInteractive(interactive: Boolean) {
                     else View.INVISIBLE
     isEnabled = interactive
 
+}
+
+@BindingAdapter("isDayRunning")
+fun FloatingActionButton.setDayRunning(dayRunning: Boolean) {
+    val imageResource =
+        if (dayRunning) R.drawable.ic_pause
+        else R.drawable.ic_play
+
+    setImageResource(imageResource)
 }

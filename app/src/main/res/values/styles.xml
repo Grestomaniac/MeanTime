@@ -51,6 +51,7 @@
     <style name="ActionButtonStyle" parent="AppTheme">
         <item name="tint">@color/secondaryTextColor</item>
         <item name="tintMode">src_atop</item>
+        <item name="elevation">6dp</item>
         <item name="android:background">@drawable/action_button</item>
     </style>
 

@@ -25,7 +25,7 @@
             android:layout_height="0dp"
             android:visibility="visible"
 
-            app:layout_constraintBottom_toTopOf="@+id/buttonsContainer"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -36,8 +36,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
 
-                android:paddingBottom="8dp"
                 android:clipToPadding="false"
+                android:paddingBottom="8dp"
 
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_main_screen_task" />
@@ -51,59 +51,48 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:background="@drawable/main_screen_navigation"
             android:paddingTop="16dp">
 
-            <ImageButton
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/play_button"
                 style="@style/ActionButtonStyle"
-                android:layout_width="@dimen/centerButtonSize"
+                android:layout_width="wrap_content"
 
-                android:layout_height="@dimen/centerButtonSize"
-                android:layout_marginBottom="16dp"
-                android:onClick="@{() -> viewmodel.startButtonPressed()}"
+                android:onClick="@{() -> viewmodel.startOrPauseButtonPressed()}"
 
-                android:src="@drawable/ic_play"
-                app:isInteractive="@{viewmodel.uiDayState != State.ACTIVE}"
-
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/button_pause"
-
-                app:layout_constraintStart_toStartOf="@+id/button_pause"
-                tools:visibility="visible"/>
-
-            <ImageButton
-                android:id="@+id/button_pause"
-                style="@style/ActionButtonStyle"
-                android:layout_width="@dimen/centerButtonSize"
-
-                android:layout_height="@dimen/centerButtonSize"
-
-                android:layout_marginBottom="16dp"
-                android:onClick="@{() -> viewmodel.pauseButtonPressed()}"
-
-                android:src="@drawable/ic_pause"
-
-                android:tint="@color/secondaryTextColor"
-
-                app:isInteractive="@{viewmodel.uiDayState == State.ACTIVE}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/addTemporalTaskButton"
-                app:layout_constraintStart_toEndOf="@+id/button_stop"
-                tools:visibility="invisible" />
-
-            <ImageButton
-                android:id="@+id/button_stop"
-                style="@style/ActionButtonStyle"
-                android:layout_width="@dimen/buttonSize"
-                android:layout_height="@dimen/buttonSize"
+                android:layout_height="wrap_content"
+                app:fabSize="normal"
 
                 android:layout_margin="@dimen/normal_margin"
+
+                app:isDayRunning="@{viewmodel.uiDayState == State.ACTIVE}"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/addTemporalTaskButton"
+
+                app:layout_constraintStart_toEndOf="@+id/button_stop"
+
+                tools:src="@drawable/ic_play"
+                android:elevation="@dimen/actionButtonElevation"/>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/button_stop"
+                style="@style/ActionButtonStyle"
+                android:layout_width="wrap_content"
+
                 android:onClick="@{() -> viewmodel.stopButtonPressed()}"
+
+                android:layout_height="wrap_content"
+                app:fabSize="normal"
+
+                android:layout_margin="@dimen/normal_margin"
+
                 android:src="@drawable/ic_stop_black_24dp"
 
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                android:elevation="@dimen/actionButtonElevation"/>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/addTemporalTaskButton"
@@ -115,7 +104,8 @@
                 android:src="@drawable/ic_add"
                 app:fabSize="normal"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                android:elevation="@dimen/actionButtonElevation"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

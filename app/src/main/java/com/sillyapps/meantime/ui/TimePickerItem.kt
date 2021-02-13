@@ -1,26 +1,34 @@
 package com.sillyapps.meantime.ui
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
+import android.os.UserManager
 import android.text.Editable
 import android.text.InputFilter
 import android.text.Spanned
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.inputmethod.EditorInfo
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.os.UserManagerCompat
 import androidx.core.text.isDigitsOnly
 import com.sillyapps.meantime.R
 import com.sillyapps.meantime.databinding.ItemTimePickerBinding
 import com.sillyapps.meantime.hideKeyBoard
 import com.sillyapps.meantime.utils.formatTime
 import com.sillyapps.meantime.utils.getActivity
+import kotlinx.coroutines.*
 import timber.log.Timber
 
 class TimePickerItem @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttrs: Int = 0): ConstraintLayout(context, attrs, defStyleAttrs), View.OnFocusChangeListener {
     val binding = ItemTimePickerBinding.inflate(LayoutInflater.from(context), this, true)
 
+    private val longClickIncAmount: Int
     private val maxValue: Int
     var previousView: TimePickerItem? = null
     var nextView: TimePickerItem? = null
@@ -34,6 +42,7 @@ class TimePickerItem @JvmOverloads constructor(context: Context, attrs: Attribut
     init {
         context.theme.obtainStyledAttributes(attrs, R.styleable.TimePickerItem, 0, 0).apply {
             maxValue = getInt(R.styleable.TimePickerItem_maxValue, 59)
+            longClickIncAmount = getInt(R.styleable.TimePickerItem_longClickIncAmount, 5)
         }
     }
 
@@ -67,18 +76,11 @@ class TimePickerItem @JvmOverloads constructor(context: Context, attrs: Attribut
 
     private fun setTimeTextListener() {
         watcher = object : TextWatcher {
-            private var buffer: CharSequence? = null
-
-            init {
-                Timber.d("For view with id $id next is $nextView")
-            }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                buffer = s
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -112,14 +114,18 @@ class TimePickerItem @JvmOverloads constructor(context: Context, attrs: Attribut
             }
         }
 
-        binding.arrowUp.apply {
-            setOnClickListener { incrementTime() }
-            setOnLongClickListener { incrementTime(5) }
+        binding.arrowUp.also {
+            it.setOnClickListener { incrementTime() }
+            it.setOnLongClickListener { incrementTime(longClickIncAmount) }
+
+            it.setOnTouchListener(RepeatListener())
         }
 
-        binding.arrowDown.apply {
-            setOnClickListener { decrementTime() }
-            setOnLongClickListener { decrementTime(5) }
+        binding.arrowDown.also {
+            it.setOnClickListener { decrementTime() }
+            it.setOnLongClickListener { decrementTime(longClickIncAmount) }
+
+            it.setOnTouchListener(RepeatListener())
         }
 
         binding.picker.filters = arrayOf(TimePickerInputFilter())
@@ -135,7 +141,7 @@ class TimePickerItem @JvmOverloads constructor(context: Context, attrs: Attribut
             setTextSafely(formatTime(value))
         else {
             previousView?.incrementTime()
-            setTextSafely("00")
+            setTextSafely(formatTime(value % maxValue - 1))
         }
         return true
     }
@@ -147,7 +153,7 @@ class TimePickerItem @JvmOverloads constructor(context: Context, attrs: Attribut
             setTextSafely(formatTime(value))
         else {
             previousView?.decrementTime()
-            setTextSafely(formatTime(maxValue))
+            setTextSafely(formatTime(maxValue - amount + 1))
         }
         return true
     }
@@ -169,6 +175,46 @@ class TimePickerItem @JvmOverloads constructor(context: Context, attrs: Attribut
 
 }
 
+class RepeatListener : View.OnTouchListener {
+
+    private val handler = Handler(Looper.getMainLooper())
+
+    private var touchedView: View? = null
+    private var haveClicked = false
+
+    private var clickInterval = ViewConfiguration.getLongPressTimeout().toLong()
+    private var repeatInterval = 1000L
+
+    private val handlerRunnable: Runnable = run {
+        Runnable {
+            haveClicked = true
+            handler.postDelayed(handlerRunnable, repeatInterval)
+            touchedView?.performLongClick()
+        }
+    }
+
+    override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
+        when (motionEvent.action) {
+            MotionEvent.ACTION_DOWN -> {
+                handler.removeCallbacks(handlerRunnable)
+
+                handler.postDelayed(handlerRunnable, clickInterval)
+                touchedView = view
+                haveClicked = false
+                return true
+            }
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                handler.removeCallbacks(handlerRunnable)
+                if (!haveClicked)
+                    touchedView?.performClick()
+                touchedView = null
+                return true
+            }
+        }
+
+        return false
+    }
+}
 class TimePickerInputFilter(): InputFilter {
     override fun filter(source: CharSequence?, start: Int, end: Int, dest: Spanned?, dstart: Int, dend: Int): CharSequence? {
         source?.let {
