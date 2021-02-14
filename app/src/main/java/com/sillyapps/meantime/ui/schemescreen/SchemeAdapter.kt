@@ -34,6 +34,10 @@ class SchemeAdapter(private val viewModel: SchemeViewModel, private val onClickL
     override fun onItemDropped(toPosition: Int) {
     }
 
+    override fun onItemPicked(position: Int) {
+
+    }
+
     override fun onItemSwiped(position: Int, direction: Int) {
         when (direction) {
             ItemTouchHelper.START -> {

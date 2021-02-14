@@ -1,11 +1,9 @@
 package com.sillyapps.meantime.data
 
-import android.util.Log
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.sillyapps.meantime.*
 import com.sillyapps.meantime.utils.getLocalCurrentTimeMillis
-import timber.log.Timber
 
 class Task(
     startTime: Long = 0L,
@@ -17,7 +15,9 @@ class Task(
     sound: String = AppConstants.DEFAULT_RINGTONE,
     var goalsId: Int = 0,
     val temporal: Boolean = false,
-    uncertain: Boolean = false
+    uncertain: Boolean = false,
+    hasPrevTask: Boolean = false,
+    hasNextTask: Boolean = false
 ): BaseObservable() {
 
     @Bindable
@@ -115,6 +115,20 @@ class Task(
             notifyPropertyChanged(BR.uncertain)
         }
 
+    @Bindable
+    var hasPrevTask: Boolean = hasPrevTask
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.hasPrevTask)
+        }
+
+    @Bindable
+    var hasNextTask: Boolean = hasNextTask
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.hasNextTask)
+        }
+
     var paused: Boolean = false
 
     fun resetStartTime(time: Long = 0L) {
@@ -203,6 +217,27 @@ class Task(
         if ((editableDuration == 0L) and (!uncertain)) return WhatIsWrong.DURATION
 
         return WhatIsWrong.NOTHING
+    }
+
+    fun disconnectAll() {
+        hasNextTask = false
+        hasPrevTask = false
+    }
+
+    fun disconnectPrev() {
+        hasPrevTask = false
+    }
+
+    fun disconnectNext() {
+        hasNextTask = false
+    }
+
+    fun connectPrev() {
+        hasPrevTask = true
+    }
+
+    fun connectNext() {
+        hasNextTask = true
     }
 
     fun copyDataFrom(task: Task) {

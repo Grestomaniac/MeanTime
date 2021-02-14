@@ -1,12 +1,8 @@
 package com.sillyapps.meantime.ui
 
-import android.graphics.Canvas
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.sillyapps.meantime.AppConstants
-import timber.log.Timber
-import kotlin.math.abs
 
 open class ItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter): ItemTouchHelper.Callback() {
 
@@ -30,10 +26,6 @@ open class ItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter)
     ): Boolean {
         val targetPosition = target.adapterPosition
 
-        if (dragFrom == AppConstants.NOT_ASSIGNED) {
-            dragFrom = viewHolder.adapterPosition
-        }
-
         mAdapter.onItemMove(viewHolder.adapterPosition, targetPosition)
         dragTo = targetPosition
 
@@ -47,11 +39,18 @@ open class ItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter)
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
         super.onSelectedChanged(viewHolder, actionState)
 
-        if ((actionState == ItemTouchHelper.ACTION_STATE_IDLE) and (dragTo != AppConstants.NOT_ASSIGNED)) {
-            if (dragFrom > dragTo)
-                mAdapter.onItemDropped(dragTo)
-            else
-                mAdapter.onItemDropped(dragFrom)
+        if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+            val position = viewHolder!!.adapterPosition
+            mAdapter.onItemPicked(position)
+            dragFrom = position
+        }
+
+        if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
+            when {
+                dragTo == AppConstants.NOT_ASSIGNED -> mAdapter.onItemDropped(dragFrom)
+                dragFrom > dragTo -> mAdapter.onItemDropped(dragTo)
+                else -> mAdapter.onItemDropped(dragFrom)
+            }
 
             dragTo = AppConstants.NOT_ASSIGNED
             dragFrom = AppConstants.NOT_ASSIGNED
@@ -77,6 +76,8 @@ interface ItemTouchHelperAdapter {
     fun onItemMove(fromPosition: Int, toPosition: Int): Boolean
 
     fun onItemDropped(toPosition: Int)
+
+    fun onItemPicked(position: Int)
 
     fun onItemSwiped(position: Int, direction: Int)
 
