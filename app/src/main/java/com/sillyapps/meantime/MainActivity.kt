@@ -9,15 +9,18 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.sillyapps.meantime.databinding.ActivityMainBinding
 import com.sillyapps.meantime.ui.TimePickerItem
@@ -26,9 +29,9 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, NavController.OnDestinationChangedListener {
-    private lateinit var drawerLayout: DrawerLayout
-    private lateinit var appBarConfiguration: AppBarConfiguration
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
+    NavController.OnDestinationChangedListener {
+    lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,12 +45,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawerLayout = binding.drawerLayout
 
         val navController = findNavController(R.id.nav_host_fragment)
-        NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
+
         navView = binding.navView
         navView.setNavigationItemSelectedListener(this)
         navController.addOnDestinationChangedListener(this)
-
-        appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -125,6 +126,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
         return super.dispatchTouchEvent(ev)
+    }
+}
+
+fun Fragment.setupToolbar(toolbar: Toolbar) {
+    (requireActivity() as MainActivity).apply {
+        val navController = findNavController(R.id.nav_host_fragment)
+
+        toolbar.setupWithNavController(navController, drawerLayout)
+
+        setSupportActionBar(toolbar)
+        actionBar?.setDisplayHomeAsUpEnabled(true)
     }
 }
 

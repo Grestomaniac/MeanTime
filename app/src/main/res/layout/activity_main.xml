@@ -9,12 +9,13 @@
         android:id="@+id/drawerLayout"
         android:fitsSystemWindows="true">
 
-        <FrameLayout
+        <LinearLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".MainActivity"
-            android:background="@color/primaryLightColor">
+            android:background="@color/primaryLightColor"
+            android:orientation="vertical">
 
             <fragment
                 android:layout_width="match_parent"
@@ -25,7 +26,7 @@
                 app:defaultNavHost="true"
                 app:navGraph="@navigation/navigation"/>
 
-        </FrameLayout>
+        </LinearLayout>
 
         <com.google.android.material.navigation.NavigationView
             android:layout_width="wrap_content"
@@ -37,6 +38,7 @@
 
             app:menu="@menu/nav_drawer_menu"
             android:fitsSystemWindows="true"/>
+
 
     </androidx.drawerlayout.widget.DrawerLayout>
 

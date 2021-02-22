@@ -6,7 +6,8 @@ import com.sillyapps.meantime.*
 import com.sillyapps.meantime.utils.getLocalCurrentTimeMillis
 import java.util.*
 
-class Day(val tasks: MutableList<Task> = mutableListOf(),
+class Day(val name: String = "",
+          val tasks: MutableList<Task> = mutableListOf(),
           val templateId: Int = 0,
           dayState: State = State.WAITING,
           var dayStartTime: Long = 0L,
@@ -212,7 +213,7 @@ class Day(val tasks: MutableList<Task> = mutableListOf(),
     companion object {
         fun fromTemplate(template: Template?): Day? {
             template?.let {
-                return Day(it.activities, it.id)
+                return Day(it.name, it.activities, it.id)
             }
             return null
         }

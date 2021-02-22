@@ -16,6 +16,7 @@ import androidx.navigation.navGraphViewModels
 import com.sillyapps.meantime.R
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.databinding.FragmentEditTaskBinding
+import com.sillyapps.meantime.setupToolbar
 import com.sillyapps.meantime.utils.showInfoToUser
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -36,6 +37,8 @@ class EditTaskFragment : DialogFragment() {
     ): View {
         binding = FragmentEditTaskBinding.inflate(inflater, container, false)
         binding.task = viewModel.task.value
+
+        setupToolbar(binding.toolbar)
 
         return binding.root
     }

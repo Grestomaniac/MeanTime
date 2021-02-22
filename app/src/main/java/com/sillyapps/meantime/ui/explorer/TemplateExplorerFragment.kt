@@ -10,6 +10,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.sillyapps.meantime.R
 import com.sillyapps.meantime.databinding.FragmentExplorerBinding
+import com.sillyapps.meantime.setupToolbar
 import com.sillyapps.meantime.utils.tintMenuIcons
 import com.sillyapps.meantime.ui.ItemTouchHelperCallbackNoDrag
 import com.sillyapps.meantime.ui.explorer.recyclerview.ExplorerAdapter
@@ -23,25 +24,27 @@ class TemplateExplorerFragment : Fragment() {
     private val viewModel by viewModels<TemplateExplorerViewModel>()
     private val args: TemplateExplorerFragmentArgs by navArgs()
 
-    private lateinit var viewDataBinding: FragmentExplorerBinding
+    private lateinit var binding: FragmentExplorerBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewDataBinding = FragmentExplorerBinding.inflate(inflater, container, false).apply {
+        binding = FragmentExplorerBinding.inflate(inflater, container, false).apply {
             viewmodel = viewModel
             editMode = args.editMode
         }
 
+        setupToolbar(binding.toolbar)
+
         setHasOptionsMenu(true)
-        return viewDataBinding.root
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
+        binding.lifecycleOwner = this.viewLifecycleOwner
 
         setupAdapter()
         setupFloatingButton()
@@ -53,7 +56,7 @@ class TemplateExplorerFragment : Fragment() {
     }
 
     private fun setupFloatingButton() {
-        viewDataBinding.addTemplateFab.setOnClickListener {
+        binding.addTemplateFab.setOnClickListener {
             navigateToEditTemplateFragment()
         }
     }
@@ -63,11 +66,11 @@ class TemplateExplorerFragment : Fragment() {
                             else getExplorerModeClickListener()
 
         val explorerAdapter = ExplorerAdapter(viewModel, clickListener)
-        viewDataBinding.items.adapter = explorerAdapter
+        binding.items.adapter = explorerAdapter
 
         val itemTouchHelperCallback = ItemTouchHelperCallbackNoDrag(explorerAdapter)
         val touchHelper = ItemTouchHelper(itemTouchHelperCallback)
-        touchHelper.attachToRecyclerView(viewDataBinding.items)
+        touchHelper.attachToRecyclerView(binding.items)
 
         viewModel.items.observe(viewLifecycleOwner, {
             it.let { explorerAdapter.submitList(it) }

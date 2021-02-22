@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.sillyapps.meantime.R
 import com.sillyapps.meantime.databinding.FragmentSchemeBinding
+import com.sillyapps.meantime.setupToolbar
 import com.sillyapps.meantime.utils.tintMenuIcons
 import com.sillyapps.meantime.ui.ItemTouchHelperCallback
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,7 +28,10 @@ class SchemeFragment: Fragment() {
     ): View {
         binding = FragmentSchemeBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
+
+        setupToolbar(binding.toolbar)
         setHasOptionsMenu(true)
+
         return binding.root
     }
 

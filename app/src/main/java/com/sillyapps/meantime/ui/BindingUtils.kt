@@ -32,7 +32,7 @@ fun ConstraintLayout.setDefault(isDefault: Boolean) {
 }
 
 @BindingAdapter("state")
-fun ConstraintLayout.updateState(state: State) {
+fun View.updateState(state: State) {
     val backgroundResource =
         when (state) {
             State.WAITING -> R.drawable.item_waiting

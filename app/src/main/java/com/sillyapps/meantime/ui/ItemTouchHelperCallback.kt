@@ -6,8 +6,10 @@ import com.sillyapps.meantime.AppConstants
 
 open class ItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter): ItemTouchHelper.Callback() {
 
-    var dragTo = AppConstants.NOT_ASSIGNED
-    var dragFrom = AppConstants.NOT_ASSIGNED
+    private var dragTo = AppConstants.NOT_ASSIGNED
+    private var dragFrom = AppConstants.NOT_ASSIGNED
+
+    private var dragging = false
 
     override fun getMovementFlags(
         recyclerView: RecyclerView,
@@ -43,10 +45,11 @@ open class ItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter)
             val position = viewHolder!!.adapterPosition
             mAdapter.onItemPicked(position)
             dragFrom = position
+            dragging = true
         }
 
         if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
-            when {
+            if (dragging) when {
                 dragTo == AppConstants.NOT_ASSIGNED -> mAdapter.onItemDropped(dragFrom)
                 dragFrom > dragTo -> mAdapter.onItemDropped(dragTo)
                 else -> mAdapter.onItemDropped(dragFrom)
@@ -54,6 +57,7 @@ open class ItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter)
 
             dragTo = AppConstants.NOT_ASSIGNED
             dragFrom = AppConstants.NOT_ASSIGNED
+            dragging = false
         }
     }
 

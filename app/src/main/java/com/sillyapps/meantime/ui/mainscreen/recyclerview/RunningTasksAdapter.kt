@@ -1,26 +1,27 @@
 package com.sillyapps.meantime.ui.mainscreen.recyclerview
 
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.ViewGroup
+import androidx.core.view.MotionEventCompat
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.sillyapps.meantime.AppConstants
-import com.sillyapps.meantime.data.State
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.databinding.ItemMainScreenTaskBinding
 import com.sillyapps.meantime.ui.ItemTouchHelperAdapter
 import com.sillyapps.meantime.ui.ItemClickListener
 import com.sillyapps.meantime.ui.mainscreen.MainViewModel
-import timber.log.Timber
 
-class RunningTasksAdapter(private val clickListener: ItemClickListener, private val viewModel: MainViewModel): ListAdapter<Task, RunningTasksAdapter.ViewHolder>(TasksDiffCallback()),
-    ItemTouchHelperAdapter {
+class RunningTasksAdapter(private val clickListener: ItemClickListener,
+                          private val viewModel: MainViewModel):
+    ListAdapter<Task, RunningTasksAdapter.ViewHolder>(TasksDiffCallback()), ItemTouchHelperAdapter {
 
     var pickedTaskPosition = -1
 
     var onSwipeToStartCallback: SwipeToStartCallback? = null
+
+    var onStartDragListener: OnStartDragListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -28,7 +29,7 @@ class RunningTasksAdapter(private val clickListener: ItemClickListener, private 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getConnectedTask(position)
-        holder.bind(item, clickListener)
+        holder.bind(item, clickListener, onStartDragListener)
     }
 
     private fun getConnectedTask(position: Int): Task {
@@ -119,9 +120,16 @@ class RunningTasksAdapter(private val clickListener: ItemClickListener, private 
     class ViewHolder private constructor(private val binding: ItemMainScreenTaskBinding): RecyclerView.ViewHolder(binding.root) {
         var notDraggable: Boolean = false
 
-        fun bind(item: Task, clickListener: ItemClickListener) {
+        fun bind(item: Task, clickListener: ItemClickListener, onStartDragListener: OnStartDragListener?) {
             binding.task = item
-            binding.root.setOnClickListener { clickListener.onClickItem(adapterPosition) }
+            binding.taskLayout.setOnClickListener { clickListener.onClickItem(adapterPosition) }
+            binding.taskIcon.setOnTouchListener { v, event ->
+                if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+
+                    onStartDragListener?.onStartDrag(this)
+                }
+                return@setOnTouchListener false
+            }
             notDraggable = item.canNotBeSwappedOrDisabled()
         }
 
@@ -151,4 +159,8 @@ class TasksDiffCallback: DiffUtil.ItemCallback<Task>() {
 
 interface SwipeToStartCallback {
     fun swiped(index: Int)
+}
+
+interface OnStartDragListener {
+    fun onStartDrag(viewHolder: RecyclerView.ViewHolder)
 }

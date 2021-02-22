@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.google.android.material.tabs.TabLayout
 import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.databinding.FragmentGoalScreenBinding
+import com.sillyapps.meantime.setupToolbar
 import com.sillyapps.meantime.ui.ItemClickListener
 import com.sillyapps.meantime.ui.ItemTouchHelperCallbackNoDrag
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,6 +36,8 @@ class GoalFragment: Fragment() {
     ): View {
         binding = FragmentGoalScreenBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
+
+        setupToolbar(binding.toolbar)
 
         return binding.root
     }

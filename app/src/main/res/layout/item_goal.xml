@@ -16,7 +16,7 @@
         android:layout_marginTop="8dp"
         android:padding="4dp"
 
-        app:isDefault="@{goal.goalIsDefault}">
+        android:background="@drawable/item_waiting">
 
         <TextView
             android:id="@+id/goalNameLabel"

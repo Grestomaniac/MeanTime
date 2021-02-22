@@ -14,10 +14,12 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
+        android:paddingHorizontal="8dp"
 
         android:elevation="@dimen/listItemElevation"
-        android:stateListAnimator="@animator/item_raise">
+        android:stateListAnimator="@animator/item_raise"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/task_background">
 
         <ImageView
             android:id="@+id/taskIcon"
@@ -25,26 +27,17 @@
             android:layout_width="@dimen/iconSize"
             android:layout_height="@dimen/iconSize"
 
-            android:background="@drawable/circle"
+            tools:background="@drawable/item_waiting"
             android:padding="4dp"
             app:layout_constraintBottom_toBottomOf="@+id/taskLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/taskLayout"
-            app:srcCompat="@drawable/ic_reorder" />
-
-        <View
-            android:id="@+id/mainConnector"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:background="@color/primaryDarkColor"
-            app:layout_constraintBottom_toBottomOf="@+id/taskIcon"
-            app:layout_constraintEnd_toStartOf="@+id/taskLayout"
-            app:layout_constraintStart_toEndOf="@+id/taskIcon"
-            app:layout_constraintTop_toTopOf="@+id/taskIcon" />
+            app:srcCompat="@drawable/ic_reorder"
+            state="@{task.state}"/>
 
         <View
             android:id="@+id/prevTaskConnector"
-            android:layout_width="1dp"
+            android:layout_width="3dp"
             android:layout_height="0dp"
             android:background="@color/primaryDarkColor"
             app:layout_constraintBottom_toTopOf="@+id/taskIcon"
@@ -55,31 +48,26 @@
 
         <View
             android:id="@+id/nextTaskConnector"
-            android:layout_width="1dp"
+            android:layout_width="3dp"
             android:layout_height="0dp"
             android:background="@color/primaryDarkColor"
+            android:visibility="@{task.hasNextTask ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/taskIcon"
             app:layout_constraintStart_toStartOf="@+id/taskIcon"
-            app:layout_constraintTop_toBottomOf="@+id/taskIcon"
 
-            android:visibility="@{task.hasNextTask ? View.VISIBLE : View.INVISIBLE}"/>
+            app:layout_constraintTop_toBottomOf="@+id/taskIcon"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/taskLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
 
-            android:layout_marginStart="16dp"
-
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/taskIcon"
-            app:layout_constraintTop_toTopOf="parent"
-            app:state="@{task.state}"
-            tools:background="@drawable/item_waiting"
 
-            android:paddingBottom="16dp"
-            android:layout_marginTop="8dp">
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/time"
@@ -102,8 +90,10 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
+                android:layout_marginBottom="4dp"
                 android:text="@{task.name}"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/progressBar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/time"
                 app:layout_constraintTop_toTopOf="parent"
@@ -112,25 +102,29 @@
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyleHorizontal"
+
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_height="3dp"
                 android:layout_marginEnd="16dp"
                 android:max="100"
                 android:progress="@{task.relativeProgress}"
-                app:layout_constraintEnd_toEndOf="parent"
 
+                android:progressDrawable="@drawable/progress_bar_state_list"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/enter_name" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/progress"
                 style="@style/TinyTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@+id/progressBar"
+                android:layout_marginStart="16dp"
 
+                android:layout_marginTop="4dp"
+                app:layout_constraintStart_toStartOf="@+id/progressBar"
                 app:layout_constraintTop_toBottomOf="@+id/progressBar"
                 app:timeWithSeconds="@{task.progress}"
                 tools:text="00:00:00" />
@@ -141,12 +135,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
+                android:layout_marginTop="4dp"
                 app:layout_constraintEnd_toEndOf="@+id/progressBar"
                 app:layout_constraintTop_toBottomOf="@+id/progressBar"
                 app:timeWithSeconds="@{task.taskTimeRemained}"
                 tools:text="00:00:00" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/transparentBackground"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/taskLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/taskLayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

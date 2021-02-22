@@ -186,6 +186,10 @@ class MainViewModel @ViewModelInject constructor(private val dayManager: DayMana
         return dayManager.thisDay!!.currentTaskPos
     }
 
+    fun getTemplateName(): String? {
+        return dayManager.thisDay?.name
+    }
+
     fun setTaskDuration(duration: Long) {
         task.value!!.editableDuration = duration
     }

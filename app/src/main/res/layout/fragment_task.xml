@@ -13,6 +13,46 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/primaryColor"
+            android:elevation="@dimen/actionBarElevation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+
+        <ImageView
+            android:id="@+id/taskIcon"
+            style="@style/ItemButtonStyle"
+            android:layout_width="@dimen/iconSize"
+            android:layout_height="@dimen/iconSize"
+
+            android:layout_marginStart="16dp"
+            android:background="@drawable/circle"
+            android:padding="4dp"
+            app:layout_constraintBottom_toBottomOf="@+id/enter_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/enter_name"
+            app:srcCompat="@drawable/ic_reorder" />
+
+        <TextView
+            android:id="@+id/enter_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@{task.name}"
+            app:layout_constraintEnd_toStartOf="@+id/time"
+            app:layout_constraintStart_toEndOf="@+id/taskIcon"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            tools:text="Таск с очень и очень длинным названием" />
+
         <TextView
             android:id="@+id/time"
             style="@style/TimeItemStyle"
@@ -26,20 +66,6 @@
             app:time="@{task.startTime}"
             tools:text="17:00" />
 
-        <TextView
-            android:id="@+id/enter_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@{task.name}"
-            app:layout_constraintEnd_toStartOf="@+id/time"
-            app:layout_constraintStart_toEndOf="@+id/taskIcon"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Таск с очень и очень длинным названием" />
-
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleHorizontal"
@@ -48,121 +74,76 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
+            android:progress="@{task.relativeProgress}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/enter_name"
 
-            android:progress="@{task.relativeProgress}"/>
+            app:layout_constraintTop_toBottomOf="@+id/enter_name" />
 
-        <ImageView
-            android:id="@+id/taskIcon"
-            style="@style/ItemButtonStyle"
-            android:layout_width="@dimen/iconSize"
-            android:layout_height="@dimen/iconSize"
-            android:layout_marginStart="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/enter_name"
+        <TextView
+            android:id="@+id/progressLabel"
+            style="@style/TinyTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
 
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/enter_name"
-            app:srcCompat="@drawable/ic_reorder" />
+            android:layout_marginEnd="8dp"
+            android:text="@string/progress"
+            app:layout_constraintEnd_toStartOf="@+id/guideline3"
+            app:layout_constraintStart_toStartOf="@+id/progressBar"
+            app:layout_constraintTop_toBottomOf="@+id/progressBar"/>
 
         <TextView
             android:id="@+id/progress"
             style="@style/TinyTextStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@+id/progressBar"
 
-            app:layout_constraintTop_toBottomOf="@+id/progressBar"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="@+id/progressLabel"
             app:timeWithSeconds="@{task.progress}"
+            android:gravity="end"
             tools:text="00:00:00" />
+
+        <TextView
+            android:id="@+id/timeRemainedLabel"
+            style="@style/TinyTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/time_remain"
+            app:layout_constraintEnd_toStartOf="@+id/guideline3"
+            app:layout_constraintStart_toStartOf="@+id/progressLabel"
+            app:layout_constraintTop_toBottomOf="@+id/progressLabel" />
 
         <TextView
             android:id="@+id/timeRemained"
             style="@style/TinyTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            app:layout_constraintEnd_toEndOf="@+id/progressBar"
-            app:layout_constraintTop_toBottomOf="@+id/progressBar"
-            app:timeWithSeconds="@{task.taskTimeRemained}"
-            tools:text="00:00:00"/>
-
-        <com.sillyapps.meantime.ui.TimePicker
-            android:id="@+id/timePickerLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
 
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+
+            android:gravity="end"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="@+id/timeRemainedLabel"
+            app:timeWithSeconds="@{task.taskTimeRemained}"
 
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/progress"/>
+            tools:text="00:00:00" />
 
-<!--        <com.google.android.material.tabs.TabLayout-->
-<!--            android:id="@+id/goalsTabLayout"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:background="@color/primaryDarkColor"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/timePickerLayout"-->
-<!--            app:tabSelectedTextColor="@color/primaryTextColor">-->
-
-<!--            <com.google.android.material.tabs.TabItem-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="@string/active_goals" />-->
-
-<!--            <com.google.android.material.tabs.TabItem-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="@string/completed_goals" />-->
-
-<!--        </com.google.android.material.tabs.TabLayout>-->
-
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:id="@+id/goals"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="0dp"-->
-
-<!--            android:visibility="@{viewModel.tabSelected == 0 ? View.VISIBLE : View.GONE}"-->
-<!--            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
-
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-
-<!--            app:layout_constraintTop_toBottomOf="@+id/goalsTabLayout"-->
-<!--            app:reverseLayout="true"-->
-
-<!--            app:stackFromEnd="true"-->
-<!--            tools:listitem="@layout/item_goal"-->
-
-<!--            android:paddingBottom="8dp"-->
-<!--            android:clipToPadding="false"/>-->
-
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:id="@+id/completedGoals"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="0dp"-->
-
-<!--            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/goalsTabLayout"-->
-<!--            app:reverseLayout="true"-->
-
-<!--            app:stackFromEnd="true"-->
-<!--            tools:listitem="@layout/item_goal"-->
-
-<!--            android:paddingBottom="8dp"-->
-<!--            android:clipToPadding="false"-->
-
-<!--            android:visibility="@{viewModel.tabSelected == 1 ? View.VISIBLE : View.GONE}"/>-->
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.3" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

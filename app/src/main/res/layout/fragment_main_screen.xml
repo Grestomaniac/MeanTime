@@ -17,32 +17,34 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/refreshDay"
-            isActive="@{viewmodel.paused}"
-            android:layout_width="0dp"
-
-            android:layout_height="0dp"
-            android:visibility="visible"
-
-            app:layout_constraintBottom_toBottomOf="parent"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/primaryColor"
+            android:elevation="@dimen/actionBarElevation"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible">
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/runningTasks"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
 
-                android:clipToPadding="false"
-                android:paddingBottom="8dp"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/runningTasks"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
 
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_main_screen_task" />
+            android:clipToPadding="false"
+            android:paddingBottom="8dp"
 
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            tools:listitem="@layout/item_main_screen_task" />
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/buttonsContainer"

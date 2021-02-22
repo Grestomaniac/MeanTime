@@ -1,28 +1,27 @@
 package com.sillyapps.meantime.ui.mainscreen
 
-import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.view.*
-import android.widget.TimePicker
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
-import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
+import androidx.recyclerview.widget.RecyclerView
 import com.sillyapps.meantime.R
 import com.sillyapps.meantime.databinding.FragmentMainScreenBinding
 import com.sillyapps.meantime.services.DayService
+import com.sillyapps.meantime.setupToolbar
 import com.sillyapps.meantime.utils.tintMenuIcons
 import com.sillyapps.meantime.ui.mainscreen.recyclerview.RunningTasksAdapter
 import com.sillyapps.meantime.ui.ItemClickListener
 import com.sillyapps.meantime.ui.mainscreen.recyclerview.DayItemTouchHelperCallback
+import com.sillyapps.meantime.ui.mainscreen.recyclerview.OnStartDragListener
 import com.sillyapps.meantime.ui.mainscreen.recyclerview.SwipeToStartCallback
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_main_screen.*
@@ -32,40 +31,34 @@ class MainScreenFragment: Fragment() {
 
     private val viewModel: MainViewModel by viewModels(ownerProducer = { this })
 
-    private lateinit var viewDataBinding: FragmentMainScreenBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        /*if (viewModel.serviceRunning.value!!) {
-            val currentTaskGoalsId = viewModel.getCurrentTaskGoalsId()
-            currentTaskGoalsId?.let { navigateToGoalFragment(it) }
-        }*/
-    }
+    private lateinit var binding: FragmentMainScreenBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewDataBinding = FragmentMainScreenBinding.inflate(inflater, container, false).apply {
+        binding = FragmentMainScreenBinding.inflate(inflater, container, false).apply {
             viewmodel = viewModel
         }
         setHasOptionsMenu(true)
-        return viewDataBinding.root
+
+        binding.toolbar.title = viewModel.getTemplateName()
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewDataBinding.lifecycleOwner = viewLifecycleOwner
+        binding.lifecycleOwner = viewLifecycleOwner
 
-        setupRefreshLayout()
+        setupToolbar(binding.toolbar)
         setupTasksAdapter()
         setupService()
 
         addTemporalTaskButton.setOnClickListener { addTemporalTask() }
 
-        viewDataBinding.buttonStop.setOnLongClickListener { viewModel.onStopButtonLongClick() }
+        binding.buttonStop.setOnLongClickListener { viewModel.onStopButtonLongClick() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -96,13 +89,13 @@ class MainScreenFragment: Fragment() {
     }
 
     private fun setupRefreshLayout() {
-        viewDataBinding.refreshDay.setOnRefreshListener {
+        /*viewDataBinding.refreshDay.setOnRefreshListener {
             viewModel.refreshDay()
         }
 
         viewModel.refreshing.observe(viewLifecycleOwner) {
             viewDataBinding.refreshDay.isRefreshing = it
-        }
+        }*/
     }
 
     private fun setupTasksAdapter() {
@@ -126,11 +119,17 @@ class MainScreenFragment: Fragment() {
         val adapter = RunningTasksAdapter(clickListener, viewModel)
         adapter.onSwipeToStartCallback = onSwipeToEndCallback
 
-        viewDataBinding.runningTasks.adapter = adapter
+        binding.runningTasks.adapter = adapter
 
         val itemTouchHelperCallback = DayItemTouchHelperCallback(adapter)
         val touchHelper = ItemTouchHelper(itemTouchHelperCallback)
-        touchHelper.attachToRecyclerView(viewDataBinding.runningTasks)
+        touchHelper.attachToRecyclerView(binding.runningTasks)
+
+        adapter.onStartDragListener = object : OnStartDragListener {
+            override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
+                touchHelper.startDrag(viewHolder)
+            }
+        }
 
         viewModel.uiTasks.observe(viewLifecycleOwner, {
             adapter.submitList(it)
