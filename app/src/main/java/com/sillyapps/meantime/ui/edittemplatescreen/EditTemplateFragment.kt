@@ -3,7 +3,6 @@ package com.sillyapps.meantime.ui.edittemplatescreen
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
-import android.widget.Toast
 import androidx.core.view.children
 import androidx.navigation.fragment.findNavController
 import com.sillyapps.meantime.R
@@ -11,6 +10,7 @@ import com.sillyapps.meantime.databinding.FragmentEditTemplateBinding
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.sillyapps.meantime.setupToolbar
 import com.sillyapps.meantime.utils.tintMenuIcons
 import com.sillyapps.meantime.ui.ItemTouchHelperCallback
 import com.sillyapps.meantime.ui.ItemClickListener
@@ -24,27 +24,28 @@ class EditTemplateFragment : Fragment() {
         defaultViewModelProviderFactory
     }
 
-    private lateinit var viewDataBinding: FragmentEditTemplateBinding
+    private lateinit var binding: FragmentEditTemplateBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewDataBinding = FragmentEditTemplateBinding.inflate(inflater, container, false).apply {
+        binding = FragmentEditTemplateBinding.inflate(inflater, container, false).apply {
             viewmodel = viewModel
         }
 
         setHasOptionsMenu(true)
-        return viewDataBinding.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
+        binding.lifecycleOwner = this.viewLifecycleOwner
 
+        setupToolbar(binding.toolbar)
         setupAdapter()
-        viewDataBinding.addTemplateFab.setOnClickListener { onAddTaskButtonClick() }
+        binding.addTemplateFab.setOnClickListener { onAddTaskButtonClick() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -73,11 +74,11 @@ class EditTemplateFragment : Fragment() {
         }
 
         val templateEditorAdapter = TemplateEditorAdapter(viewModel, clickListener)
-        viewDataBinding.tasks.adapter = templateEditorAdapter
+        binding.tasks.adapter = templateEditorAdapter
 
         val itemTouchHelperCallback = ItemTouchHelperCallback(templateEditorAdapter)
         val touchHelper = ItemTouchHelper(itemTouchHelperCallback)
-        touchHelper.attachToRecyclerView(viewDataBinding.tasks)
+        touchHelper.attachToRecyclerView(binding.tasks)
 
         viewModel.tasks.observe(viewLifecycleOwner, {
             templateEditorAdapter.submitList(it)

@@ -17,13 +17,13 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/primaryColor"
+            android:background="@android:color/transparent"
             android:elevation="@dimen/actionBarElevation"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+            app:theme="@style/ThemeOverlay.AppCompat.ActionBar"/>
 
         <ImageView
             android:id="@+id/taskIcon"

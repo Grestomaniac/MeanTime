@@ -14,10 +14,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".MainActivity"
-            android:background="@color/primaryLightColor"
+            android:background="@drawable/background"
             android:orientation="vertical">
 
-            <fragment
+            <androidx.fragment.app.FragmentContainerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/nav_host_fragment"

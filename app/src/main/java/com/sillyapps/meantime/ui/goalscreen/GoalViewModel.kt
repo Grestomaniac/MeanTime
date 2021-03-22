@@ -1,16 +1,18 @@
 package com.sillyapps.meantime.ui.goalscreen
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.data.Goal
 import com.sillyapps.meantime.data.TaskGoals
 import com.sillyapps.meantime.data.repository.AppRepository
 import com.sillyapps.meantime.ui.SingleLiveEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import java.util.*
+import javax.inject.Inject
 
-class GoalViewModel @ViewModelInject constructor(private val repository: AppRepository): ViewModel() {
+@HiltViewModel
+class GoalViewModel @Inject constructor(private val repository: AppRepository): ViewModel() {
 
     private val updateInterval = 5000L
 

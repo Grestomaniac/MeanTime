@@ -12,105 +12,43 @@
             type="com.sillyapps.meantime.ui.mainscreen.MainViewModel" />
     </data>
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        android:fitsSystemWindows="true">
+
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/primaryColor"
-            android:elevation="@dimen/actionBarElevation"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            android:background="@android:color/transparent"
+            android:stateListAnimator="@null">
 
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                style="@style/ToolbarStyle"
+
+                app:layout_scrollFlags="scroll|enterAlwaysCollapsed|snap"
+                android:fitsSystemWindows="true"
+                app:menu="@menu/main_screen_menu"
+                android:background="@drawable/toolbar"
+                />
+
+        </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/runningTasks"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-
-            android:clipToPadding="false"
-            android:paddingBottom="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
 
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            tools:listitem="@layout/item_main_screen_task" />
+            tools:listitem="@layout/item_main_screen_task_v3"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/buttonsContainer"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:paddingTop="16dp">
-
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/play_button"
-                style="@style/ActionButtonStyle"
-                android:layout_width="wrap_content"
-
-                android:onClick="@{() -> viewmodel.startOrPauseButtonPressed()}"
-
-                android:layout_height="wrap_content"
-                app:fabSize="normal"
-
-                android:layout_margin="@dimen/normal_margin"
-
-                app:isDayRunning="@{viewmodel.uiDayState == State.ACTIVE}"
-
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/addTemporalTaskButton"
-
-                app:layout_constraintStart_toEndOf="@+id/button_stop"
-
-                tools:src="@drawable/ic_play"
-                android:elevation="@dimen/actionButtonElevation"/>
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/button_stop"
-                style="@style/ActionButtonStyle"
-                android:layout_width="wrap_content"
-
-                android:onClick="@{() -> viewmodel.stopButtonPressed()}"
-
-                android:layout_height="wrap_content"
-                app:fabSize="normal"
-
-                android:layout_margin="@dimen/normal_margin"
-
-                android:src="@drawable/ic_stop_black_24dp"
-
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:elevation="@dimen/actionButtonElevation"/>
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/addTemporalTaskButton"
-                style="@style/ActionButtonStyle"
-                android:layout_width="wrap_content"
-
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/normal_margin"
-                android:src="@drawable/ic_add"
-                app:fabSize="normal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:elevation="@dimen/actionButtonElevation"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

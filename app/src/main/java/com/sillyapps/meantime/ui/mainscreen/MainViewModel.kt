@@ -1,7 +1,6 @@
 package com.sillyapps.meantime.ui.mainscreen
 
 import androidx.databinding.Observable
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.sillyapps.meantime.AppBR
 import com.sillyapps.meantime.AppConstants
@@ -11,11 +10,13 @@ import com.sillyapps.meantime.data.State
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.data.TaskGoals
 import com.sillyapps.meantime.ui.SingleLiveEvent
-import com.sillyapps.meantime.utils.formatString
 import com.sillyapps.meantime.utils.removeExtraSpaces
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel @ViewModelInject constructor(private val dayManager: DayManager): ViewModel() {
+@HiltViewModel
+class MainViewModel @Inject constructor(private val dayManager: DayManager): ViewModel() {
 
     val uiTasks: MutableLiveData<MutableList<Task>> = MutableLiveData(mutableListOf())
 

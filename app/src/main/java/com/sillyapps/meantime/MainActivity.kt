@@ -18,6 +18,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     NavController.OnDestinationChangedListener {
     lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +47,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         )
         drawerLayout = binding.drawerLayout
 
-        val navController = findNavController(R.id.nav_host_fragment)
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
 
         navView = binding.navView
         navView.setNavigationItemSelectedListener(this)
@@ -52,7 +56,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment)
         return NavigationUI.navigateUp(navController, drawerLayout)
     }
 
@@ -84,15 +87,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             R.id.mainScreenFragment -> {
-                findNavController(R.id.nav_host_fragment).navigate(R.id.mainScreenFragment)
+                navController.navigate(R.id.mainScreenFragment)
             }
 
             R.id.explorerFragment -> {
-                findNavController(R.id.nav_host_fragment).navigate(R.id.explorerFragment)
+                navController.navigate(R.id.explorerFragment)
             }
 
             R.id.schemeFragment -> {
-                findNavController(R.id.nav_host_fragment).navigate(R.id.schemeFragment)
+                navController.navigate(R.id.schemeFragment)
             }
         }
 
@@ -131,7 +134,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 fun Fragment.setupToolbar(toolbar: Toolbar) {
     (requireActivity() as MainActivity).apply {
-        val navController = findNavController(R.id.nav_host_fragment)
+        val navController = findNavController()
 
         toolbar.setupWithNavController(navController, drawerLayout)
 

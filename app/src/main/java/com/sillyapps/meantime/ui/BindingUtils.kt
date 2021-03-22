@@ -116,7 +116,7 @@ fun ImageButton.setInteractive(interactive: Boolean) {
 }
 
 @BindingAdapter("isDayRunning")
-fun FloatingActionButton.setDayRunning(dayRunning: Boolean) {
+fun ImageButton.setDayRunning(dayRunning: Boolean) {
     val imageResource =
         if (dayRunning) R.drawable.ic_pause
         else R.drawable.ic_play

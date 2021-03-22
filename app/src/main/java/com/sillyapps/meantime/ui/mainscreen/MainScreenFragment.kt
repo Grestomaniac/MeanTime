@@ -24,7 +24,6 @@ import com.sillyapps.meantime.ui.mainscreen.recyclerview.DayItemTouchHelperCallb
 import com.sillyapps.meantime.ui.mainscreen.recyclerview.OnStartDragListener
 import com.sillyapps.meantime.ui.mainscreen.recyclerview.SwipeToStartCallback
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_main_screen.*
 
 @AndroidEntryPoint
 class MainScreenFragment: Fragment() {
@@ -43,7 +42,6 @@ class MainScreenFragment: Fragment() {
         }
         setHasOptionsMenu(true)
 
-        binding.toolbar.title = viewModel.getTemplateName()
         return binding.root
     }
 
@@ -56,9 +54,7 @@ class MainScreenFragment: Fragment() {
         setupTasksAdapter()
         setupService()
 
-        addTemporalTaskButton.setOnClickListener { addTemporalTask() }
-
-        binding.buttonStop.setOnLongClickListener { viewModel.onStopButtonLongClick() }
+        binding.toolbar.title = viewModel.getTemplateName()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -124,12 +120,6 @@ class MainScreenFragment: Fragment() {
         val itemTouchHelperCallback = DayItemTouchHelperCallback(adapter)
         val touchHelper = ItemTouchHelper(itemTouchHelperCallback)
         touchHelper.attachToRecyclerView(binding.runningTasks)
-
-        adapter.onStartDragListener = object : OnStartDragListener {
-            override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
-                touchHelper.startDrag(viewHolder)
-            }
-        }
 
         viewModel.uiTasks.observe(viewLifecycleOwner, {
             adapter.submitList(it)

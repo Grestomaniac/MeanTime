@@ -1,6 +1,5 @@
 package com.sillyapps.meantime.ui.schemescreen
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.sillyapps.meantime.data.Scheme
 import com.sillyapps.meantime.data.SchemeTemplate
@@ -8,10 +7,13 @@ import com.sillyapps.meantime.data.SchemeTemplateInfo
 import com.sillyapps.meantime.data.Template
 import com.sillyapps.meantime.data.repository.AppRepository
 import com.sillyapps.meantime.ui.SingleLiveEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
-class SchemeViewModel @ViewModelInject constructor(private val repository: AppRepository): ViewModel() {
+@HiltViewModel
+class SchemeViewModel @Inject constructor(private val repository: AppRepository): ViewModel() {
 
     val scheme = MutableLiveData<Scheme>()
 

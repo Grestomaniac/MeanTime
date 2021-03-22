@@ -1,6 +1,5 @@
 package com.sillyapps.meantime.ui.alarmscreen
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,11 +8,14 @@ import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.data.State
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.ui.mainscreen.DayManager
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AlarmViewModel @ViewModelInject constructor(private val dayManager: DayManager): ViewModel() {
+@HiltViewModel
+class AlarmViewModel @Inject constructor(private val dayManager: DayManager): ViewModel() {
 
     lateinit var completedTask: Task
     var dayEnded: Boolean = false

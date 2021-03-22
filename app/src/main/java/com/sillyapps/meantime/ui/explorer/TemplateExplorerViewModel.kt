@@ -1,11 +1,13 @@
 package com.sillyapps.meantime.ui.explorer
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.sillyapps.meantime.data.repository.AppRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TemplateExplorerViewModel @ViewModelInject constructor(private val repository: AppRepository): ViewModel() {
+@HiltViewModel
+class TemplateExplorerViewModel @Inject constructor(private val repository: AppRepository): ViewModel() {
 
     val items = repository.observeAllTemplates()
 

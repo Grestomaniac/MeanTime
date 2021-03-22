@@ -1,7 +1,5 @@
 package com.sillyapps.meantime.ui.edittemplatescreen
 
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.R
@@ -12,11 +10,14 @@ import com.sillyapps.meantime.data.Template
 import com.sillyapps.meantime.data.repository.AppRepository
 import com.sillyapps.meantime.ui.Result
 import com.sillyapps.meantime.utils.removeExtraSpaces
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
-class EditTemplateViewModel @ViewModelInject constructor(private val repository: AppRepository,
-                                                         @Assisted private val savedStateHandle: SavedStateHandle): ViewModel() {
+@HiltViewModel
+class EditTemplateViewModel @Inject constructor(private val repository: AppRepository,
+                                                    private val savedStateHandle: SavedStateHandle): ViewModel() {
 
     var templateId = savedStateHandle.get<Int>("templateId")!!
     val templateName: MutableLiveData<String> = MutableLiveData("")
