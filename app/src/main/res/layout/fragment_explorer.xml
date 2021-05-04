@@ -23,10 +23,10 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/primaryColor"
-            app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            android:elevation="@dimen/actionBarElevation"/>
+
+            style="@style/ToolbarStyle"
+
+            app:menu="@menu/explorer_menu"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/explorer"

@@ -3,5 +3,6 @@
     <declare-styleable name="TimePickerItem">
         <attr name="maxValue" format="integer"/>
         <attr name="longClickIncAmount" format="integer"/>
+        <attr name="label" format="string"/>
     </declare-styleable>
 </resources>

@@ -3,7 +3,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primaryColor</item>
-        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorPrimaryDark">@color/completedColor</item>
         <item name="colorAccent">@color/secondaryColor</item>
 
         <item name="android:textSize">18sp</item>
@@ -17,15 +17,47 @@
 
     <style name="ToolbarStyle" parent="AppTheme">
         <item name="android:background">@color/primaryColor</item>
-        <item name="android:elevation">@dimen/appBarHeight</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="android:elevation">@dimen/actionBarElevation</item>
+    </style>
+
+    <style name="DescriptionStyle" parent="AppTheme">
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@string/font_family_light</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
     </style>
     
     <style name="TimeItemStyle" parent="AppTheme">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@string/font_family_regular</item>
+        <item name="android:textColor">@color/secondaryTextColor</item>
+    </style>
+
+    <style name="Header" parent="AppTheme">
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">@string/font_family_regular</item>
+    </style>
+
+    <style name="ButtonTextStyle" parent="AppTheme">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@string/font_family_regular</item>
+        <item name="android:textColor">@color/secondaryTextColor</item>
     </style>
 
     <style name="TinyTextStyle" parent="AppTheme">
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@string/font_family_light</item>
+    </style>
+
+    <style name="LabelTextStyle" parent="TinyTextStyle">
+        <item name="android:textColor">@color/secondaryTextColor</item>
+    </style>
+
+    <style name="TimeTextStyle" parent="AppTheme">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@string/font_family_regular</item>
+        <item name="android:textColor">@color/secondaryTextColor</item>
     </style>
 
     <style name="InputTextStyle" parent="AppTheme">
@@ -41,11 +73,14 @@
     </style>
 
     <style name="ButtonStyle" parent="AppTheme">
-        <item name="android:textColor">@color/secondaryTextColor</item>
-        <item name="android:background">@drawable/button</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:paddingStart">@dimen/button_padding</item>
         <item name="android:paddingEnd">@dimen/button_padding</item>
+
+        <item name="android:textColor">@color/secondaryTextColor</item>
+        <item name="android:gravity">center</item>
+        <item name="fontFamily">@string/font_family_bold</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="ProgressBarStyle" parent="ThemeOverlay.AppCompat.Light">
@@ -53,26 +88,16 @@
     </style>
 
     <style name="ItemButtonStyle" parent="AppTheme">
-        <item name="tint">@color/secondaryTextColor</item>
+        <item name="tint">@color/primaryTextColor</item>
         <item name="tintMode">src_atop</item>
     </style>
 
     <style name="ActionButtonStyle" parent="AppTheme">
-        <item name="tint">@color/primaryTextColor</item>
+        <item name="tint">@color/secondaryTextColor</item>
         <item name="tintMode">src_atop</item>
         <item name="elevation">6dp</item>
         <item name="android:scaleType">fitXY</item>
         <item name="android:background">@android:color/transparent</item>
-    </style>
-
-    <style name="WarningStyle" parent="AppTheme">
-        <item name="color">@color/colorWarning</item>
-        <item name="tint">@color/colorWarning</item>
-    </style>
-
-    <style name="AlrightStyle" parent="AppTheme">
-        <item name="color">@color/colorAlright</item>
-        <item name="tint">@color/colorAlright</item>
     </style>
 
 </resources>

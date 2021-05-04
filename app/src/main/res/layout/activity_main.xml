@@ -14,7 +14,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".MainActivity"
-            android:background="@drawable/background"
             android:orientation="vertical">
 
             <androidx.fragment.app.FragmentContainerView
@@ -33,8 +32,8 @@
             android:layout_height="match_parent"
             android:id="@+id/navView"
             android:layout_gravity="start"
-            app:itemTextColor="@drawable/nav_view_item_text_color"
-            app:itemIconTint="@drawable/nav_view_item_text_color"
+            app:itemTextColor="@color/primaryTextColor"
+            app:itemIconTint="@color/primaryTextColor"
 
             app:menu="@menu/nav_drawer_menu"
             android:fitsSystemWindows="true"/>

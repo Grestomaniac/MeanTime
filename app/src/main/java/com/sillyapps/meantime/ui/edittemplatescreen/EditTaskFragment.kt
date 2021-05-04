@@ -10,6 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
@@ -17,19 +19,31 @@ import com.sillyapps.meantime.R
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.databinding.FragmentEditTaskBinding
 import com.sillyapps.meantime.setupToolbar
+import com.sillyapps.meantime.utils.convertToMillis
 import com.sillyapps.meantime.utils.showInfoToUser
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * Fragment for editing and creating the [Task]
+ */
 @AndroidEntryPoint
 class EditTaskFragment : DialogFragment() {
-
-    val REQUEST_CODE = 5
 
     private val viewModel: EditTemplateViewModel by navGraphViewModels(R.id.edit_template_graph) {
         defaultViewModelProviderFactory
     }
 
     private lateinit var binding: FragmentEditTaskBinding
+
+    private val ringtoneManagerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            val ringToneUri = data?.getParcelableExtra<Uri>(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
+
+            ringToneUri?.let {
+                viewModel.setTaskSound(it.toString()) }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,24 +57,16 @@ class EditTaskFragment : DialogFragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = this.viewLifecycleOwner
-
-        val nameAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_dropdown_item_1line)
-        binding.name.setAdapter(nameAdapter)
 
         binding.melody.setOnClickListener { showRingtonePicker() }
         binding.okFab.setOnClickListener { validateData() }
-
-        viewModel.goalTasksNames.observe(viewLifecycleOwner) {
-            nameAdapter.clear()
-            nameAdapter.addAll(it)
-        }
     }
 
     private fun validateData() {
-        viewModel.setTaskDuration(binding.timePickerLayout.getDuration())
+        viewModel.setTaskDuration(binding.timePicker.getDuration())
 
         when(viewModel.isTaskDataValid()) {
             Task.WhatIsWrong.NOTHING -> saveTask()
@@ -79,20 +85,8 @@ class EditTaskFragment : DialogFragment() {
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.choose_task_sound))
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_RINGTONE)
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, Uri.parse(viewModel.task.value!!.sound))
-        startActivityForResult(intent, REQUEST_CODE)
-    }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_CODE) {
-                val ringToneUri = data?.getParcelableExtra<Uri>(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
-
-                ringToneUri?.let {
-                    viewModel.setTaskSound(it.toString()) }
-            }
-        }
+        ringtoneManagerLauncher.launch(intent)
     }
 
 }

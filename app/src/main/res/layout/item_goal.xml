@@ -12,11 +12,11 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
+        android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
-        android:padding="4dp"
+        android:paddingBottom="12dp"
 
-        android:background="@drawable/item_waiting">
+        android:background="@drawable/base_item">
 
         <TextView
             android:id="@+id/goalNameLabel"
@@ -24,48 +24,49 @@
 
             android:layout_height="wrap_content"
 
-            android:padding="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="@string/font_family_bold"
+
+            android:maxLines="2"
             android:text="@{goal.name}"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-
-            android:textStyle="bold"
-            android:lines="2"
             tools:text="Goal 1" />
-
-        <TextView
-            android:id="@+id/goalChangedTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="16dp"
-
-            app:layout_constraintEnd_toStartOf="@+id/goalDescriptionLabel"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/goalNameLabel"
-
-            android:text="@{goal.changedDate}"
-            tools:text="Jul 12, 23:00"
-
-            style="@style/TinyTextStyle"/>
 
         <TextView
             android:id="@+id/goalDescriptionLabel"
             android:layout_width="0dp"
-            android:layout_height="0dp"
 
-            android:layout_marginEnd="8dp"
+            android:layout_height="wrap_content"
 
-            app:layout_constraintBottom_toBottomOf="@+id/goalChangedTime"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/goalChangedTime"
-            app:layout_constraintTop_toTopOf="@+id/goalChangedTime"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@string/font_family_regular"
 
-            tools:text="Description"
+            android:lines="2"
             android:text="@{goal.description}"
-            style="@style/TinyTextStyle"/>
+
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/goalNameLabel"
+            app:layout_constraintStart_toStartOf="@+id/goalNameLabel"
+            app:layout_constraintTop_toBottomOf="@+id/goalNameLabel"
+            tools:text="Description" />
+
+        <TextView
+            android:id="@+id/goalChangedTime"
+            style="@style/TinyTextStyle"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="4dp"
+            android:text="@{goal.changedDate}"
+            app:layout_constraintEnd_toEndOf="@+id/goalDescriptionLabel"
+            app:layout_constraintTop_toBottomOf="@+id/goalDescriptionLabel"
+            tools:text="Jul 12, 23:00" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -100,7 +100,7 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     private fun checkIfCurrentTaskGoalsIsEmpty() {
         CoroutineScope(Dispatchers.IO).launch {
             val currentTaskGoals = repository.getTaskGoals(thisDay!!.currentTask.goalsId)
-            currentTaskGoals?.let { currentTaskGoalsIsNotEmpty = it.activeGoals.isNotEmpty() }
+            currentTaskGoals?.let { currentTaskGoalsIsNotEmpty = it.goals.isNotEmpty() }
         }
     }
 

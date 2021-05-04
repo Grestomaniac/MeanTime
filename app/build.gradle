@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
+apply plugin: 'org.jetbrains.dokka-android'
 
 android {
     compileSdkVersion 30
@@ -21,6 +22,11 @@ android {
             annotationProcessorOptions {
                 arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
+        }
+
+        dokka {
+            outputFormat = 'html'
+            outputDirectory = "$buildDir/javadoc"
         }
     }
 

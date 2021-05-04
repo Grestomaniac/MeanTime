@@ -5,11 +5,15 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
+import android.util.Log
 import android.view.*
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +28,7 @@ import com.sillyapps.meantime.ui.mainscreen.recyclerview.DayItemTouchHelperCallb
 import com.sillyapps.meantime.ui.mainscreen.recyclerview.OnStartDragListener
 import com.sillyapps.meantime.ui.mainscreen.recyclerview.SwipeToStartCallback
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainScreenFragment: Fragment() {
@@ -42,12 +47,13 @@ class MainScreenFragment: Fragment() {
         }
         setHasOptionsMenu(true)
 
+        Timber.d("Fragment create view")
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        Timber.d("Fragment created")
         binding.lifecycleOwner = viewLifecycleOwner
 
         setupToolbar(binding.toolbar)
@@ -135,12 +141,12 @@ class MainScreenFragment: Fragment() {
     }
 
     private fun addTemporalTask() {
-        viewModel.createTemporalTask()
-        TaskDialogFragment().show(childFragmentManager, "Temporal task dialog")
+        /*viewModel.createTemporalTask()
+        TaskDialogFragment().show(childFragmentManager, "Temporal task dialog")*/
     }
 
     private fun showTaskInfo() {
-        TaskDialogFragment().show(childFragmentManager, "Task info")
+        /*TaskDialogFragment().show(childFragmentManager, "Task info")*/
     }
 
     private fun showWarningDialog() {

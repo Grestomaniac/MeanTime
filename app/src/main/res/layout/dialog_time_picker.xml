@@ -3,64 +3,96 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <data>
+        <variable
+            name="task"
+            type="com.sillyapps.meantime.data.Task"/>
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:background="@drawable/dialog">
+        android:paddingBottom="12dp">
 
-        <NumberPicker
-            android:id="@+id/timePickerHours"
-
+        <View
+            android:id="@+id/topBar"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/timePickerMinutes"
-            app:layout_constraintEnd_toStartOf="@+id/timePickerMinutes"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/timePickerMinutes"
-            android:solidColor="@color/primaryDarkColor"/>
+            android:layout_height="60dp"
 
-        <NumberPicker
-            android:id="@+id/timePickerMinutes"
-
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toStartOf="@+id/picker"
-            app:layout_constraintStart_toEndOf="@+id/timePickerHours"
-            app:layout_constraintTop_toTopOf="parent"
-            android:solidColor="@color/primaryDarkColor"/>
-
-        <NumberPicker
-            android:id="@+id/picker"
-
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/timePickerMinutes"
+            android:background="@color/primaryColor"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/timePickerMinutes"
-            app:layout_constraintTop_toTopOf="@+id/timePickerMinutes"
-            android:solidColor="@color/primaryDarkColor"/>
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_clock"
+            app:layout_constraintBottom_toBottomOf="@+id/topBar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/topBar" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="8dp"
+            android:fontFamily="@string/font_family_bold"
+            android:gravity="center"
+            android:text="@string/pick_time"
+            android:textColor="@color/secondaryTextColor"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView"
+            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintTop_toTopOf="@+id/imageView" />
+
+        <com.sillyapps.meantime.ui.TimePicker
+            android:id="@+id/timePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/topBar"
+            task="@{task}"/>
+
 
         <Button
             android:id="@+id/okButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="@+id/picker"
-            app:layout_constraintStart_toStartOf="@+id/picker"
-            app:layout_constraintTop_toBottomOf="@+id/timePickerMinutes"
-            app:srcCompat="@drawable/ic_check"
-            style="@style/ButtonStyle"
-            android:text="@string/save"/>
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+
+            android:layout_marginTop="12dp"
+            android:background="@android:color/transparent"
+
+            android:fontFamily="@string/font_family_bold"
+            android:text="@string/ok"
+            android:textColor="@color/completedColor"
+
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/timePicker"
+            app:layout_constraintTop_toBottomOf="@id/timePicker" />
 
         <Button
-            android:id="@+id/uncertainButton"
-            style="@style/ButtonStyle"
+            android:id="@+id/cancelButton"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:text="@string/duration_is_uncertain"
-            app:layout_constraintStart_toStartOf="@+id/timePickerHours"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
 
+            android:background="@android:color/transparent"
+
+            android:textColor="@color/completedColor"
+            android:fontFamily="@string/font_family_bold"
+            android:text="@string/cancel"
+
+            android:textSize="14sp"
+
+            app:layout_constraintEnd_toStartOf="@+id/okButton"
             app:layout_constraintTop_toTopOf="@+id/okButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

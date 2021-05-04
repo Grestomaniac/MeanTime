@@ -17,99 +17,158 @@
         android:background="@color/primaryLightColor">
 
         <TextView
-            android:id="@+id/completedTaskName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@{viewmodel.completedTask.name}"
-            app:layout_constraintBottom_toTopOf="@+id/completedTextView"
+            android:id="@+id/timeIsOutLabel"
+            android:layout_width="0dp"
+            android:layout_height="67dp"
+            android:background="@color/primaryColor"
+
+            android:fontFamily="@string/font_family_light"
+            android:gravity="center"
+            android:text="@string/time_is_out"
+            android:textColor="@color/secondaryTextColor"
+
+            android:textSize="28sp"
 
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Task 1" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/completedTextView"
+            android:id="@+id/currentTaskLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/completed"
-            app:layout_constraintBottom_toTopOf="@+id/bigAssButton"
-            app:layout_constraintEnd_toEndOf="@+id/completedTaskName"
+            android:layout_marginTop="8dp"
+
+            android:fontFamily="@string/font_family_light"
+            android:gravity="center"
+            android:text="@string/current_task"
+            android:textSize="18sp"
+
+            app:layout_constraintEnd_toEndOf="@+id/currentTaskName"
+            app:layout_constraintStart_toStartOf="@+id/currentTaskName"
+            app:layout_constraintTop_toBottomOf="@+id/timeIsOutLabel" />
+
+        <TextView
+            android:id="@+id/currentTaskName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@string/font_family_bold"
+            android:gravity="center"
+
+            android:text="@{viewmodel.completedTask.name}"
+            android:textSize="20sp"
+            android:maxLines="3"
+
+            android:visibility="@{viewmodel.dayEnded ? View.INVISIBLE : View.VISIBLE}"
+            app:layout_constraintEnd_toStartOf="@+id/nextTaskName"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/completedTaskName"
-            app:layout_constraintTop_toBottomOf="@+id/completedTaskName" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/currentTaskLabel"
+            tools:text="Task with very long name and something else" />
+
+        <TextView
+            android:id="@+id/nextTaskLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+
+            android:fontFamily="@string/font_family_light"
+            android:gravity="center"
+            android:text="@string/next_task"
+            android:textSize="18sp"
+
+            app:layout_constraintBottom_toTopOf="@+id/nextTaskName"
+            app:layout_constraintEnd_toEndOf="@+id/nextTaskName"
+            app:layout_constraintStart_toStartOf="@+id/nextTaskName"
+            app:layout_constraintTop_toBottomOf="@+id/timeIsOutLabel" />
+
+        <TextView
+            android:id="@+id/nextTaskName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+
+            android:layout_marginEnd="16dp"
+            android:fontFamily="@string/font_family_bold"
+            android:gravity="center"
+
+            android:text="@{viewmodel.nextTaskName}"
+            android:textSize="20sp"
+            android:maxLines="3"
+
+            android:visibility="@{viewmodel.dayEnded ? View.INVISIBLE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/currentTaskName"
+            app:layout_constraintTop_toBottomOf="@+id/nextTaskLabel"
+            tools:text="Task 2" />
+
 
         <Button
             android:id="@+id/bigAssButton"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
             android:background="@drawable/big_button"
+
             android:text="@string/ok"
             android:textColor="@color/secondaryTextColor"
-
-            android:textSize="40sp"
-            app:layout_constraintBottom_toTopOf="@+id/nextTaskTextView"
+            android:textSize="50sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/completedTextView" />
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/dayEndedTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/day_ended"
-            android:visibility="@{viewmodel.dayEnded ? View.VISIBLE : View.INVISIBLE}"
+        <Button
+            android:id="@+id/takeBreakButton"
+            style="@style/ButtonStyle"
+            android:layout_width="150dp"
+            android:layout_height="68dp"
+            android:layout_marginStart="16dp"
 
-            app:layout_constraintBottom_toBottomOf="@+id/nextTaskName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/nextTaskName"
-            tools:visibility="invisible" />
+            android:layout_marginBottom="8dp"
 
-        <TextView
-            android:id="@+id/nextTaskName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:text="@{viewmodel.nextTaskName}"
-            android:visibility="@{viewmodel.dayEnded ? View.INVISIBLE : View.VISIBLE}"
-
+            android:background="@drawable/item_disabled"
+            android:text="@string/take_break"
             app:layout_constraintBottom_toTopOf="@+id/endDayButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nextTaskTextView"
-            tools:text="Task 2" />
-
-        <TextView
-            android:id="@+id/nextTaskTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/next_task"
-            app:layout_constraintBottom_toTopOf="@+id/nextTaskName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bigAssButton" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/endDayButton"
             style="@style/ButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="68dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/item_active"
             android:text="@string/end_day"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/takeBreakButton"
+            app:layout_constraintStart_toStartOf="@+id/takeBreakButton" />
+
+        <Button
+            android:id="@+id/prolongButton"
+            style="@style/ButtonStyle"
+            android:layout_width="0dp"
+
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/item_button"
+
+            android:text="@string/prolong"
+            app:layout_constraintBottom_toBottomOf="@+id/endDayButton"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nextTaskName" />
+            app:layout_constraintStart_toEndOf="@+id/takeBreakButton"
+            app:layout_constraintTop_toTopOf="@+id/takeBreakButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

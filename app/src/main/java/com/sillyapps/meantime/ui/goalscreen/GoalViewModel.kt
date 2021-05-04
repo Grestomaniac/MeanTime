@@ -2,14 +2,14 @@ package com.sillyapps.meantime.ui.goalscreen
 
 import androidx.lifecycle.*
 import com.sillyapps.meantime.AppConstants
-import com.sillyapps.meantime.data.Goal
-import com.sillyapps.meantime.data.TaskGoals
+import com.sillyapps.meantime.data.*
 import com.sillyapps.meantime.data.repository.AppRepository
 import com.sillyapps.meantime.ui.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 @HiltViewModel
 class GoalViewModel @Inject constructor(private val repository: AppRepository): ViewModel() {
@@ -23,61 +23,40 @@ class GoalViewModel @Inject constructor(private val repository: AppRepository): 
     private val _tabSelected: MutableLiveData<Int> = MutableLiveData(0)
     val tabSelected: LiveData<Int> = _tabSelected
 
-    val activeGoals: LiveData<MutableList<Goal>> = taskGoals.map { it.activeGoals }
-
-    val completedGoals: LiveData<MutableList<Goal>> = taskGoals.map { it.completedGoals }
+    val consolidatedList: MutableLiveData<ArrayList<ListItem>> = MutableLiveData(createConsolidatedList(taskGoals.value!!.goals))
 
     val goal: MutableLiveData<Goal> = MutableLiveData()
     private var goalPos = AppConstants.NOT_ASSIGNED
 
-    val newGoalAdded: SingleLiveEvent<Void> = SingleLiveEvent()
-    val viewModelLoaded: SingleLiveEvent<Void> = SingleLiveEvent()
-
     fun load(taskGoalId: Int) {
         viewModelScope.launch {
             taskGoals.value = repository.getTaskGoals(taskGoalId)
-            viewModelLoaded.call()
         }
     }
 
-    fun selectTab(tabPosition: Int) {
-        _tabSelected.value = tabPosition
+    fun notifyGoalRemoved(position: Int) {
+        val goalItem = consolidatedList.value!![position] as GoalItem
+        taskGoals.value?.removeGoal(goalItem.goal)
+        updateConsolidatedList()
+        goalsChanged()
     }
 
-    fun getDefaultGoalPosition(): Int {
-        return taskGoals.value!!.defaultGoalPos
-    }
+    private fun createConsolidatedList(goals: HashMap<String, MutableList<Goal>>): ArrayList<ListItem> {
+        val consolidatedList = ArrayList<ListItem>()
 
-    fun notifyActiveGoalRemoved(position: Int) {
-        if (position == taskGoals.value!!.defaultGoalPos) {
-            taskGoals.value!!.unselectDefaultGoal()
+        for (tag in goals.keys) {
+            consolidatedList.add(TagItem(tag))
+
+            val groupGoals = goals[tag]!!
+            for (i in 0 until groupGoals.size) {
+                consolidatedList.add(GoalItem(groupGoals[i]))
+            }
         }
-        completedGoals.value!!.add(activeGoals.value!![position])
-        activeGoals.value!!.removeAt(position)
-        goalsChanged()
+        return consolidatedList
     }
 
-    fun notifyCompletedGoalSwapped(fromPosition: Int, toPosition: Int) {
-        Collections.swap(completedGoals.value!!, fromPosition, toPosition)
-        goalsChanged()
-    }
-
-    fun notifyCompletedGoalRecovered(position: Int) {
-        val goal = completedGoals.value!![position]
-        goal.saveGoal()
-        activeGoals.value!!.add(goal)
-        completedGoals.value!!.removeAt(position)
-        goalsChanged()
-    }
-
-    fun notifyCompletedGoalRemoved(position: Int) {
-        completedGoals.value!!.removeAt(position)
-        goalsChanged()
-    }
-
-    fun notifyTaskSelected(position: Int) {
-        taskGoals.value!!.selectDefaultGoal(position)
-        goalsChanged()
+    private fun updateConsolidatedList() {
+        consolidatedList.value = createConsolidatedList(taskGoals.value!!.goals)
     }
 
     fun createNewGoal() {
@@ -85,27 +64,19 @@ class GoalViewModel @Inject constructor(private val repository: AppRepository): 
         goal.value = Goal()
     }
 
-    fun editActiveGoal(position: Int) {
+    fun editGoal(position: Int) {
         goalPos = position
-        goal.value = activeGoals.value!![position].copy()
-    }
-
-    fun editCompletedGoal(position: Int) {
-        goalPos = activeGoals.value!!.size + position
-        goal.value = completedGoals.value!![position].copy()
+        goal.value = (consolidatedList.value!![position] as GoalItem).goal.copy()
     }
 
     fun saveGoal() {
         goal.value!!.saveGoal()
         if (goalPos == AppConstants.NOT_ASSIGNED) {
-            activeGoals.value!!.add(goal.value!!)
-            newGoalAdded.call()
-        }
-        else if (goalPos < activeGoals.value!!.size) {
-            activeGoals.value!![goalPos].fillWith(goal.value!!)
+            taskGoals.value!!.addGoal(goal.value!!)
+            updateConsolidatedList()
         }
         else {
-            completedGoals.value!![activeGoals.value!!.size-goalPos]
+            (consolidatedList.value!![goalPos] as GoalItem).goal.fillWith(goal.value!!)
         }
     }
 

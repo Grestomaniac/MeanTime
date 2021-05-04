@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="buttonSize">35dp</dimen>
+    <dimen name="buttonSize">44dp</dimen>
     <dimen name="centralButtonSize">40dp</dimen>
     <dimen name="normal_margin">16dp</dimen>
     <dimen name="button_padding">8dp</dimen>
-    <dimen name="iconSize">40dp</dimen>
+    <dimen name="iconSize">32dp</dimen>
 
     <dimen name="iconPadding">28dp</dimen>
 

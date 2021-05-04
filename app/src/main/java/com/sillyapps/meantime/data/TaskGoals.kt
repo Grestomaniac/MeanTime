@@ -2,15 +2,16 @@ package com.sillyapps.meantime.data
 
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.BR
 import com.sillyapps.meantime.utils.formatString
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 @Entity(tableName = "goal_table")
 class TaskGoals(
@@ -18,39 +19,29 @@ class TaskGoals(
     val id: Int = 0,
     val name: String = "",
     val formattedName: String = formatString(name),
-    var defaultGoalPos: Int = AppConstants.NOT_ASSIGNED,
 
-    @ColumnInfo(name = "active_goals")
-    val activeGoals: MutableList<Goal> = mutableListOf(),
-
-    @ColumnInfo(name = "completed_goals")
-    val completedGoals: MutableList<Goal> = mutableListOf()
+    val goals: HashMap<String, MutableList<Goal>> = HashMap()
 ): BaseObservable() {
-    fun selectDefaultGoal(position: Int) {
-        when (defaultGoalPos) {
-            AppConstants.NOT_ASSIGNED -> {
-                defaultGoalPos = position
-                activeGoals[position].goalIsDefault = true
-            }
-            position -> {
-                unselectDefaultGoal()
-            }
-            else -> {
-                activeGoals[defaultGoalPos].goalIsDefault = false
-                activeGoals[position].goalIsDefault = true
-                defaultGoalPos = position
-            }
+
+    fun removeGoal(goal: Goal) {
+        val group = goals[goal.tag]!!
+        group.remove(goal)
+        if (group.isEmpty()) {
+            goals.remove(goal.tag)
         }
     }
 
-    fun unselectDefaultGoal() {
-        activeGoals[defaultGoalPos].goalIsDefault = false
-        defaultGoalPos = AppConstants.NOT_ASSIGNED
+    fun addGoal(goal: Goal) {
+        if (!goals.containsKey(goal.tag)) {
+            goals[goal.tag] = mutableListOf(goal)
+        }
+        goals[goal.tag]?.add(goal)
     }
 }
 
 class Goal(
     name: String = "",
+    tag: String = "",
     description: String = "",
     changedDate: String = "",
     isDefault: Boolean = false
@@ -61,6 +52,13 @@ class Goal(
         set(value) {
             field = value
             notifyPropertyChanged(BR.name)
+        }
+
+    @Bindable
+    var tag: String = tag
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.tag)
         }
 
     @Bindable

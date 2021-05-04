@@ -57,6 +57,28 @@ object AppTypeConverter {
 
     @TypeConverter
     @JvmStatic
+    fun convertGoalsMapToJson(map: HashMap<String, List<Goal>>?): String {
+        val moshi = Moshi.Builder().build()
+        val dataList = Types.newParameterizedType(Map::class.java, String::class.java, List::class.java)
+        val jsonAdapter: JsonAdapter<Map<String, List<Goal>>> = moshi.adapter(dataList)
+
+        return jsonAdapter.toJson(map)
+    }
+
+    @TypeConverter
+    @JvmStatic
+    fun convertJsonToGoalsMap(data: String?): HashMap<String, List<Goal>>? {
+        if (data == null) return hashMapOf()
+        val moshi = Moshi.Builder().build()
+
+        val dataList = Types.newParameterizedType(Map::class.java, String::class.java, List::class.java)
+        val jsonAdapter: JsonAdapter<HashMap<String, List<Goal>>> = moshi.adapter(dataList)
+
+        return jsonAdapter.fromJson(data)
+    }
+
+    @TypeConverter
+    @JvmStatic
     fun convertStringToOrderList(data: String?): List<SchemeTemplateInfo>? {
         if (data == null) return emptyList()
         val moshi = Moshi.Builder().build()

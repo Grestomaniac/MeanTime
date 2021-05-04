@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-@Database(entities = [Template::class, Scheme::class, ApplicationPreferences::class, TaskGoals::class], version = 9)
+@Database(entities = [Template::class, Scheme::class, ApplicationPreferences::class, TaskGoals::class], version = 1)
 @TypeConverters(AppTypeConverter::class)
 abstract class AppDatabase: RoomDatabase() {
 
@@ -86,7 +86,7 @@ abstract class AppDatabase: RoomDatabase() {
                         AppDatabase::class.java,
                         "app_database")
                         .addCallback(DatabaseCallback())
-                        .addMigrations(MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9)
+                        .fallbackToDestructiveMigration()
                         .build()
                     INSTANCE = instance
                 }
@@ -100,7 +100,7 @@ abstract class AppDatabase: RoomDatabase() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
             INSTANCE?.let { appDatabase ->
-                CoroutineScope(Dispatchers.IO).launch {
+                CoroutineScope(Dispatchers.Main).launch {
                     appDatabase.appPrefDao.insert(ApplicationPreferences())
                     appDatabase.schemesDao.insert(Scheme(1))
                 }

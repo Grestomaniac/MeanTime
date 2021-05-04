@@ -17,6 +17,7 @@ import com.sillyapps.meantime.R
 import com.sillyapps.meantime.utils.convertMillisToStringFormat
 import com.sillyapps.meantime.utils.convertMillisToStringFormatWithSeconds
 import com.sillyapps.meantime.data.State
+import timber.log.Timber
 
 @BindingAdapter("isDefault")
 fun ConstraintLayout.setDefault(isDefault: Boolean) {
@@ -31,14 +32,22 @@ fun ConstraintLayout.setDefault(isDefault: Boolean) {
     setBackgroundResource(backgroundResource)
 }
 
+@BindingAdapter("taskSelected")
+fun View.setTaskSelected(isSelected: Boolean) {
+    val backgroundResource =
+        if (isSelected) R.color.primaryLightColor
+        else R.color.itemColor
+    setBackgroundResource(backgroundResource)
+}
+
 @BindingAdapter("state")
 fun View.updateState(state: State) {
     val backgroundResource =
         when (state) {
-            State.WAITING -> R.drawable.item_waiting
-            State.COMPLETED -> R.drawable.item_completed
-            State.DISABLED -> R.drawable.item_disabled
-            State.ACTIVE -> R.drawable.item_active
+            State.WAITING -> R.color.primaryColor
+            State.COMPLETED -> R.color.completedColor
+            State.DISABLED -> R.color.disabledColor
+            State.ACTIVE -> R.color.activeColor
         }
 
     setBackgroundResource(backgroundResource)
@@ -101,7 +110,7 @@ fun ConstraintLayout.setInteractive(isInteractive: Boolean) {
 @BindingAdapter("isActive")
 fun View.setActive(isActive: Boolean) {
     foregroundTintList = if (isActive)
-        ColorStateList.valueOf(ContextCompat.getColor(context, R.color.colorNotActive))
+        ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disabledColor))
     else {
         null
     }

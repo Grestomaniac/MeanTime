@@ -8,18 +8,63 @@
             name="task"
             type="com.sillyapps.meantime.data.Task"/>
 
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/item_task"
-        android:background="@drawable/item_waiting"
-        android:layout_marginTop="@dimen/normal_margin"
-        android:layout_marginHorizontal="8dp"
-        android:paddingBottom="16dp"
 
-        android:elevation="@dimen/listItemElevation">
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
+        android:background="@drawable/base_item"
+        android:elevation="@dimen/listItemElevation"
+
+        android:stateListAnimator="@animator/item_raise"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <View
+            android:id="@+id/left_bar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:background="@color/primaryColor"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/taskIcon"
+            app:layout_constraintEnd_toStartOf="@+id/right_bar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/right_bar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginBottom="1dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/taskIcon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/taskIcon"
+            style="@style/ItemButtonStyle"
+            android:layout_width="@dimen/iconSize"
+
+            android:layout_height="@dimen/iconSize"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/circle"
+            android:padding="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_reorder"
+            app:tint="@color/primaryTextColor" />
 
         <TextView
             android:id="@+id/time"
@@ -27,39 +72,117 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:layout_marginEnd="16dp"
+            android:layout_marginTop="26dp"
 
-            app:layout_constraintBottom_toBottomOf="@+id/enter_name"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintTop_toTopOf="@+id/enter_name"
+            android:fontFamily="sans-serif"
+            app:layout_constraintEnd_toEndOf="@+id/taskIcon"
+            app:layout_constraintStart_toStartOf="@+id/taskIcon"
+            app:layout_constraintTop_toBottomOf="@+id/taskIcon"
             app:time="@{task.startTime}"
             tools:text="17:00" />
 
         <TextView
             android:id="@+id/enter_name"
+            style="@style/Header"
             android:layout_width="0dp"
+
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="12dp"
+            android:text="@{task.name}"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintStart_toEndOf="@+id/left_bar"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Таск с очень и очень длинным названием" />
+
+        <TextView
+            android:id="@+id/durationTextView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@{task.name}"
-            app:layout_constraintEnd_toStartOf="@+id/time"
-            app:layout_constraintStart_toEndOf="@+id/taskIcon"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Свободное время" />
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="@string/font_family_light"
+            android:text="@string/total_duration"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@+id/addButton"
+            app:layout_constraintEnd_toStartOf="@+id/duration"
+            app:layout_constraintTop_toTopOf="@+id/time" />
+
+        <TextView
+            android:id="@+id/duration"
+            time="@{task.duration}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginEnd="12dp"
+            android:fontFamily="@string/font_family_regular"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/durationTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/durationTextView"
+            tools:text="00:00" />
 
         <ImageView
-            android:id="@+id/taskIcon"
-            style="@style/ItemButtonStyle"
-            android:layout_width="@dimen/iconSize"
-            android:layout_height="@dimen/iconSize"
-            android:layout_marginStart="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/enter_name"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/enter_name"
-            app:srcCompat="@drawable/ic_reorder" />
+            android:id="@+id/addIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="12dp"
+            android:src="@drawable/ic_add"
+            app:layout_constraintBottom_toBottomOf="@+id/addButton"
+            app:layout_constraintStart_toEndOf="@+id/left_bar"
+            app:layout_constraintTop_toTopOf="@+id/addButton"
+            app:tint="@color/completedColor"
+
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/addButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:background="@android:color/transparent"
+            android:text="@string/add"
+            android:textColor="@color/completedColor"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/addIcon"
+            app:layout_constraintTop_toBottomOf="@+id/durationTextView"
+
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/editIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:src="@drawable/ic_build"
+            app:layout_constraintBottom_toBottomOf="@+id/editButton"
+            app:layout_constraintEnd_toStartOf="@+id/editButton"
+            app:layout_constraintTop_toTopOf="@+id/editButton"
+            app:tint="@color/completedColor"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/editButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="12dp"
+            android:background="@android:color/transparent"
+            android:text="@string/edit"
+            android:textColor="@color/completedColor"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/durationTextView"
+            android:visibility="gone"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

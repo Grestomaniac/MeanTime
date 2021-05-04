@@ -8,6 +8,7 @@ import com.sillyapps.meantime.data.local.TaskGoalsDao
 import com.sillyapps.meantime.data.local.TemplateDao
 import com.sillyapps.meantime.ui.mainscreen.DayManager
 import com.sillyapps.meantime.utils.formatString
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -96,6 +97,7 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
     }
 
     private suspend fun loadTemplate(getNextTemplate: Boolean = true): Template? {
+        Timber.d("App pref dao is null = ${appPrefDao.getApplicationPref() == null}")
         var templateId = appPrefDao.getDefaultTemplateId()
         getTemplateFromScheme(getNextTemplate)?.let { templateId = it }
 

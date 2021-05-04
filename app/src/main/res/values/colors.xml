@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primaryColor">#f9edef</color>
-    <color name="primaryLightColor">#ffffff</color>
-    <color name="primaryDarkColor">#c6bbbd</color>
-    <color name="secondaryColor">#546e7a</color>
-    <color name="secondaryLightColor">#819ca9</color>
-    <color name="secondaryDarkColor">#29434e</color>
+    <color name="primaryColor">#0098C4</color>
+    <color name="secondaryColor">#FF6A00</color>
+
     <color name="primaryTextColor">#000000</color>
-    <color name="primaryTextColorSelected">#29434e</color>
-    <color name="secondaryTextColor">#ffffff</color>
+    <color name="secondaryTextColor">#FFFFFF</color>
 
-    <color name="colorItemWaiting">#fdcb9e</color>
-    <color name="colorItemActive">#FFDF6B</color>
-    <color name="colorItemDisabled">#D7BCC8</color>
-    <color name="colorItemCompleted">#B1F8F2</color>
+    <color name="activeColor">#D1411E</color>
+    <color name="disabledColor">#4A6066</color>
+    <color name="completedColor">#006B91</color>
 
-    <color name="colorWarning">#D7292A</color>
-    <color name="colorAlright">#4CB33F</color>
+    <color name="primaryLightColor">#EDFDFF</color>
+    <color name="itemColor">#F2F2F2</color>
+    <color name="itemBorderColor">#BDBDBD</color>
 
-    <color name="colorNotActive">#D9D9D9</color>
+    <color name="defaultBackground">#FAFAFA</color>
 
-    <color name="colorSurface">#D9D9D9</color>
+    <color name="iconColor">#686767</color>
 </resources>

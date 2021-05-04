@@ -30,12 +30,7 @@ class TimePickerItem @JvmOverloads constructor(context: Context, attrs: Attribut
 
     private val longClickIncAmount: Int
     private val maxValue: Int
-    var previousView: TimePickerItem? = null
-    var nextView: TimePickerItem? = null
-        set(value) {
-            field = value
-            binding.picker.nextFocusForwardId = value!!.id
-        }
+    private val label: String?
 
     private lateinit var watcher: TextWatcher
 
@@ -43,27 +38,14 @@ class TimePickerItem @JvmOverloads constructor(context: Context, attrs: Attribut
         context.theme.obtainStyledAttributes(attrs, R.styleable.TimePickerItem, 0, 0).apply {
             maxValue = getInt(R.styleable.TimePickerItem_maxValue, 59)
             longClickIncAmount = getInt(R.styleable.TimePickerItem_longClickIncAmount, 5)
+            label = getString(R.styleable.TimePickerItem_label)
         }
-    }
-
-    fun setAsLastPicker() {
-        binding.picker.imeOptions = EditorInfo.IME_ACTION_DONE
-        binding.picker.setOnEditorActionListener { v, actionId, event ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                clearPickerFocus(v)
-            }
-            return@setOnEditorActionListener false
-        }
-    }
-
-    private fun clearPickerFocus(v: View) {
-        v.clearFocus()
-        getActivity()?.hideKeyBoard(v)
     }
 
     override fun onFinishInflate() {
         super.onFinishInflate()
         setTimeTextListener()
+        binding.label.text = label
     }
 
     fun setTime(value: Int) {
@@ -89,27 +71,6 @@ class TimePickerItem @JvmOverloads constructor(context: Context, attrs: Attribut
                     setTextSafely(s.subSequence(2, 3))
                     binding.picker.setSelection(binding.picker.text.length)
                     return
-                }
-
-                val value = s.toString().toInt()
-                if (value > maxValue) {
-                    focusToNextView(formatTime(maxValue))
-                }
-
-                else if (value*10 > maxValue) {
-                    focusToNextView(formatTime(value))
-                }
-            }
-
-            private fun focusToNextView(value: CharSequence?) {
-                setTextSafely(value)
-
-                if (nextView != null) {
-                    nextView?.requestFocus()
-                }
-                else {
-                    clearFocus()
-                    getActivity()?.hideKeyBoard(this@TimePickerItem)
                 }
             }
         }
@@ -140,7 +101,6 @@ class TimePickerItem @JvmOverloads constructor(context: Context, attrs: Attribut
         if (value <= maxValue)
             setTextSafely(formatTime(value))
         else {
-            previousView?.incrementTime()
             setTextSafely(formatTime(value % maxValue - 1))
         }
         return true
@@ -152,7 +112,6 @@ class TimePickerItem @JvmOverloads constructor(context: Context, attrs: Attribut
         if (value >= 0)
             setTextSafely(formatTime(value))
         else {
-            previousView?.decrementTime()
             setTextSafely(formatTime(maxValue - amount + 1))
         }
         return true

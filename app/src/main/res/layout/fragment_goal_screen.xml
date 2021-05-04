@@ -20,10 +20,9 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/primaryColor"
-            app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            android:elevation="@dimen/actionBarElevation"/>
+
+            style="@style/ToolbarStyle"
+            app:menu="@menu/goal_screen_menu"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -31,61 +30,17 @@
 
             android:layout_marginTop="?attr/actionBarSize">
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/goalsTabLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-
-                android:background="@color/primaryDarkColor"
-                app:tabSelectedTextColor="@color/primaryTextColor">
-
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/active_goals"/>
-
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/completed_goals"/>
-
-            </com.google.android.material.tabs.TabLayout>
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/goals"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
 
-                android:visibility="@{viewModel.tabSelected == 0 ? View.VISIBLE : View.GONE}"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-
-                app:layout_constraintTop_toBottomOf="@+id/goalsTabLayout"
-                app:reverseLayout="true"
-
-                app:stackFromEnd="true"
-                tools:listitem="@layout/item_goal"
-
-                android:paddingBottom="8dp"
-                android:clipToPadding="false"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/completedGoals"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
 
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/goalsTabLayout"
+                app:layout_constraintTop_toTopOf="parent"
                 app:reverseLayout="true"
 
                 app:stackFromEnd="true"

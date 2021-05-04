@@ -28,6 +28,7 @@ import com.sillyapps.meantime.databinding.ActivityMainBinding
 import com.sillyapps.meantime.ui.TimePickerItem
 import com.sillyapps.meantime.utils.setDarkThemeIfNeeded
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 
 @AndroidEntryPoint
@@ -40,11 +41,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setDarkThemeIfNeeded()
+        Timber.d("Activity created")
 
         val binding = DataBindingUtil.setContentView<ActivityMainBinding>(
             this,
             R.layout.activity_main
         )
+        Timber.d("Activity inflated")
         drawerLayout = binding.drawerLayout
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment

@@ -77,7 +77,7 @@ fun tintMenuIcons(items: Sequence<MenuItem>, context: Context) {
     for (item in items) {
         item.icon?.apply {
             item.icon.setTintMode(PorterDuff.Mode.SRC_ATOP)
-            item.icon.setTint(ContextCompat.getColor(context, R.color.primaryTextColor))
+            item.icon.setTint(ContextCompat.getColor(context, R.color.secondaryTextColor))
         }
     }
 }

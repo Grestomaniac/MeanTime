@@ -84,11 +84,38 @@
     <string name="goals">Goals:</string>
     <string name="based_on_name">Based on name</string>
     <string name="warnings">Warnings</string>
-    <string name="tasks">Tasks:</string>
-    <string name="search">Search</string>
+    <string name="tasks">Task count:</string>
     <string name="save_as">Save as</string>
     <string name="open">Open</string>
     <string name="get_next">Get next</string>
     <string name="colon">:</string>
+
+
+    <!--Font Styles-->
+    <string name="font_family_thin">sans-serif-thin</string>
+    <string name="font_family_regular">sans-serif</string>
+    <string name="font_family_bold">sans-serif-medium</string>
+    <string name="font_family_light">sans-serif-light</string>
+    <string name="start_at">Start at:</string>
+    <string name="time_passed">Time passed:</string>
+    <string name="time_left">Time left:</string>
+    <string name="play">Play</string>
+    <string name="add">Add</string>
+    <string name="search">Search</string>
+    <string name="time_is_out">Time is out!</string>
+    <string name="or">OR</string>
+    <string name="current_task">Current task:</string>
+    <string name="take_break">Take break</string>
+    <string name="prolong">Prolong</string>
+    <string name="hour">Hour</string>
+    <string name="pick_time">Pick time</string>
+    <string name="minute">Minute</string>
+    <string name="cancel">Cancel</string>
+    <string name="sort">Sort</string>
+    <string name="total_duration">Total duration:</string>
+    <string name="edit">Edit</string>
+    <string name="create_new">Create new</string>
+    <string name="used">Used:</string>
+    <string name="created">Created:</string>
 
 </resources>

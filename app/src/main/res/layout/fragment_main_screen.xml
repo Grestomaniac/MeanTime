@@ -12,43 +12,84 @@
             type="com.sillyapps.meantime.ui.mainscreen.MainViewModel" />
     </data>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="match_parent">
 
-        android:fitsSystemWindows="true">
-
-        <com.google.android.material.appbar.AppBarLayout
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/ToolbarStyle"
             android:layout_width="match_parent"
+
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
-            android:background="@android:color/transparent"
-            android:stateListAnimator="@null">
+            app:layout_constraintEnd_toEndOf="parent"
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                style="@style/ToolbarStyle"
-
-                app:layout_scrollFlags="scroll|enterAlwaysCollapsed|snap"
-                android:fitsSystemWindows="true"
-                app:menu="@menu/main_screen_menu"
-                android:background="@drawable/toolbar"
-                />
-
-        </com.google.android.material.appbar.AppBarLayout>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed|snap"
+            app:menu="@menu/main_screen_menu" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/runningTasks"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
 
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_main_screen_task_v3"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            tools:itemCount="3"
+            tools:listitem="@layout/item_main_screen_task" />
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <ImageView
+            android:id="@+id/floatingActionButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/action_button"
+            android:elevation="6dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_play"
+            app:layout_constraintBottom_toBottomOf="@+id/stop_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <View
+            android:id="@+id/controlPanelShadow"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/shadow"
+            app:layout_constraintBottom_toTopOf="@+id/stop_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/stop_button"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginBottom="12dp"
+
+            android:elevation="4dp"
+            android:src="@drawable/ic_stop_black_24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/floatingActionButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:tint="@color/primaryTextColor" />
+
+        <ImageView
+            android:id="@+id/add_button"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:elevation="4dp"
+            android:src="@drawable/ic_add"
+
+            app:layout_constraintBottom_toBottomOf="@+id/stop_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/floatingActionButton"
+            app:tint="@color/primaryTextColor" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

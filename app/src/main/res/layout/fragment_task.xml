@@ -9,142 +9,355 @@
             type="com.sillyapps.meantime.data.Task"/>
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        android:fitsSystemWindows="true">
+
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
             android:background="@android:color/transparent"
-            android:elevation="@dimen/actionBarElevation"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:theme="@style/ThemeOverlay.AppCompat.ActionBar"/>
+            android:stateListAnimator="@null">
 
-        <ImageView
-            android:id="@+id/taskIcon"
-            style="@style/ItemButtonStyle"
-            android:layout_width="@dimen/iconSize"
-            android:layout_height="@dimen/iconSize"
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
 
-            android:layout_marginStart="16dp"
-            android:background="@drawable/circle"
-            android:padding="4dp"
-            app:layout_constraintBottom_toBottomOf="@+id/enter_name"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/enter_name"
-            app:srcCompat="@drawable/ic_reorder" />
+                style="@style/ToolbarStyle">
 
-        <TextView
-            android:id="@+id/enter_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@{task.name}"
-            app:layout_constraintEnd_toStartOf="@+id/time"
-            app:layout_constraintStart_toEndOf="@+id/taskIcon"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            tools:text="Таск с очень и очень длинным названием" />
+                    <ImageView
+                        android:layout_width="@dimen/iconSize"
+                        android:layout_height="@dimen/iconSize"
+                        android:src="@drawable/ic_reorder"
+                        android:background="@drawable/circle"
+                        app:tint="@color/primaryTextColor"
+                        android:padding="4dp"/>
 
-        <TextView
-            android:id="@+id/time"
-            style="@style/TimeItemStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+                    <TextView
+                        android:layout_marginStart="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="@{task.name}"
 
-            android:layout_marginEnd="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/enter_name"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/enter_name"
-            app:time="@{task.startTime}"
-            tools:text="17:00" />
+                        android:gravity="center"
+                        android:fontFamily="@string/font_family_bold"
+                        android:textSize="20sp"
+                        android:textColor="@color/secondaryTextColor"
+                        tools:text="Task 1"/>
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:progress="@{task.relativeProgress}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+                </LinearLayout>
 
-            app:layout_constraintTop_toBottomOf="@+id/enter_name" />
+            </androidx.appcompat.widget.Toolbar>
 
-        <TextView
-            android:id="@+id/progressLabel"
-            style="@style/TinyTextStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/primaryColor"
+                android:elevation="@dimen/actionBarElevation"
+                android:paddingBottom="16dp">
 
-            android:layout_marginEnd="8dp"
-            android:text="@string/progress"
-            app:layout_constraintEnd_toStartOf="@+id/guideline3"
-            app:layout_constraintStart_toStartOf="@+id/progressBar"
-            app:layout_constraintTop_toBottomOf="@+id/progressBar"/>
+                <TextView
+                    android:id="@+id/startTimeLabel"
+                    style="@style/TinyTextStyle"
 
-        <TextView
-            android:id="@+id/progress"
-            style="@style/TinyTextStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/start_at"
+                    android:textColor="@color/secondaryTextColor"
+                    app:layout_constraintEnd_toEndOf="@+id/startTime"
+                    app:layout_constraintStart_toStartOf="@+id/startTime"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline3"
-            app:layout_constraintTop_toTopOf="@+id/progressLabel"
-            app:timeWithSeconds="@{task.progress}"
-            android:gravity="end"
-            tools:text="00:00:00" />
+                <TextView
+                    android:id="@+id/startTime"
+                    style="@style/TimeTextStyle"
+                    time="@{task.startTime}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/startTimeLabel"
+                    tools:text="17:00" />
 
-        <TextView
-            android:id="@+id/timeRemainedLabel"
-            style="@style/TinyTextStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+                <TextView
+                    android:id="@+id/timePassedLabel"
+                    style="@style/TinyTextStyle"
 
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/time_remain"
-            app:layout_constraintEnd_toStartOf="@+id/guideline3"
-            app:layout_constraintStart_toStartOf="@+id/progressLabel"
-            app:layout_constraintTop_toBottomOf="@+id/progressLabel" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/time_passed"
+                    android:textColor="@color/secondaryTextColor"
+                    app:layout_constraintEnd_toEndOf="@+id/timePassed"
+                    app:layout_constraintStart_toStartOf="@+id/timePassed"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/timeRemained"
-            style="@style/TinyTextStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+                <TextView
+                    android:id="@+id/timePassed"
+                    style="@style/TimeTextStyle"
+                    timeWithSeconds="@{task.progress}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/timePassedLabel"
+                    tools:text="00:00:00" />
 
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="16dp"
+                <TextView
+                    android:id="@+id/timeLeftLabel"
+                    style="@style/TinyTextStyle"
 
-            android:gravity="end"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline3"
-            app:layout_constraintTop_toTopOf="@+id/timeRemainedLabel"
-            app:timeWithSeconds="@{task.taskTimeRemained}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/time_left"
+                    android:textColor="@color/secondaryTextColor"
+                    app:layout_constraintEnd_toEndOf="@+id/timeLeft"
+                    app:layout_constraintStart_toStartOf="@+id/timeLeft"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            tools:text="00:00:00" />
+                <TextView
+                    android:id="@+id/timeLeft"
+                    style="@style/TimeTextStyle"
+                    timeWithSeconds="@{task.taskTimeRemained}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/timeLeftLabel"
+                    tools:text="00:00:00" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.3" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:progress="@{task.relativeProgress}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+
+                app:layout_constraintTop_toBottomOf="@+id/enter_name" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:id="@+id/durationRect"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:background="@drawable/item_active"
+                        app:layout_constraintBottom_toBottomOf="@+id/minusTimeButton"
+                        app:layout_constraintEnd_toStartOf="@+id/pickTimeButton"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/addTimeButton"
+                        android:layout_width="124dp"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:background="@drawable/item_disabled"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:src="@drawable/ic_add"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <TextView
+                        android:id="@+id/pickTimeButton"
+                        style="@style/TimeTextStyle"
+                        android:layout_width="124dp"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:background="@drawable/item_disabled"
+                        android:gravity="center"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:src="@drawable/ic_add"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/addTimeButton"
+                        tools:text="5 min" />
+
+                    <ImageView
+                        android:id="@+id/minusTimeButton"
+                        android:layout_width="124dp"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:background="@drawable/item_disabled"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:src="@drawable/ic_add"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/pickTimeButton" />
+
+                    <TextView
+                        android:id="@+id/durationLabel"
+                        style="@style/TinyTextStyle"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/time_left"
+                        android:textColor="@color/secondaryTextColor"
+                        app:layout_constraintBottom_toTopOf="@+id/duration"
+                        app:layout_constraintEnd_toEndOf="@+id/duration"
+                        app:layout_constraintStart_toStartOf="@+id/duration"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_chainStyle="packed" />
+
+                    <TextView
+                        android:id="@+id/duration"
+                        style="@style/TimeTextStyle"
+                        timeWithSeconds="@{task.taskTimeRemained}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/durationRect"
+                        app:layout_constraintEnd_toEndOf="@+id/durationRect"
+                        app:layout_constraintStart_toStartOf="@+id/durationRect"
+                        app:layout_constraintTop_toBottomOf="@+id/durationLabel"
+                        tools:text="00:00:00" />
+
+                    <View
+                        android:id="@+id/timeControlRect"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:background="@drawable/item_button"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/durationRect" />
+
+                    <ImageView
+                        android:id="@+id/stopButton"
+                        android:layout_width="@dimen/buttonSize"
+                        android:layout_height="@dimen/buttonSize"
+
+                        android:src="@drawable/ic_stop_black_24dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/playButton"
+                        app:layout_constraintEnd_toStartOf="@+id/playButton"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/playButton" />
+
+                    <TextView
+                        android:id="@+id/stopButtonLabel"
+                        style="@style/LabelTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/stop"
+                        app:layout_constraintBottom_toBottomOf="@id/timeControlRect"
+                        app:layout_constraintEnd_toEndOf="@+id/stopButton"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="@+id/stopButton"
+                        app:layout_constraintTop_toBottomOf="@+id/stopButton" />
+
+                    <ImageView
+                        android:id="@+id/playButton"
+                        android:layout_width="@dimen/buttonSize"
+                        android:layout_height="@dimen/buttonSize"
+
+                        android:layout_marginTop="8dp"
+                        android:src="@drawable/ic_play"
+                        app:layout_constraintBottom_toTopOf="@+id/playButtonLabel"
+                        app:layout_constraintEnd_toStartOf="@+id/editButton"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/stopButton"
+                        app:layout_constraintTop_toTopOf="@+id/timeControlRect" />
+
+                    <TextView
+                        android:id="@+id/playButtonLabel"
+                        style="@style/LabelTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/play"
+                        app:layout_constraintBottom_toBottomOf="@id/timeControlRect"
+                        app:layout_constraintEnd_toEndOf="@+id/playButton"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="@+id/playButton"
+                        app:layout_constraintTop_toBottomOf="@+id/playButton" />
+
+                    <ImageView
+                        android:id="@+id/editButton"
+                        android:layout_width="@dimen/buttonSize"
+                        android:layout_height="@dimen/buttonSize"
+
+                        android:src="@drawable/ic_add"
+                        app:layout_constraintBottom_toBottomOf="@+id/playButton"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/playButton"
+                        app:layout_constraintTop_toTopOf="@+id/playButton" />
+
+                    <TextView
+                        android:id="@+id/addButtonLabel"
+                        style="@style/LabelTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/add"
+                        app:layout_constraintBottom_toBottomOf="@id/timeControlRect"
+                        app:layout_constraintEnd_toEndOf="@+id/editButton"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="@+id/editButton"
+                        app:layout_constraintTop_toBottomOf="@+id/editButton" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <fragment
+                    android:layout_marginTop="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintTop_toBottomOf="@+id/timeControlRect"
+                    tools:layout="@layout/fragment_goal_screen"/>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

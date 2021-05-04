@@ -2,26 +2,44 @@ package com.sillyapps.meantime.ui.mainscreen.recyclerview
 
 import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.MotionEventCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sillyapps.meantime.data.Task
-import com.sillyapps.meantime.databinding.ItemMainScreenTaskV1Binding
-import com.sillyapps.meantime.databinding.ItemMainScreenTaskV2Binding
-import com.sillyapps.meantime.databinding.ItemMainScreenTaskV3Binding
+import com.sillyapps.meantime.databinding.ItemMainScreenTaskBinding
 import com.sillyapps.meantime.ui.ItemTouchHelperAdapter
 import com.sillyapps.meantime.ui.ItemClickListener
 import com.sillyapps.meantime.ui.mainscreen.MainViewModel
+import timber.log.Timber
 
 class RunningTasksAdapter(private val clickListener: ItemClickListener,
                           private val viewModel: MainViewModel):
     ListAdapter<Task, RunningTasksAdapter.ViewHolder>(TasksDiffCallback()), ItemTouchHelperAdapter {
 
     var pickedTaskPosition = -1
+    var selectedTaskPosition = -1
 
     var onSwipeToStartCallback: SwipeToStartCallback? = null
+
+    private val adapterClickListener = object : ClickListener {
+        override fun onClick(position: Int) {
+            if (selectedTaskPosition != -1) {
+                getItem(selectedTaskPosition).isSelected = false
+                notifyItemChanged(selectedTaskPosition)
+            }
+            if (selectedTaskPosition != position) {
+                getItem(position).isSelected = true
+                selectedTaskPosition = position
+                notifyItemChanged(position)
+                return
+            }
+            selectedTaskPosition = -1
+        }
+
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -29,7 +47,7 @@ class RunningTasksAdapter(private val clickListener: ItemClickListener,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getConnectedTask(position)
-        holder.bind(item, clickListener)
+        holder.bind(item, clickListener, adapterClickListener)
     }
 
     private fun getConnectedTask(position: Int): Task {
@@ -115,24 +133,32 @@ class RunningTasksAdapter(private val clickListener: ItemClickListener,
     override fun onItemSwiped(position: Int, direction: Int) {
         viewModel.notifyTaskDisabled(position)
         notifyItemChanged(position)
+        if (position < selectedTaskPosition) selectedTaskPosition--
     }
 
-    class ViewHolder private constructor(private val binding: ItemMainScreenTaskV3Binding): RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder private constructor(private val binding: ItemMainScreenTaskBinding): RecyclerView.ViewHolder(binding.root) {
         var notDraggable: Boolean = false
 
-        fun bind(item: Task, clickListener: ItemClickListener) {
+        fun bind(item: Task, clickListener: ItemClickListener, adapterClickListener: ClickListener) {
             binding.task = item
             notDraggable = item.canNotBeSwappedOrDisabled()
+            binding.root.setOnClickListener {
+                adapterClickListener.onClick(adapterPosition)
+            }
         }
 
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
 
-                val binding = ItemMainScreenTaskV3Binding.inflate(layoutInflater, parent, false)
+                val binding = ItemMainScreenTaskBinding.inflate(layoutInflater, parent, false)
                 return ViewHolder(binding)
             }
         }
+    }
+
+    interface ClickListener {
+        fun onClick(position: Int)
     }
 }
 

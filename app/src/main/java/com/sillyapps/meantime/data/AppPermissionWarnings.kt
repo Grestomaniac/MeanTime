@@ -31,7 +31,7 @@ class AppPermissionWarnings: BaseObservable() {
         }
 
     @Bindable
-    var notificationWarningColor: Int = R.color.colorAlright
+    var notificationWarningColor: Int = R.color.primaryColor
         set(value) {
             field = value
             notifyPropertyChanged(BR.notificationWarningColor)
@@ -44,7 +44,7 @@ class AppPermissionWarnings: BaseObservable() {
         }
 
     @Bindable
-    var batteryWarningColor: Int = R.color.colorAlright
+    var batteryWarningColor: Int = R.color.primaryColor
         set(value) {
             field = value
             notifyPropertyChanged(BR.batteryWarningColor)
@@ -59,11 +59,11 @@ class AppPermissionWarnings: BaseObservable() {
     private fun updateNotificationWarning() {
         if (notificationDisabled) {
             notificationStringResource = R.string.notifications_off
-            notificationWarningColor = R.color.colorWarning
+            notificationWarningColor = R.color.secondaryColor
         }
         else {
             notificationStringResource = R.string.notifications_on
-            notificationWarningColor = R.color.colorAlright
+            notificationWarningColor = R.color.primaryColor
         }
         haveAnyWarnings = notificationDisabled or batteryOptimizationEnabled
     }
@@ -71,11 +71,11 @@ class AppPermissionWarnings: BaseObservable() {
     private fun updateBatteryWarning() {
         if (batteryOptimizationEnabled) {
             batteryStringResource = R.string.battery_optimization_on
-            batteryWarningColor = R.color.colorWarning
+            batteryWarningColor = R.color.secondaryColor
         }
         else {
             batteryStringResource = R.string.battery_optimization_off
-            batteryWarningColor = R.color.colorAlright
+            batteryWarningColor = R.color.primaryColor
         }
         haveAnyWarnings = notificationDisabled or batteryOptimizationEnabled
     }

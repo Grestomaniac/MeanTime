@@ -18,22 +18,9 @@ class TimePicker @JvmOverloads constructor(context: Context, attrs: AttributeSet
     fun getDuration(): Long {
         binding.apply {
             return convertToMillis(
-                timePickerHours.getTime(),
-                timePickerMinutes.getTime(),
-                timePickerSeconds.getTime()
+                hourField.getTime(),
+                minuteField.getTime()
             )
-        }
-    }
-
-    private fun setupTimePickers() {
-        binding.apply {
-            timePickerHours.nextView = timePickerMinutes
-            timePickerMinutes.nextView = timePickerSeconds
-
-            timePickerMinutes.previousView = timePickerHours
-            timePickerSeconds.previousView = timePickerMinutes
-
-            timePickerSeconds.setAsLastPicker()
         }
     }
 
@@ -44,15 +31,13 @@ class TimePicker @JvmOverloads constructor(context: Context, attrs: AttributeSet
 
         binding.apply {
             val overallSeconds = (durationInMillis / 1000).toInt()
-            timePickerSeconds.setTime(overallSeconds % 60)
 
             val overallMinutes = overallSeconds / 60
-            timePickerMinutes.setTime(overallMinutes % 60)
+            minuteField.setTime(overallMinutes % 60)
 
             val overallHours = overallMinutes / 60
-            timePickerHours.setTime(overallHours % 24)
+            hourField.setTime(overallHours % 24)
         }
-        setupTimePickers()
     }
 }
 

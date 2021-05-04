@@ -4,7 +4,11 @@ import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.sillyapps.meantime.*
 import com.sillyapps.meantime.utils.getLocalCurrentTimeMillis
+import timber.log.Timber
 
+/**
+ * Data class for holding information about the task
+ */
 class Task(
     startTime: Long = 0L,
 
@@ -130,6 +134,8 @@ class Task(
         }
 
     var paused: Boolean = false
+
+    var isSelected: Boolean = false
 
     fun resetStartTime(time: Long = 0L) {
         startTime = time

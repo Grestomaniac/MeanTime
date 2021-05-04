@@ -27,6 +27,8 @@ object AppBR {
     const val dayPaused = 1004
     const val dayResumed = 1005
     const val taskAdded = 1006
+
+    const val goalsChanged = 1007
 }
 
 object PreferencesKeys {
