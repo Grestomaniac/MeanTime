@@ -20,7 +20,7 @@
         state="@{schemeTemplate.templateInfo.state}"
         tools:background="@drawable/item_waiting"
 
-        android:elevation="@dimen/listItemElevation">
+        android:elevation="@dimen/itemDefaultElevation">
 
         <TextView
             android:id="@+id/enter_name"

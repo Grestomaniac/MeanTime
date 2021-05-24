@@ -18,7 +18,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="4dp"
         android:background="@drawable/base_item"
-        android:elevation="@dimen/listItemElevation"
+        android:elevation="@dimen/itemDefaultElevation"
 
         android:stateListAnimator="@animator/item_raise"
         app:layout_constraintTop_toTopOf="parent">

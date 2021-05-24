@@ -16,7 +16,8 @@
     <string name="enter_duration">Enter duration:</string>
     <string name="with_melody">With melody:</string>
     <string name="melody">Melody:</string>
-    <string name="vibration_on">Vibration on:</string>
+    <string name="vibration_on">Vibration on</string>
+    <string name="vibration_off">Vibration off</string>
     <string name="melody_on">Melody on:</string>
 
     <string name="choose_task_sound">Choose task notification sound</string>
@@ -42,6 +43,7 @@
     <string name="task_progress">Progress:</string>
     <string name="muffled">Muffled</string>
     <string name="sound_on">Sound on</string>
+    <string name="sound_off">Sound off</string>
 
     <!--WarningInfoDialog-->
     <string name="warning_dialog_description">For the best experience possible please consider this
@@ -54,7 +56,7 @@
     <string name="notifications_on">Notifications is on</string>
     <string name="notifications_off">Notifications is off</string>
     <string name="notifications_description">To use app in 100% potential, you should turn notifications on</string>
-    <string name="notification_settings_path">Battery optimization -> All apps -> $1%s -> Don\'t optimize</string>
+    <string name="notification_settings_path">Battery optimization -> All apps -> %1$s -> Don\'t optimize</string>
 
     <!--DayService-->
     <string name="channel_id">DayServiceTimer</string>
@@ -96,6 +98,7 @@
     <string name="font_family_regular">sans-serif</string>
     <string name="font_family_bold">sans-serif-medium</string>
     <string name="font_family_light">sans-serif-light</string>
+
     <string name="start_at">Start at:</string>
     <string name="time_passed">Time passed:</string>
     <string name="time_left">Time left:</string>
@@ -117,5 +120,20 @@
     <string name="create_new">Create new</string>
     <string name="used">Used:</string>
     <string name="created">Created:</string>
+    <string name="advanced">Advanced</string>
+    <string name="set_break">Set break</string>
+    <string name="interval">Interval</string>
+    <string name="interval_between_breaks">Interval between breaks</string>
+    <string name="duration_text">Duration</string>
+    <string name="duration_of_the_break">Duration of the break</string>
+    <string name="disable">Disable</string>
+
+    <string name="time_with_hours">%1$d h and %2$d min</string>
+    <string name="time_without_hours">%1$d min</string>
+    <string name="break_format">Interval: %1$s\nDuration: %2$s</string>
+    <string name="no_break">No break</string>
+    <string name="invalid_break_interval">Break interval can not be 0</string>
+    <string name="invalid_break_duration">Break duration can not be 0</string>
+
 
 </resources>

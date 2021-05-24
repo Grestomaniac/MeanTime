@@ -26,7 +26,7 @@ import kotlinx.coroutines.*
 import timber.log.Timber
 
 class TimePickerItem @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttrs: Int = 0): ConstraintLayout(context, attrs, defStyleAttrs), View.OnFocusChangeListener {
-    val binding = ItemTimePickerBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = ItemTimePickerBinding.inflate(LayoutInflater.from(context), this, true)
 
     private val longClickIncAmount: Int
     private val maxValue: Int
@@ -67,10 +67,16 @@ class TimePickerItem @JvmOverloads constructor(context: Context, attrs: Attribut
 
             override fun afterTextChanged(s: Editable?) {
                 if (s.isNullOrBlank()) return
-                if (s.length > 2) {
-                    setTextSafely(s.subSequence(2, 3))
+
+                val l = s.length
+                if (l > 2) {
+                    setTextSafely(s.subSequence(l-2, l))
                     binding.picker.setSelection(binding.picker.text.length)
-                    return
+                }
+                val value = s.toString().toInt()
+                if (value > maxValue) {
+                    setTextSafely((value % 10).toString())
+                    binding.picker.setSelection(binding.picker.text.length)
                 }
             }
         }
@@ -118,9 +124,11 @@ class TimePickerItem @JvmOverloads constructor(context: Context, attrs: Attribut
     }
 
     fun setTextSafely(value: CharSequence?) {
-        binding.picker.removeTextChangedListener(watcher)
-        binding.picker.setText(value)
-        binding.picker.addTextChangedListener(watcher)
+        binding.picker.apply {
+            removeTextChangedListener(watcher)
+            text.replace(0, text.length, value)
+            addTextChangedListener(watcher)
+        }
     }
 
     override fun onFocusChange(v: View?, hasFocus: Boolean) {

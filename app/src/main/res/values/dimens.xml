@@ -7,13 +7,19 @@
     <dimen name="button_padding">8dp</dimen>
     <dimen name="iconSize">32dp</dimen>
 
+    <dimen name="bigIconSize">36dp</dimen>
+
     <dimen name="iconPadding">28dp</dimen>
 
     <dimen name="timePickerItemSize">40dp</dimen>
 
     <dimen name="actionBarElevation">8dp</dimen>
     <dimen name="actionButtonElevation">6dp</dimen>
-    <dimen name="listItemElevation">4dp</dimen>
+    <dimen name="itemDefaultElevation">4dp</dimen>
 
     <dimen name="appBarHeight">200dp</dimen>
+
+    <dimen name="settingItemHeight">75dp</dimen>
+
+    <dimen name="defaultButtonWidth">130dp</dimen>
 </resources>

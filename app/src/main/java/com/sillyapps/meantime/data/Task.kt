@@ -21,7 +21,9 @@ class Task(
     val temporal: Boolean = false,
     uncertain: Boolean = false,
     hasPrevTask: Boolean = false,
-    hasNextTask: Boolean = false
+    hasNextTask: Boolean = false,
+    taskBreak: Break = Break(),
+    advancedPopped: Boolean = false
 ): BaseObservable() {
 
     @Bindable
@@ -136,6 +138,20 @@ class Task(
     var paused: Boolean = false
 
     var isSelected: Boolean = false
+
+    @Bindable
+    var advancedPopped: Boolean = advancedPopped
+    set(value) {
+        field = value
+        notifyPropertyChanged(BR.advancedPopped)
+    }
+
+    @Bindable
+    var taskBreak: Break = taskBreak
+    set(value) {
+        field = value
+        notifyPropertyChanged(BR.taskBreak)
+    }
 
     fun resetStartTime(time: Long = 0L) {
         startTime = time
@@ -254,7 +270,22 @@ class Task(
     }
 
     fun copy(): Task {
-        return Task(startTime, name, editableDuration, editableVibrationOn, editableSoundOn, uncertain=uncertain)
+        return Task(startTime, name, editableDuration, editableVibrationOn, editableSoundOn,
+            uncertain=uncertain, taskBreak=taskBreak, advancedPopped=advancedPopped)
+    }
+
+    fun toggleVibrationOn() {
+        vibrationOn = !vibrationOn
+        editableVibrationOn = vibrationOn
+    }
+
+    fun toggleSoundOn() {
+        soundOn = !soundOn
+        editableSoundOn = soundOn
+    }
+
+    fun toggleAdvanced() {
+        advancedPopped = !advancedPopped
     }
 
     companion object {
@@ -263,5 +294,26 @@ class Task(
 
     enum class WhatIsWrong {
         NAME, DURATION, NOTHING
+    }
+
+    class Break(var hasBreak: Boolean = false, breakInterval: Long = 0L,
+                breakDuration: Long = 0L, var isInclusive: Boolean = false): BaseObservable() {
+        @Bindable
+        var breakInterval: Long = breakInterval
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.breakInterval)
+        }
+
+        @Bindable
+        var breakDuration: Long = breakDuration
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.breakDuration)
+        }
+
+        fun copy(): Break {
+            return Break(hasBreak, breakInterval, breakDuration, isInclusive)
+        }
     }
 }

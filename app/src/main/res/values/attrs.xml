@@ -5,4 +5,11 @@
         <attr name="longClickIncAmount" format="integer"/>
         <attr name="label" format="string"/>
     </declare-styleable>
+
+    <declare-styleable name="SettingItem">
+        <attr name="settingName" format="string"/>
+        <attr name="icon" format="reference"/>
+        <attr name="leftBarColor" format="reference"/>
+        <attr name="settingContent" format="string"/>
+    </declare-styleable>
 </resources>

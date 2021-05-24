@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:elevation="@dimen/listItemElevation"
+        android:elevation="@dimen/itemDefaultElevation"
         android:stateListAnimator="@animator/item_raise"
         app:layout_constraintTop_toTopOf="parent"
 

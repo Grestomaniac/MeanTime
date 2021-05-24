@@ -3,16 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <data>
-        <variable
-            name="task"
-            type="com.sillyapps.meantime.data.Task"/>
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="12dp">
+        android:paddingBottom="12dp"
+        android:background="@color/secondaryTextColor">
 
         <View
             android:id="@+id/topBar"
@@ -58,8 +53,7 @@
             android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/topBar"
-            task="@{task}"/>
+            app:layout_constraintTop_toBottomOf="@+id/topBar"/>
 
 
         <Button

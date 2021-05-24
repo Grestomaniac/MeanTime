@@ -17,6 +17,10 @@ object AppConstants {
 
     const val TIMER_CHECK_INTERVAL = 100000L
 
+    const val HOUR = 3600000L
+    const val FIVE_MINUTES = 300000L
+    const val THIRTY_MINUTES = 1800000L
+
     const val DEFAULT_RINGTONE = "Default"
 }
 

@@ -65,7 +65,6 @@ class EditTemplateViewModel @Inject constructor(private val repository: AppRepos
                 recalculateStartTimes(taskPosition)
             }
         }
-        tasks.value = tasks.value
         taskPosition = AppConstants.NOT_ASSIGNED
     }
 
@@ -80,6 +79,10 @@ class EditTemplateViewModel @Inject constructor(private val repository: AppRepos
         } else 0L
 
         task.value = Task(nextStartTime)
+    }
+
+    fun getTaskDuration(): Long {
+        return task.value!!.duration
     }
 
     fun setTaskDuration(duration: Long) {
@@ -139,5 +142,13 @@ class EditTemplateViewModel @Inject constructor(private val repository: AppRepos
     fun notifyTaskRemoved(position: Int) {
         tasks.value!!.removeAt(position)
         recalculateStartTimes(position)
+    }
+
+    fun getTaskBreak(): Task.Break {
+        return task.value!!.taskBreak
+    }
+
+    fun setTaskBreak(taskBreak: Task.Break) {
+        task.value!!.taskBreak = taskBreak
     }
 }

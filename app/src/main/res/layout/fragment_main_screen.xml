@@ -52,7 +52,9 @@
             android:src="@drawable/ic_play"
             app:layout_constraintBottom_toBottomOf="@+id/stop_button"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+
+            android:onClick="@{() -> viewmodel.startOrPauseButtonPressed()}"/>
 
         <View
             android:id="@+id/controlPanelShadow"
@@ -75,7 +77,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/floatingActionButton"
             app:layout_constraintStart_toStartOf="parent"
-            app:tint="@color/primaryTextColor" />
+            app:tint="@color/primaryTextColor"
+            android:onClick="@{() -> viewmodel.stopButtonPressed()}"/>
 
         <ImageView
             android:id="@+id/add_button"
@@ -87,7 +90,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/stop_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/floatingActionButton"
-            app:tint="@color/primaryTextColor" />
+            app:tint="@color/primaryTextColor"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

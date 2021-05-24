@@ -61,6 +61,10 @@ class MainScreenFragment: Fragment() {
         setupService()
 
         binding.toolbar.title = viewModel.getTemplateName()
+
+        binding.addButton.setOnClickListener { addTemporalTask() }
+
+        binding.stopButton.setOnLongClickListener { viewModel.onStopButtonLongClick() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -147,10 +151,6 @@ class MainScreenFragment: Fragment() {
 
     private fun showTaskInfo() {
         /*TaskDialogFragment().show(childFragmentManager, "Task info")*/
-    }
-
-    private fun showWarningDialog() {
-        WarningDialogFragment().show(childFragmentManager, "Warning info")
     }
 
     private fun setupService() {

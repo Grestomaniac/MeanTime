@@ -44,7 +44,8 @@
 
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/arrowUp"
-            tools:text="00" />
+            tools:text="00"
+            android:selectAllOnFocus="true"/>
 
         <TextView
             android:id="@+id/label"

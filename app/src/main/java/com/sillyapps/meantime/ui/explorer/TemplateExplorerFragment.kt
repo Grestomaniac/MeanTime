@@ -17,6 +17,7 @@ import com.sillyapps.meantime.ui.explorer.recyclerview.ExplorerAdapter
 import com.sillyapps.meantime.ui.ItemClickListener
 import com.sillyapps.meantime.ui.schemescreen.SchemeFragment
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class TemplateExplorerFragment : Fragment() {
@@ -41,9 +42,8 @@ class TemplateExplorerFragment : Fragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = this.viewLifecycleOwner
 
         setupAdapter()

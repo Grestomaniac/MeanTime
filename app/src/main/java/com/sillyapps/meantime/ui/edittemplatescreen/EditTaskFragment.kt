@@ -13,12 +13,14 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.sillyapps.meantime.R
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.databinding.FragmentEditTaskBinding
 import com.sillyapps.meantime.setupToolbar
+import com.sillyapps.meantime.ui.TimePickerDialog
 import com.sillyapps.meantime.utils.convertToMillis
 import com.sillyapps.meantime.utils.showInfoToUser
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,7 +29,7 @@ import dagger.hilt.android.AndroidEntryPoint
  * Fragment for editing and creating the [Task]
  */
 @AndroidEntryPoint
-class EditTaskFragment : DialogFragment() {
+class EditTaskFragment : Fragment() {
 
     private val viewModel: EditTemplateViewModel by navGraphViewModels(R.id.edit_template_graph) {
         defaultViewModelProviderFactory
@@ -51,6 +53,7 @@ class EditTaskFragment : DialogFragment() {
     ): View {
         binding = FragmentEditTaskBinding.inflate(inflater, container, false)
         binding.task = viewModel.task.value
+        binding.fragment = this
 
         setupToolbar(binding.toolbar)
 
@@ -61,12 +64,11 @@ class EditTaskFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = this.viewLifecycleOwner
 
-        binding.melody.setOnClickListener { showRingtonePicker() }
-        binding.okFab.setOnClickListener { validateData() }
+//        binding.melody.setOnClickListener { showRingtonePicker() }
     }
 
-    private fun validateData() {
-        viewModel.setTaskDuration(binding.timePicker.getDuration())
+    fun validateData() {
+//        viewModel.setTaskDuration(binding.timePicker.getDuration())
 
         when(viewModel.isTaskDataValid()) {
             Task.WhatIsWrong.NOTHING -> saveTask()
@@ -78,6 +80,16 @@ class EditTaskFragment : DialogFragment() {
     private fun saveTask() {
         viewModel.addCreatedTask()
         findNavController().popBackStack()
+    }
+
+    fun openBreakDialog() {
+        val dialog = BreakDialog(viewModel.task.value!!.taskBreak) { viewModel.setTaskBreak(it) }
+        dialog.show(childFragmentManager, "BreakDialog")
+    }
+
+    fun openTimePicker() {
+        val dialog = TimePickerDialog(viewModel.getTaskDuration()) { viewModel.setTaskDuration(it) }
+        dialog.show(childFragmentManager, "TimePicker")
     }
 
     private fun showRingtonePicker() {

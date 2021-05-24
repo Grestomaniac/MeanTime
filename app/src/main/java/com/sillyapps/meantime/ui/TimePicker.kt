@@ -24,11 +24,7 @@ class TimePicker @JvmOverloads constructor(context: Context, attrs: AttributeSet
         }
     }
 
-    fun fillTimePicker(task: Task) {
-        binding.task = task
-        val durationInMillis = task.editableDuration
-        Timber.d("Duration is ${convertMillisToStringFormat(durationInMillis)}")
-
+    fun setDuration(durationInMillis: Long) {
         binding.apply {
             val overallSeconds = (durationInMillis / 1000).toInt()
 
@@ -39,9 +35,4 @@ class TimePicker @JvmOverloads constructor(context: Context, attrs: AttributeSet
             hourField.setTime(overallHours % 24)
         }
     }
-}
-
-@BindingAdapter("task")
-fun TimePicker.setTask(task: Task) {
-    fillTimePicker(task)
 }

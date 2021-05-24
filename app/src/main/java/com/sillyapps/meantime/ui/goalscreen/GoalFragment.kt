@@ -96,6 +96,5 @@ class GoalFragment: Fragment() {
     }
 
     private fun showGoalDialog() {
-        GoalDialogFragment().show(childFragmentManager, "Goal dialog")
     }
 }

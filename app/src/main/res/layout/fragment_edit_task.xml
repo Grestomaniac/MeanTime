@@ -7,168 +7,239 @@
         <variable
             name="task"
             type="com.sillyapps.meantime.data.Task"/>
+        <variable
+            name="fragment"
+            type="com.sillyapps.meantime.ui.edittemplatescreen.EditTaskFragment"/>
+        <import type="android.view.View"/>
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/edit_screen"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.3"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.7"/>
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
+            style="@style/ToolbarStyle"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
 
-            style="@style/ToolbarStyle"/>
+            android:layout_height="?attr/actionBarSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/edit_screen"
-
+            android:id="@+id/header"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="?attr/actionBarSize">
+            android:layout_height="wrap_content"
+            android:background="@color/primaryColor"
+            android:elevation="@dimen/actionBarElevation"
+            android:paddingBottom="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/primaryColor"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+            <ImageView
+                android:id="@+id/taskIcon"
+                android:layout_width="70dp"
+
+                android:layout_height="70dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/circle"
+                android:padding="8dp"
+
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:paddingBottom="16dp"
-
-                android:elevation="@dimen/actionBarElevation">
-
-                <ImageView
-                    android:id="@+id/taskIcon"
-                    android:layout_width="70dp"
-
-                    android:layout_height="70dp"
-                    android:layout_marginTop="12dp"
-                    android:background="@drawable/circle"
-                    android:padding="8dp"
-
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/primaryTextColor"
-                    tools:src="@drawable/ic_reorder" />
-
-                <EditText
-                    android:id="@+id/name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="12dp"
-
-                    android:background="@drawable/base_item_no_border"
-                    android:fontFamily="@string/font_family_bold"
-                    android:hint="@string/enter_name"
-                    android:inputType="text"
-
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="8dp"
-                    android:text="@={task.name}"
-
-                    android:textSize="14sp"
-
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/taskIcon"
-                    tools:text="Template 1" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                app:tint="@color/primaryTextColor"
+                tools:src="@drawable/ic_reorder" />
 
             <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-
-                android:layout_marginTop="8dp"
-                android:fontFamily="@string/font_family_light"
-                android:text="@string/duration"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/header" />
-
-            <com.sillyapps.meantime.ui.TimePicker
-                android:id="@+id/timePicker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView2"
-
-                task="@{task}"/>
-
-            <TextView
-                android:id="@+id/enter_melody"
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="@string/melody"
-                app:layout_constraintBottom_toBottomOf="@+id/melody"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/melody" />
-
-            <TextView
-                android:id="@+id/melody"
-
+                android:id="@+id/name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/melody_on"
+                android:layout_marginEnd="12dp"
 
-                app:soundText="@{task.sound}"
-                tools:text="Dean Town" />
+                android:background="@drawable/base_item_no_border"
+                android:fontFamily="@string/font_family_bold"
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/vibration_on"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:checked="@={task.vibrationOn}"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="8dp"
+                android:text="@={task.name}"
 
-                android:text="@string/vibration_on"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/timePicker" />
-
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/melody_on"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:checked="@={task.soundOn}"
-                android:text="@string/melody_on"
+                android:textSize="14sp"
 
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/vibration_on" />
+                app:layout_constraintTop_toBottomOf="@+id/taskIcon"
+                tools:text="Template 1" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/ok_fab"
+        <com.sillyapps.meantime.ui.SettingItem
+            android:id="@+id/durationPicker"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/settingItemHeight"
+            android:elevation="4dp"
+            android:onClick="@{() -> fragment.openTimePicker()}"
+            app:contentTime="@{task.duration}"
+            app:icon="@drawable/ic_clock"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+
+            app:layout_constraintTop_toBottomOf="@+id/header"
+            app:settingName="Duration"
+            tools:settingContent="00:00"/>
+
+        <ImageView
+            android:id="@+id/soundOnIcon"
+            android:layout_width="@dimen/bigIconSize"
+            android:layout_height="@dimen/bigIconSize"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/durationPicker"
+            app:soundOn="@{task.editableSoundOn}"
+            app:tint="@color/disabledColor"
+            tools:src="@drawable/ic_sound_on"
+            android:onClick="@{() -> task.toggleSoundOn()}"/>
+
+        <TextView
+            android:id="@+id/soundOnLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
+            android:fontFamily="@string/font_family_light"
+            android:textColor="@color/disabledColor"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/soundOnIcon"
+            app:layout_constraintStart_toStartOf="@+id/soundOnIcon"
+            app:layout_constraintTop_toBottomOf="@+id/soundOnIcon"
+            app:soundOn="@{task.editableSoundOn}"
+            tools:text="@string/sound_on" />
+
+        <ImageView
+            android:id="@+id/vibrationOnIcon"
+            android:layout_width="@dimen/bigIconSize"
+            android:layout_height="@dimen/bigIconSize"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="@+id/soundOnIcon"
+            app:tint="@color/disabledColor"
+            app:vibrationOn="@{task.editableVibrationOn}"
+            tools:src="@drawable/ic_vibration_on"
+
+            android:onClick="@{() -> task.toggleVibrationOn()}"/>
+
+        <TextView
+            android:id="@+id/vibrationOnLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:fontFamily="@string/font_family_light"
+            android:textColor="@color/disabledColor"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/vibrationOnIcon"
+            app:layout_constraintStart_toStartOf="@+id/vibrationOnIcon"
+            app:layout_constraintTop_toBottomOf="@+id/vibrationOnIcon"
+            app:vibrationOn="@{task.editableVibrationOn}"
+            tools:text="@string/vibration_on"/>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="4dp"
+            android:background="@color/itemColor"
+            android:elevation="4dp"
+            android:text="@string/advanced"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/soundOnLabel"
+
+            android:onClick="@{() -> task.toggleAdvanced()}"/>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button"
+
+            android:visibility="@{task.advancedPopped ? View.VISIBLE : View.GONE}">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.sillyapps.meantime.ui.SettingItem
+                    android:id="@+id/ringtonePicker"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/settingItemHeight"
+                    android:layout_marginTop="12dp"
+                    app:icon="@drawable/ic_music"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/button"
+                    app:settingName="Ringtone"
+                    app:soundName="@{task.sound}"
+                    tools:settingContent="System default"
+
+                    />
+
+                <com.sillyapps.meantime.ui.SettingItem
+                    android:id="@+id/breakIntervalPicker"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/settingItemHeight"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
+                    app:contentBreak="@{task.taskBreak}"
+                    app:icon="@drawable/ic_pause"
+                    app:layout_constraintTop_toBottomOf="@+id/ringtonePicker"
+                    app:settingName="Break Interval"
+                    tools:settingContent="No break"
+
+                    android:onClick="@{() -> fragment.openBreakDialog()}"/>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/ok_fab"
+            style="@style/ActionButtonStyle"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/normal_margin"
+            android:layout_marginBottom="28dp"
             android:src="@drawable/ic_check"
             app:fabSize="normal"
-            android:layout_gravity="bottom|end"
-            style="@style/ActionButtonStyle"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
 
-    </FrameLayout>
+            android:onClick="@{() -> fragment.validateData()}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

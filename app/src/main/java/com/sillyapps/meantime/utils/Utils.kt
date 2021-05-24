@@ -34,6 +34,15 @@ fun convertToMillis(hours: Int, minutes: Int, seconds: Int = 0): Long {
     return ((hours*60L + minutes)*60 + seconds)*1000L
 }
 
+fun getHoursAndMinutes(timeInMillis: Long): Pair<Long, Long> {
+    val overallMinutes = timeInMillis / 60000
+    val minutes = overallMinutes % 60
+    val overallHours = overallMinutes / 60
+    val hours = overallHours % 24
+
+    return Pair(hours, minutes)
+}
+
 fun convertMillisToStringFormat(millis: Long): String {
     val overallMinutes = millis / 60000
     val minutes = overallMinutes % 60
@@ -71,6 +80,16 @@ fun formatIfNeeded(hours: Int, minutes: Int, secondsFormatted: String = ""): Str
         stringMinutes = "0$minutes"
     }
     return "$stringHours:$stringMinutes$secondsFormatted"
+}
+
+fun getVerboseTime(timeInMillis: Long, context: Context): CharSequence {
+    val time = getHoursAndMinutes(timeInMillis)
+    return if (time.first >= 1) {
+        context.getString(R.string.time_with_hours, time.first, time.second)
+    }
+    else {
+        context.getString(R.string.time_without_hours, time.second)
+    }
 }
 
 fun tintMenuIcons(items: Sequence<MenuItem>, context: Context) {

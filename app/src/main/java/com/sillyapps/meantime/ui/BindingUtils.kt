@@ -4,6 +4,7 @@ import android.content.res.ColorStateList
 import android.net.Uri
 import android.provider.OpenableColumns
 import android.view.View
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -17,16 +18,18 @@ import com.sillyapps.meantime.R
 import com.sillyapps.meantime.utils.convertMillisToStringFormat
 import com.sillyapps.meantime.utils.convertMillisToStringFormatWithSeconds
 import com.sillyapps.meantime.data.State
+import com.sillyapps.meantime.utils.getHoursAndMinutes
+import com.sillyapps.meantime.utils.getVerboseTime
 import timber.log.Timber
 
 @BindingAdapter("isDefault")
-fun ConstraintLayout.setDefault(isDefault: Boolean) {
+fun View.setDefault(isDefault: Boolean) {
     val backgroundResource =
         if (!isDefault) {
-            R.drawable.item_waiting
+            R.color.primaryColor
         }
         else {
-            R.drawable.item_active
+            R.color.activeColor
         }
 
     setBackgroundResource(backgroundResource)
@@ -35,7 +38,7 @@ fun ConstraintLayout.setDefault(isDefault: Boolean) {
 @BindingAdapter("taskSelected")
 fun View.setTaskSelected(isSelected: Boolean) {
     val backgroundResource =
-        if (isSelected) R.color.primaryLightColor
+        if (isSelected) R.color.defaultBackground
         else R.color.itemColor
     setBackgroundResource(backgroundResource)
 }
@@ -71,17 +74,9 @@ fun TextView.setTimeWithSeconds(time: Long) {
     text = convertMillisToStringFormatWithSeconds(time)
 }
 
-@BindingAdapter("soundText")
-fun TextView.setSoundString(uriPath: String) {
-    if (uriPath == AppConstants.DEFAULT_RINGTONE) {
-        text = context.getString(R.string.default_ringtone)
-        return
-    }
-
-    val cursor = context.contentResolver.query(Uri.parse(uriPath), null, null, null, null)
-    cursor?.moveToFirst()
-    text = cursor?.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
-    cursor?.close()
+@BindingAdapter("app:verboseTime")
+fun Button.setVerboseTime(timeInMillis: Long) {
+    text = getVerboseTime(timeInMillis, context)
 }
 
 @BindingAdapter("dialogBackground")
@@ -131,4 +126,30 @@ fun ImageButton.setDayRunning(dayRunning: Boolean) {
         else R.drawable.ic_play
 
     setImageResource(imageResource)
+}
+
+@BindingAdapter("app:soundOn")
+fun ImageView.setSoundOn(soundOn: Boolean) {
+    if (soundOn) setImageResource(R.drawable.ic_sound_on)
+    else setImageResource(R.drawable.ic_sound_off)
+}
+
+@BindingAdapter("app:vibrationOn")
+fun ImageView.setVibrationOn(vibrationOn: Boolean) {
+    if (vibrationOn) setImageResource(R.drawable.ic_vibration_on)
+    else setImageResource(R.drawable.ic_vibrate_off)
+}
+
+@BindingAdapter("app:soundOn")
+fun TextView.setSoundOn(soundOn: Boolean) {
+    text =
+        if (soundOn) context.getString(R.string.sound_on)
+        else context.getString(R.string.sound_off)
+}
+
+@BindingAdapter("app:vibrationOn")
+fun TextView.setVibrationOn(vibrationOn: Boolean) {
+    text =
+        if (vibrationOn) context.getString(R.string.vibration_on)
+        else context.getString(R.string.vibration_off)
 }

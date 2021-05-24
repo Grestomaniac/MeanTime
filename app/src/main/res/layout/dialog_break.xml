@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="taskBreak"
+            type="com.sillyapps.meantime.data.Task.Break" />
+        <variable
+            name="fragment"
+            type="com.sillyapps.meantime.ui.edittemplatescreen.BreakDialog"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="12dp"
+        android:background="@color/secondaryTextColor">
+
+        <View
+            android:id="@+id/topBar"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+
+            android:background="@color/primaryColor"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/pauseIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_pause"
+            app:layout_constraintBottom_toBottomOf="@+id/topBar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/topBar" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@string/font_family_bold"
+            android:gravity="center"
+            android:text="@string/set_break"
+            android:textColor="@color/secondaryTextColor"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/pauseIcon"
+            app:layout_constraintStart_toEndOf="@+id/pauseIcon"
+            app:layout_constraintTop_toTopOf="@+id/pauseIcon" />
+
+        <TextView
+            android:id="@+id/intervalText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@string/font_family_bold"
+            android:text="@string/interval"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/topBar" />
+
+        <TextView
+            android:id="@+id/intervalDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="4dp"
+            android:fontFamily="@string/font_family_light"
+            android:text="@string/interval_between_breaks"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@+id/intervalText"
+            app:layout_constraintTop_toBottomOf="@+id/intervalText" />
+
+        <Button
+            android:id="@+id/intervalButton"
+            android:layout_width="@dimen/defaultButtonWidth"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/item_completed"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+
+            android:textAllCaps="false"
+            android:textColor="@color/secondaryTextColor"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/intervalDescription"
+            app:layout_constraintTop_toTopOf="@+id/intervalText"
+            app:verboseTime="@{taskBreak.breakInterval}"
+            tools:text="30 min"
+
+            android:onClick="@{() -> fragment.pickInterval()}"/>
+
+        <TextView
+            android:id="@+id/durationText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="16dp"
+            android:fontFamily="@string/font_family_bold"
+            android:text="@string/duration_text"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/intervalText"
+            app:layout_constraintTop_toBottomOf="@+id/intervalDescription" />
+
+        <TextView
+            android:id="@+id/durationDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="4dp"
+            android:fontFamily="@string/font_family_light"
+            android:text="@string/duration_of_the_break"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@+id/durationText"
+            app:layout_constraintTop_toBottomOf="@+id/durationText" />
+
+        <Button
+            android:id="@+id/durationButton"
+            android:layout_width="@dimen/defaultButtonWidth"
+            android:layout_height="wrap_content"
+
+            android:background="@drawable/item_completed"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:textAllCaps="false"
+
+            android:textColor="@color/secondaryTextColor"
+            app:layout_constraintBottom_toBottomOf="@+id/durationDescription"
+            app:layout_constraintEnd_toEndOf="@+id/intervalButton"
+            app:layout_constraintStart_toStartOf="@+id/intervalButton"
+            app:layout_constraintTop_toTopOf="@+id/durationText"
+            tools:text="30 min"
+            app:verboseTime="@{taskBreak.breakDuration}"
+
+            android:onClick="@{() -> fragment.pickDuration()}"/>
+
+
+        <Button
+            android:id="@+id/okButton"
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+
+            android:layout_marginTop="24dp"
+
+            android:background="@android:color/transparent"
+            android:fontFamily="@string/font_family_bold"
+            android:text="@string/ok"
+
+            android:textColor="@color/completedColor"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/durationButton"
+            app:layout_constraintTop_toBottomOf="@+id/durationButton"
+
+            android:onClick="@{() -> fragment.onOkButtonClick()}"/>
+
+        <Button
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+
+            android:background="@android:color/transparent"
+
+            android:textColor="@color/completedColor"
+            android:fontFamily="@string/font_family_bold"
+            android:text="@string/cancel"
+
+            android:textSize="14sp"
+
+            app:layout_constraintEnd_toStartOf="@+id/okButton"
+            app:layout_constraintTop_toTopOf="@+id/okButton"
+
+            android:onClick="@{() -> fragment.onCancelButtonClick()}"/>
+
+        <Button
+            android:id="@+id/disableButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+
+            android:layout_marginStart="12dp"
+
+            android:background="@android:color/transparent"
+            android:fontFamily="@string/font_family_bold"
+            android:text="@string/disable"
+
+            android:textColor="@color/activeColor"
+
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/okButton"
+
+            android:onClick="@{() -> fragment.onDisableButtonClick()}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
