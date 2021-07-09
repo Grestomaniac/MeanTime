@@ -27,7 +27,7 @@
             app:destination="@id/goalFragment">
 
             <argument
-                android:name="taskGoalsId"
+                android:name="baseTaskId"
                 app:argType="integer"/>
 
         </action>
@@ -95,7 +95,7 @@
         tools:layout="@layout/fragment_goal_screen">
 
         <argument
-            android:name="taskGoalsId"
+            android:name="baseTaskId"
             app:argType="integer"/>
 
     </fragment>

@@ -25,7 +25,7 @@ class EditTemplateViewModel @Inject constructor(private val repository: AppRepos
     val templateName: MutableLiveData<String> = MutableLiveData("")
     val tasks: MutableLiveData<MutableList<Task>> = MutableLiveData(mutableListOf())
 
-    private val goalTasks: LiveData<List<BaseTask>> = repository.observeAllTaskGoals()
+    private val goalTasks: LiveData<List<BaseTask>> = repository.observeAllBaseTasks()
     val goalTasksNames: LiveData<List<String>> = goalTasks.map { it.map { goal -> goal.name } }
 
     val task: MutableLiveData<Task> = MutableLiveData()
@@ -77,7 +77,7 @@ class EditTemplateViewModel @Inject constructor(private val repository: AppRepos
         val taskCopy = tasks.value!![position].copy()
 
         viewModelScope.launch {
-            taskIconResId.postValue(repository.getTaskGoals(taskCopy.goalsId)?.iconResId)
+            taskIconResId.postValue(repository.getBaseTask(taskCopy.goalsId)?.iconResId)
         }
         task.value = taskCopy
     }
@@ -122,7 +122,7 @@ class EditTemplateViewModel @Inject constructor(private val repository: AppRepos
         viewModelScope.launch {
             for (task in tasks.value!!) {
                 if (task.goalsId == 0) {
-                    task.goalsId = repository.getTaskGoalIdByName(task.name)
+                    task.goalsId = repository.getBaseTaskIdByName(task.name)
                 }
             }
 

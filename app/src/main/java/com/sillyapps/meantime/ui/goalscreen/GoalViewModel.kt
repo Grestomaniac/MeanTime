@@ -27,9 +27,9 @@ class GoalViewModel @Inject constructor(private val repository: AppRepository): 
     val goal: MutableLiveData<Goal> = MutableLiveData()
     private var goalPos = AppConstants.NOT_ASSIGNED
 
-    fun load(taskGoalId: Int) {
+    fun load(baseTaskId: Int) {
         viewModelScope.launch {
-            baseTask.value = repository.getTaskGoals(taskGoalId)
+            baseTask.value = repository.getBaseTask(baseTaskId)
         }
     }
 
@@ -99,7 +99,7 @@ class GoalViewModel @Inject constructor(private val repository: AppRepository): 
 
     private fun updateGoals() {
         CoroutineScope(Dispatchers.IO).launch {
-            repository.updateGoals(baseTask.value!!)
+            repository.updateBaseTask(baseTask.value!!)
         }
     }
 

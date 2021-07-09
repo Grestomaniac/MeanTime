@@ -144,25 +144,25 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
         appPrefDao.setCurrentDay(day)
     }
 
-    fun observeAllTaskGoals(): LiveData<List<BaseTask>> {
-        return baseTaskDao.observeAllTaskGoals()
+    fun observeAllBaseTasks(): LiveData<List<BaseTask>> {
+        return baseTaskDao.observeAllBaseTasks()
     }
 
-    suspend fun getTaskGoals(taskGoalsId: Int): BaseTask? {
-        return baseTaskDao.getTaskGoals(taskGoalsId)
+    suspend fun getBaseTask(baseTaskId: Int): BaseTask? {
+        return baseTaskDao.getBaseTask(baseTaskId)
     }
 
-    suspend fun updateGoals(baseTask: BaseTask) {
-        baseTaskDao.updateGoals(baseTask)
+    suspend fun updateBaseTask(baseTask: BaseTask) {
+        baseTaskDao.updateBaseTask(baseTask)
     }
 
-    suspend fun getTaskGoalIdByName(taskName: String): Int {
-        var taskGoalsId = baseTaskDao.getTaskGoalsIdByName(formatString(taskName))
-        if (taskGoalsId == null) {
-            taskGoalsId = baseTaskDao.insertTaskGoals(BaseTask(0, taskName)).toInt()
+    suspend fun getBaseTaskIdByName(taskName: String): Int {
+        var baseTaskId = baseTaskDao.getBaseTaskIdByName(formatString(taskName))
+        if (baseTaskId == null) {
+            baseTaskId = baseTaskDao.insertBaseTask(BaseTask(0, taskName)).toInt()
         }
 
-        return taskGoalsId
+        return baseTaskId
     }
 
 }

@@ -44,7 +44,7 @@ class GoalFragment: Fragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel.load(args.taskGoalsId)
+        viewModel.load(args.baseTaskId)
         setupGoals()
 
         binding.addGoalFab.setOnClickListener {

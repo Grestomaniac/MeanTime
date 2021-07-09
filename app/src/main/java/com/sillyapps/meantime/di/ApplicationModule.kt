@@ -35,7 +35,7 @@ object ApplicationModule {
 
     @Singleton
     @Provides
-    fun provideTaskGoalsDao(db: AppDatabase) = db.baseTaskDao
+    fun provideBaseTaskDao(db: AppDatabase) = db.baseTaskDao
 
     @Singleton
     @Provides

@@ -7,28 +7,25 @@ import com.sillyapps.meantime.data.BaseTask
 @Dao
 interface BaseTaskDao {
 
-    @Query("select * from goal_table where id = :taskGoalsId")
-    fun observeTaskGoals(taskGoalsId: Int): LiveData<BaseTask>
+    @Query("select * from goal_table where id = :baseTaskId")
+    fun observeBaseTask(baseTaskId: Int): LiveData<BaseTask>
 
     @Query("select * from goal_table")
-    fun observeAllTaskGoals(): LiveData<List<BaseTask>>
+    fun observeAllBaseTasks(): LiveData<List<BaseTask>>
 
-    @Query("select * from goal_table where id = :taskGoalsId")
-    suspend fun getTaskGoals(taskGoalsId: Int): BaseTask?
+    @Query("select * from goal_table where id = :baseTaskId")
+    suspend fun getBaseTask(baseTaskId: Int): BaseTask?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTaskGoals(baseTask: BaseTask): Long
+    suspend fun insertBaseTask(baseTask: BaseTask): Long
 
     @Update
-    suspend fun updateTaskGoals(baseTask: BaseTask)
-
-    @Update
-    suspend fun updateGoals(baseTask: BaseTask)
+    suspend fun updateBaseTask(baseTask: BaseTask)
 
     @Query("select id from goal_table where formattedName = :taskName")
-    suspend fun getTaskGoalsIdByName(taskName: String): Int?
+    suspend fun getBaseTaskIdByName(taskName: String): Int?
 
     @Delete
-    suspend fun deleteTaskGoals(baseTask: BaseTask)
+    suspend fun deleteBaseTask(baseTask: BaseTask)
 
 }

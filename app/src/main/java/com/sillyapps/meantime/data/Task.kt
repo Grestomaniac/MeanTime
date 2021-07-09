@@ -11,6 +11,7 @@ import timber.log.Timber
 /**
  * Data class for holding information about the task
  */
+
 class Task(
     startTime: Long = 0L,
 

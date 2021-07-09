@@ -5,18 +5,13 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
-import android.util.Log
 import android.view.*
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.sillyapps.meantime.R
 import com.sillyapps.meantime.databinding.FragmentMainScreenBinding
 import com.sillyapps.meantime.services.DayService
@@ -25,7 +20,6 @@ import com.sillyapps.meantime.utils.tintMenuIcons
 import com.sillyapps.meantime.ui.mainscreen.recyclerview.RunningTasksAdapter
 import com.sillyapps.meantime.ui.ItemClickListener
 import com.sillyapps.meantime.ui.mainscreen.recyclerview.DayItemTouchHelperCallback
-import com.sillyapps.meantime.ui.mainscreen.recyclerview.OnStartDragListener
 import com.sillyapps.meantime.ui.mainscreen.recyclerview.SwipeToStartCallback
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -188,8 +182,8 @@ class MainScreenFragment: Fragment() {
         findNavController().navigate(MainScreenFragmentDirections.actionMainScreenFragmentToEditTemplateGraph())
     }
 
-    private fun navigateToGoalFragment(taskGoalsId: Int) {
-        findNavController().navigate(MainScreenFragmentDirections.actionMainScreenFragmentToGoalFragment(taskGoalsId))
+    private fun navigateToGoalFragment(baseTaskId: Int) {
+        findNavController().navigate(MainScreenFragmentDirections.actionMainScreenFragmentToGoalFragment(baseTaskId))
     }
 
 }

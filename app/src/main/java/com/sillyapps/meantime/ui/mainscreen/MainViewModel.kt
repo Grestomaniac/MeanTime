@@ -47,7 +47,7 @@ class MainViewModel @Inject constructor(private val dayManager: DayManager): Vie
     private val _paused = MutableLiveData(false)
     val paused: LiveData<Boolean> = _paused
 
-    val baseTask: LiveData<List<BaseTask>> = dayManager.observeTaskGoals()
+    val baseTask: LiveData<List<BaseTask>> = dayManager.observeBaseTasks()
 
     private val dataUpdateCallback = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
@@ -143,7 +143,7 @@ class MainViewModel @Inject constructor(private val dayManager: DayManager): Vie
     private fun addTemporalTask(task: Task) {
         viewModelScope.launch {
             task.name = removeExtraSpaces(task.name)
-            task.goalsId = dayManager.getTaskGoalsIdByName(task.name)
+            task.goalsId = dayManager.getBaseTaskIdByName(task.name)
             dayManager.thisDay!!.addTemporalTask(task)
         }
     }
@@ -176,8 +176,8 @@ class MainViewModel @Inject constructor(private val dayManager: DayManager): Vie
         recalculateStartTimes(taskPosition)
     }
 
-    fun getCurrentTaskGoalsId(): Int? {
-        if (dayManager.currentTaskGoalsIsNotEmpty) {
+    fun getCurrentBaseTaskId(): Int? {
+        if (dayManager.currentBaseTaskIsNotEmpty) {
             return dayManager.thisDay!!.currentTask.goalsId
         }
         return null

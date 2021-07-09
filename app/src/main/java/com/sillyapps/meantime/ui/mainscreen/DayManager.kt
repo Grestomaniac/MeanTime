@@ -44,7 +44,7 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
     private var coroutineCounter: Job? = null
     /*private var untilCriticalTimer: Job? = null*/
 
-    var currentTaskGoalsIsNotEmpty: Boolean = false
+    var currentBaseTaskIsNotEmpty: Boolean = false
 
     private val dataUpdateCallback = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
@@ -97,23 +97,23 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
         setProperTicker()
     }
 
-    private fun checkIfCurrentTaskGoalsIsEmpty() {
+    private fun checkIfCurrentBaseTaskIsEmpty() {
         CoroutineScope(Dispatchers.IO).launch {
-            val currentTaskGoals = repository.getTaskGoals(thisDay!!.currentTask.goalsId)
-            currentTaskGoals?.let { currentTaskGoalsIsNotEmpty = it.goals.isNotEmpty() }
+            val currentBaseTask = repository.getBaseTask(thisDay!!.currentTask.goalsId)
+            currentBaseTask?.let { currentBaseTaskIsNotEmpty = it.goals.isNotEmpty() }
         }
     }
 
-    fun observeTaskGoals(): LiveData<List<BaseTask>> {
-        return repository.observeAllTaskGoals()
+    fun observeBaseTasks(): LiveData<List<BaseTask>> {
+        return repository.observeAllBaseTasks()
     }
 
     fun recalculateStartTimes(position: Int) {
         thisDay!!.taskDropped(position)
     }
 
-    suspend fun getTaskGoalsIdByName(taskName: String): Int {
-        return repository.getTaskGoalIdByName(taskName)
+    suspend fun getBaseTaskIdByName(taskName: String): Int {
+        return repository.getBaseTaskIdByName(taskName)
     }
 
     fun notifyTasksSwapped(upperPosition: Int, bottomPosition: Int) {
