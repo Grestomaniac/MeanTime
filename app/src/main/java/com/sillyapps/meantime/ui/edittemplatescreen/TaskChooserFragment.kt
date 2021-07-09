@@ -10,7 +10,9 @@ import com.sillyapps.meantime.R
 import com.sillyapps.meantime.databinding.FragmentEditTaskBinding
 import com.sillyapps.meantime.databinding.FragmentTaskChooserBinding
 import com.sillyapps.meantime.setupToolbar
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class TaskChooserFragment: Fragment() {
 
     private val viewModel: EditTemplateViewModel by navGraphViewModels(R.id.edit_template_graph) {
@@ -34,8 +36,6 @@ class TaskChooserFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = this.viewLifecycleOwner
-
-
     }
 
 }

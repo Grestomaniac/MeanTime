@@ -9,16 +9,13 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.sillyapps.meantime.data.ApplicationPreferences
 import com.sillyapps.meantime.data.Scheme
-import com.sillyapps.meantime.data.TaskGoals
+import com.sillyapps.meantime.data.BaseTask
 import com.sillyapps.meantime.data.Template
-import com.sillyapps.meantime.utils.formatString
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import timber.log.Timber
 
-@Database(entities = [Template::class, Scheme::class, ApplicationPreferences::class, TaskGoals::class], version = 1)
+@Database(entities = [Template::class, Scheme::class, ApplicationPreferences::class, BaseTask::class], version = 2)
 @TypeConverters(AppTypeConverter::class)
 abstract class AppDatabase: RoomDatabase() {
 
@@ -28,13 +25,22 @@ abstract class AppDatabase: RoomDatabase() {
 
     abstract val appPrefDao: ApplicationPreferencesDao
 
-    abstract val taskGoalsDao: TaskGoalsDao
+    abstract val baseTaskDao: BaseTaskDao
 
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
-        private val MIGRATION_5_6 = object : Migration(5, 6) {
+        private val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("create table goal_table_new (id integer primary key not null, name text not null, formattedName text not null, goals text not null default '', iconResId integer not null default -1)")
+                database.execSQL("insert into goal_table_new(id, name, formattedName, goals) select id, name, formattedName, goals from goal_table")
+                database.execSQL("drop table goal_table")
+                database.execSQL("alter table goal_table_new rename to goal_table")
+            }
+        }
+
+        /*private val MIGRATION_5_6 = object : Migration(5, 6) {
             override fun migrate(database: SupportSQLiteDatabase) {
 
                 database.execSQL("create table goal_table (id integer primary key not null, name text not null, goals text not null)")
@@ -74,7 +80,7 @@ abstract class AppDatabase: RoomDatabase() {
                     database.execSQL("update goal_table set formattedName = '$formattedName' where id = '$position'")
                 }
             }
-        }
+        }*/
 
         fun getInstance(context: Context): AppDatabase {
             synchronized(this) {
@@ -86,7 +92,8 @@ abstract class AppDatabase: RoomDatabase() {
                         AppDatabase::class.java,
                         "app_database")
                         .addCallback(DatabaseCallback())
-                        .fallbackToDestructiveMigration()
+                        .addMigrations(MIGRATION_1_2)
+//                        .fallbackToDestructiveMigration()
                         .build()
                     INSTANCE = instance
                 }

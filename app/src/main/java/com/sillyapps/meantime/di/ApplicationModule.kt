@@ -1,6 +1,9 @@
 package com.sillyapps.meantime.di
 
 import android.content.Context
+import com.maltaisn.icondialog.pack.IconPack
+import com.maltaisn.icondialog.pack.IconPackLoader
+import com.maltaisn.iconpack.defaultpack.createDefaultIconPack
 import com.sillyapps.meantime.data.local.AppDatabase
 import dagger.Module
 import dagger.Provides
@@ -32,9 +35,18 @@ object ApplicationModule {
 
     @Singleton
     @Provides
-    fun provideTaskGoalsDao(db: AppDatabase) = db.taskGoalsDao
+    fun provideTaskGoalsDao(db: AppDatabase) = db.baseTaskDao
 
     @Singleton
     @Provides
     fun provideIoDispatcher() = Dispatchers.IO
+
+    @Singleton
+    @Provides
+    fun provideIconPack(@ApplicationContext appContext: Context): IconPack {
+        val loader = IconPackLoader(appContext)
+        val iconPack = createDefaultIconPack(loader)
+        iconPack.loadDrawables(loader.drawableLoader)
+        return iconPack
+    }
 }

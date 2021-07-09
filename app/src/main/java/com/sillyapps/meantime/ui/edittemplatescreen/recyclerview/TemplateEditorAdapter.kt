@@ -55,7 +55,7 @@ class TemplateEditorAdapter(private val viewModel: EditTemplateViewModel, privat
 
         fun bind(item: Task, onClickListener: ItemClickListener) {
             binding.task = item
-            binding.root.setOnClickListener { onClickListener.onClickItem(adapterPosition) }
+            binding.root.setOnClickListener { onClickListener.onClickItem(bindingAdapterPosition) }
         }
 
         companion object {

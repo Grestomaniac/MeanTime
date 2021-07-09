@@ -9,6 +9,22 @@
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/primaryTextColor</item>
         <item name="colorSurface">@color/primaryColor</item>
+
+        <item name="icdStyle">@style/CustomIconDialogStyle</item>
+    </style>
+
+    <style name="CustomIconDialogStyle" parent="IcdStyle">
+        <item name="icdIconColor">@color/primaryTextColor</item>
+        <item name="icdSearchIconStyle">@style/CustomIcdSearchIconStyle</item>
+        <item name="icdCancelSearchIconStyle">@style/CustomIcdCancelSearchIconStyle</item>
+    </style>
+
+    <style name="CustomIcdSearchIconStyle" parent="IcdSearchIconStyle">
+        <item name="tint">@color/disabledColor</item>
+    </style>
+
+    <style name="CustomIcdCancelSearchIconStyle" parent="IcdCancelSearchIconStyle">
+        <item name="tint">@color/disabledColor</item>
     </style>
 
     <style name="DialogStyle" parent="Theme.AppCompat.DayNight.Dialog.MinWidth">

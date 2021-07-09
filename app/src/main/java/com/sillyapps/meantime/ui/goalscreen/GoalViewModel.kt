@@ -4,7 +4,6 @@ import androidx.lifecycle.*
 import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.data.*
 import com.sillyapps.meantime.data.repository.AppRepository
-import com.sillyapps.meantime.ui.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import java.util.*
@@ -18,25 +17,25 @@ class GoalViewModel @Inject constructor(private val repository: AppRepository): 
 
     private var updateTimer: Job? = null
 
-    private val taskGoals: MutableLiveData<TaskGoals> = MutableLiveData()
+    private val baseTask: MutableLiveData<BaseTask> = MutableLiveData()
 
     private val _tabSelected: MutableLiveData<Int> = MutableLiveData(0)
     val tabSelected: LiveData<Int> = _tabSelected
 
-    val consolidatedList: MutableLiveData<ArrayList<ListItem>> = MutableLiveData(createConsolidatedList(taskGoals.value!!.goals))
+    val consolidatedList: MutableLiveData<ArrayList<ListItem>> = MutableLiveData(createConsolidatedList(baseTask.value!!.goals))
 
     val goal: MutableLiveData<Goal> = MutableLiveData()
     private var goalPos = AppConstants.NOT_ASSIGNED
 
     fun load(taskGoalId: Int) {
         viewModelScope.launch {
-            taskGoals.value = repository.getTaskGoals(taskGoalId)
+            baseTask.value = repository.getTaskGoals(taskGoalId)
         }
     }
 
     fun notifyGoalRemoved(position: Int) {
         val goalItem = consolidatedList.value!![position] as GoalItem
-        taskGoals.value?.removeGoal(goalItem.goal)
+        baseTask.value?.removeGoal(goalItem.goal)
         updateConsolidatedList()
         goalsChanged()
     }
@@ -56,7 +55,7 @@ class GoalViewModel @Inject constructor(private val repository: AppRepository): 
     }
 
     private fun updateConsolidatedList() {
-        consolidatedList.value = createConsolidatedList(taskGoals.value!!.goals)
+        consolidatedList.value = createConsolidatedList(baseTask.value!!.goals)
     }
 
     fun createNewGoal() {
@@ -72,7 +71,7 @@ class GoalViewModel @Inject constructor(private val repository: AppRepository): 
     fun saveGoal() {
         goal.value!!.saveGoal()
         if (goalPos == AppConstants.NOT_ASSIGNED) {
-            taskGoals.value!!.addGoal(goal.value!!)
+            baseTask.value!!.addGoal(goal.value!!)
             updateConsolidatedList()
         }
         else {
@@ -94,13 +93,13 @@ class GoalViewModel @Inject constructor(private val repository: AppRepository): 
 
     override fun onCleared() {
         updateTimer?.cancel()
-        taskGoals.value?.let { updateGoals() }
+        baseTask.value?.let { updateGoals() }
         super.onCleared()
     }
 
     private fun updateGoals() {
         CoroutineScope(Dispatchers.IO).launch {
-            repository.updateGoals(taskGoals.value!!)
+            repository.updateGoals(baseTask.value!!)
         }
     }
 

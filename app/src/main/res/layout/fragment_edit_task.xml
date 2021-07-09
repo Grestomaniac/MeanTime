@@ -8,6 +8,9 @@
             name="task"
             type="com.sillyapps.meantime.data.Task"/>
         <variable
+            name="taskIconResId"
+            type="Integer"/>
+        <variable
             name="fragment"
             type="com.sillyapps.meantime.ui.edittemplatescreen.EditTaskFragment"/>
         <import type="android.view.View"/>
@@ -68,7 +71,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/primaryTextColor"
-                tools:src="@drawable/ic_reorder" />
+                tools:src="@drawable/ic_reorder"
+
+                android:onClick="@{() -> fragment.openIconDialog()}"/>
 
             <TextView
                 android:id="@+id/name"

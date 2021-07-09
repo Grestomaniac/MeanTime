@@ -8,7 +8,7 @@ import com.sillyapps.meantime.BR
 import com.sillyapps.meantime.data.AppPermissionWarnings
 import com.sillyapps.meantime.data.State
 import com.sillyapps.meantime.data.Task
-import com.sillyapps.meantime.data.TaskGoals
+import com.sillyapps.meantime.data.BaseTask
 import com.sillyapps.meantime.ui.SingleLiveEvent
 import com.sillyapps.meantime.utils.removeExtraSpaces
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -47,7 +47,7 @@ class MainViewModel @Inject constructor(private val dayManager: DayManager): Vie
     private val _paused = MutableLiveData(false)
     val paused: LiveData<Boolean> = _paused
 
-    val taskGoals: LiveData<List<TaskGoals>> = dayManager.observeTaskGoals()
+    val baseTask: LiveData<List<BaseTask>> = dayManager.observeTaskGoals()
 
     private val dataUpdateCallback = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) {

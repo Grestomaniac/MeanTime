@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import com.sillyapps.meantime.data.*
 import com.sillyapps.meantime.data.local.ApplicationPreferencesDao
 import com.sillyapps.meantime.data.local.SchemeDao
-import com.sillyapps.meantime.data.local.TaskGoalsDao
+import com.sillyapps.meantime.data.local.BaseTaskDao
 import com.sillyapps.meantime.data.local.TemplateDao
 import com.sillyapps.meantime.ui.mainscreen.DayManager
 import com.sillyapps.meantime.utils.formatString
@@ -16,7 +16,7 @@ import javax.inject.Singleton
 class AppRepository @Inject constructor(private val templateDao: TemplateDao,
                                         private val schemeDao: SchemeDao,
                                         private val appPrefDao: ApplicationPreferencesDao,
-                                        private val taskGoalsDao: TaskGoalsDao) {
+                                        private val baseTaskDao: BaseTaskDao) {
 
     private suspend fun findNewDefaultTemplate() {
         appPrefDao.setDefaultTemplateId(0)
@@ -144,22 +144,22 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
         appPrefDao.setCurrentDay(day)
     }
 
-    fun observeAllTaskGoals(): LiveData<List<TaskGoals>> {
-        return taskGoalsDao.observeAllTaskGoals()
+    fun observeAllTaskGoals(): LiveData<List<BaseTask>> {
+        return baseTaskDao.observeAllTaskGoals()
     }
 
-    suspend fun getTaskGoals(taskGoalsId: Int): TaskGoals? {
-        return taskGoalsDao.getTaskGoals(taskGoalsId)
+    suspend fun getTaskGoals(taskGoalsId: Int): BaseTask? {
+        return baseTaskDao.getTaskGoals(taskGoalsId)
     }
 
-    suspend fun updateGoals(taskGoals: TaskGoals) {
-        taskGoalsDao.updateGoals(taskGoals)
+    suspend fun updateGoals(baseTask: BaseTask) {
+        baseTaskDao.updateGoals(baseTask)
     }
 
     suspend fun getTaskGoalIdByName(taskName: String): Int {
-        var taskGoalsId = taskGoalsDao.getTaskGoalsIdByName(formatString(taskName))
+        var taskGoalsId = baseTaskDao.getTaskGoalsIdByName(formatString(taskName))
         if (taskGoalsId == null) {
-            taskGoalsId = taskGoalsDao.insertTaskGoals(TaskGoals(0, taskName)).toInt()
+            taskGoalsId = baseTaskDao.insertTaskGoals(BaseTask(0, taskName)).toInt()
         }
 
         return taskGoalsId

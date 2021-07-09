@@ -2,6 +2,8 @@ package com.sillyapps.meantime.data
 
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
+import androidx.room.Embedded
+import androidx.room.Relation
 import com.sillyapps.meantime.*
 import com.sillyapps.meantime.utils.getLocalCurrentTimeMillis
 import timber.log.Timber

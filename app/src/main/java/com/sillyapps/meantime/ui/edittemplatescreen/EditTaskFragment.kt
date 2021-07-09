@@ -16,6 +16,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import com.maltaisn.icondialog.IconDialog
+import com.maltaisn.icondialog.IconDialogSettings
+import com.maltaisn.icondialog.data.Icon
+import com.maltaisn.icondialog.pack.IconPack
 import com.sillyapps.meantime.R
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.databinding.FragmentEditTaskBinding
@@ -24,12 +28,13 @@ import com.sillyapps.meantime.ui.TimePickerDialog
 import com.sillyapps.meantime.utils.convertToMillis
 import com.sillyapps.meantime.utils.showInfoToUser
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 /**
  * Fragment for editing and creating the [Task]
  */
 @AndroidEntryPoint
-class EditTaskFragment : Fragment() {
+class EditTaskFragment : Fragment(), IconDialog.Callback {
 
     private val viewModel: EditTemplateViewModel by navGraphViewModels(R.id.edit_template_graph) {
         defaultViewModelProviderFactory
@@ -67,6 +72,14 @@ class EditTaskFragment : Fragment() {
 //        binding.melody.setOnClickListener { showRingtonePicker() }
     }
 
+    override val iconDialogIconPack: IconPack?
+        get() = viewModel.iconPack
+
+    override fun onIconDialogIconsSelected(dialog: IconDialog, icons: List<Icon>) {
+        viewModel.setTaskIcon(icons.first().srcId)
+        Timber.d("Icon with id ${icons[0].id} selected")
+    }
+
     fun validateData() {
 //        viewModel.setTaskDuration(binding.timePicker.getDuration())
 
@@ -92,6 +105,12 @@ class EditTaskFragment : Fragment() {
         dialog.show(childFragmentManager, "TimePicker")
     }
 
+    fun openIconDialog() {
+        val iconDialog = parentFragmentManager.findFragmentByTag(ICON_DIALOG_TAG) as IconDialog?
+            ?: IconDialog.newInstance(IconDialogSettings())
+        iconDialog.show(childFragmentManager, ICON_DIALOG_TAG)
+    }
+
     private fun showRingtonePicker() {
         val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.choose_task_sound))
@@ -99,6 +118,10 @@ class EditTaskFragment : Fragment() {
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, Uri.parse(viewModel.task.value!!.sound))
 
         ringtoneManagerLauncher.launch(intent)
+    }
+
+    companion object {
+        const val ICON_DIALOG_TAG = "IconDialog"
     }
 
 }

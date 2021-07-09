@@ -135,5 +135,6 @@
     <string name="invalid_break_interval">Break interval can not be 0</string>
     <string name="invalid_break_duration">Break duration can not be 0</string>
 
+    <string name="used_times">%1$d times</string>
 
 </resources>

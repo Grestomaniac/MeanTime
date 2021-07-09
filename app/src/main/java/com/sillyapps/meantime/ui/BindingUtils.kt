@@ -74,6 +74,11 @@ fun TextView.setTimeWithSeconds(time: Long) {
     text = convertMillisToStringFormatWithSeconds(time)
 }
 
+@BindingAdapter("usedTimes")
+fun TextView.setUsedTimes(times: Int) {
+    text = context.getString(R.string.used_times, times)
+}
+
 @BindingAdapter("app:verboseTime")
 fun Button.setVerboseTime(timeInMillis: Long) {
     text = getVerboseTime(timeInMillis, context)

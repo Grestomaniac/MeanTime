@@ -6,7 +6,7 @@ import com.sillyapps.meantime.AppBR
 import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.data.Day
 import com.sillyapps.meantime.data.State
-import com.sillyapps.meantime.data.TaskGoals
+import com.sillyapps.meantime.data.BaseTask
 import com.sillyapps.meantime.data.repository.AppRepository
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -104,7 +104,7 @@ class DayManager @Inject constructor(private val repository: AppRepository) {
         }
     }
 
-    fun observeTaskGoals(): LiveData<List<TaskGoals>> {
+    fun observeTaskGoals(): LiveData<List<BaseTask>> {
         return repository.observeAllTaskGoals()
     }
 

@@ -14,11 +14,12 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 @Entity(tableName = "goal_table")
-class TaskGoals(
+class BaseTask(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String = "",
     val formattedName: String = formatString(name),
+    val iconResId: Int = -1,
 
     val goals: HashMap<String, MutableList<Goal>> = HashMap()
 ): BaseObservable() {
