@@ -11,43 +11,30 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/defaultBackground">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            style="@style/ToolbarStyle"
+        <com.sillyapps.meantime.ui.CustomSearchView
+            android:id="@+id/searchView"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
 
-            android:layout_height="?attr/actionBarSize"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/baseTasks"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
 
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_simple_task"
-            />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/ok_fab"
-            style="@style/ActionButtonStyle"
-            android:layout_width="wrap_content"
-
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/normal_margin"
-            android:layout_marginBottom="28dp"
-            android:src="@drawable/ic_add"
-            app:fabSize="normal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/searchView"
+            tools:listitem="@layout/item_simple_task" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

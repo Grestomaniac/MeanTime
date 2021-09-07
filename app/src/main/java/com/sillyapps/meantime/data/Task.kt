@@ -22,6 +22,7 @@ class Task(
     sound: String = AppConstants.DEFAULT_RINGTONE,
     var goalsId: Int = 0,
     val temporal: Boolean = false,
+
     uncertain: Boolean = false,
     hasPrevTask: Boolean = false,
     hasNextTask: Boolean = false,

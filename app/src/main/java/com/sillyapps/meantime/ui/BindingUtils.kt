@@ -158,3 +158,12 @@ fun TextView.setVibrationOn(vibrationOn: Boolean) {
         if (vibrationOn) context.getString(R.string.vibration_on)
         else context.getString(R.string.vibration_off)
 }
+
+@BindingAdapter("app:setIcon")
+fun ImageView.setIcon(iconId: Int?) {
+    Timber.d("Icon with id: $iconId is trying to set")
+    if (iconId == null || iconId < 0) return
+
+    Timber.d("Icon with id: $iconId is set")
+    setImageResource(iconId)
+}

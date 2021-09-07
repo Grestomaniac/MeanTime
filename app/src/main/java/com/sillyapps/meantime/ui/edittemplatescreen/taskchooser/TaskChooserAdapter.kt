@@ -1,21 +1,21 @@
-package com.sillyapps.meantime.ui.edittemplatescreen
+package com.sillyapps.meantime.ui.edittemplatescreen.taskchooser
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sillyapps.meantime.data.BaseTask
+import com.sillyapps.meantime.data.SimpleBaseTask
 import com.sillyapps.meantime.databinding.ItemChooserTaskBinding
 import com.sillyapps.meantime.ui.ItemClickListener
-import com.sillyapps.meantime.utils.formatIfNeeded
 import com.sillyapps.meantime.utils.formatString
 
-class TaskChooserAdapter(private val clickListener: ItemClickListener): ListAdapter<BaseTask, TaskChooserAdapter.ViewHolder>(TasksDiffCallback()) {
+class TaskChooserAdapter(private val clickListener: ViewHolder.OnClick): ListAdapter<SimpleBaseTask, TaskChooserAdapter.ViewHolder>(
+    TasksDiffCallback()
+) {
 
-    private var unfilteredList = listOf<BaseTask>()
+    private var unfilteredList = listOf<SimpleBaseTask>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -26,13 +26,13 @@ class TaskChooserAdapter(private val clickListener: ItemClickListener): ListAdap
         holder.bind(item, clickListener)
     }
 
-    fun submitUnfilteredList(list: List<BaseTask>) {
+    fun submitUnfilteredList(list: List<SimpleBaseTask>) {
         unfilteredList = list
         submitList(list)
     }
 
-    fun filter(text: String) {
-        if (text.isBlank()) submitList(unfilteredList)
+    fun filter(text: String?) {
+        if (text.isNullOrBlank()) submitList(unfilteredList)
         else {
             val list = unfilteredList.filter { it.formattedName.contains(formatString(text)) }
             submitList(list)
@@ -40,9 +40,9 @@ class TaskChooserAdapter(private val clickListener: ItemClickListener): ListAdap
     }
 
     class ViewHolder private constructor(private val binding: ItemChooserTaskBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: BaseTask, onClickListener: ItemClickListener) {
+        fun bind(item: SimpleBaseTask, onClickListener: OnClick) {
             binding.baseTask = item
-            binding.root.setOnClickListener { onClickListener.onClickItem(bindingAdapterPosition) }
+            binding.root.setOnClickListener { onClickListener.onClick(item) }
         }
 
         companion object {
@@ -53,16 +53,20 @@ class TaskChooserAdapter(private val clickListener: ItemClickListener): ListAdap
                 return ViewHolder(binding)
             }
         }
+
+        fun interface OnClick {
+            fun onClick(baseTask: SimpleBaseTask)
+        }
     }
 
 }
 
-class TasksDiffCallback: DiffUtil.ItemCallback<BaseTask>() {
-    override fun areItemsTheSame(oldItem: BaseTask, newItem: BaseTask): Boolean {
+class TasksDiffCallback: DiffUtil.ItemCallback<SimpleBaseTask>() {
+    override fun areItemsTheSame(oldItem: SimpleBaseTask, newItem: SimpleBaseTask): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: BaseTask, newItem: BaseTask): Boolean {
+    override fun areContentsTheSame(oldItem: SimpleBaseTask, newItem: SimpleBaseTask): Boolean {
         return oldItem.formattedName == newItem.formattedName
     }
 }

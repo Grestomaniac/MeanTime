@@ -19,7 +19,7 @@ class BaseTask(
     val id: Int = 0,
     val name: String = "",
     val formattedName: String = formatString(name),
-    val iconResId: Int = -1,
+    var iconResId: Int = -1,
 
     val goals: HashMap<String, MutableList<Goal>> = HashMap()
 ): BaseObservable() {
@@ -38,7 +38,18 @@ class BaseTask(
         }
         goals[goal.tag]?.add(goal)
     }
+
+    companion object{
+        fun fromTask(task: Task, iconId: Int = -1): BaseTask {
+            return BaseTask(0, task.name, formatString(task.name), iconId)
+        }
+    }
 }
+
+data class SimpleBaseTask(val id: Int,
+                          val name: String,
+                          val formattedName: String,
+                          var iconResId: Int)
 
 class Goal(
     name: String = "",

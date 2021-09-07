@@ -1,5 +1,6 @@
 package com.sillyapps.meantime.ui.edittemplatescreen
 
+import android.graphics.drawable.Drawable
 import androidx.lifecycle.*
 import com.maltaisn.icondialog.pack.IconPack
 import com.sillyapps.meantime.AppConstants
@@ -7,12 +8,14 @@ import com.sillyapps.meantime.R
 import com.sillyapps.meantime.utils.convertToMillis
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.data.BaseTask
+import com.sillyapps.meantime.data.SimpleBaseTask
 import com.sillyapps.meantime.data.Template
 import com.sillyapps.meantime.data.repository.AppRepository
 import com.sillyapps.meantime.ui.Result
 import com.sillyapps.meantime.utils.removeExtraSpaces
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
@@ -29,8 +32,8 @@ class EditTemplateViewModel @Inject constructor(private val repository: AppRepos
     val goalTasksNames: LiveData<List<String>> = goalTasks.map { it.map { goal -> goal.name } }
 
     val task: MutableLiveData<Task> = MutableLiveData()
-    val taskIconResId: MutableLiveData<Int> = MutableLiveData()
-    val goalBaseTask: MutableLiveData<BaseTask> = MutableLiveData()
+    val taskIconResId: MutableLiveData<Int?> = MutableLiveData()
+    val baseTaskData: MutableLiveData<BaseTask> = MutableLiveData()
 
     private var taskPosition = AppConstants.NOT_ASSIGNED
 
@@ -60,6 +63,8 @@ class EditTemplateViewModel @Inject constructor(private val repository: AppRepos
             val newTask = task.value!!
             newTask.name = removeExtraSpaces(newTask.name)
 
+            updateBaseTask()
+
             if (taskPosition == AppConstants.NOT_ASSIGNED) {
                 it.add(newTask)
             }
@@ -69,7 +74,15 @@ class EditTemplateViewModel @Inject constructor(private val repository: AppRepos
                 recalculateStartTimes(taskPosition)
             }
         }
+
         taskPosition = AppConstants.NOT_ASSIGNED
+    }
+
+    private fun updateBaseTask() {
+        viewModelScope.launch {
+            task.value?.goalsId = repository.getBaseTaskIdByName(task.value!!.name)
+            repository.updateSimpleBaseTask(task.value, taskIconResId.value ?: -1)
+        }
     }
 
     fun editTask(position: Int) {
@@ -77,6 +90,7 @@ class EditTemplateViewModel @Inject constructor(private val repository: AppRepos
         val taskCopy = tasks.value!![position].copy()
 
         viewModelScope.launch {
+            Timber.d("BaseTask id = ${taskCopy.goalsId}")
             taskIconResId.postValue(repository.getBaseTask(taskCopy.goalsId)?.iconResId)
         }
         task.value = taskCopy
@@ -111,7 +125,6 @@ class EditTemplateViewModel @Inject constructor(private val repository: AppRepos
     }
 
     fun saveTemplate(): Result {
-
         if (tasks.value!!.size == 0) {
             return Result(false, R.string.zero_tasks)
         }
@@ -163,5 +176,19 @@ class EditTemplateViewModel @Inject constructor(private val repository: AppRepos
 
     fun setTaskBreak(taskBreak: Task.Break) {
         task.value!!.taskBreak = taskBreak
+    }
+
+    fun setBaseTask(baseTask: SimpleBaseTask) {
+        task.value?.apply{
+            goalsId = baseTask.id
+            name = baseTask.name
+            taskIconResId.value = baseTask.iconResId
+        }
+    }
+
+    fun getDrawableForIcon(iconId: Int?): Drawable? {
+        if (iconId == null) return null
+
+        return iconPack?.getIcon(iconId)?.drawable
     }
 }

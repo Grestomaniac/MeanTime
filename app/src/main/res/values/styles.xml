@@ -13,6 +13,15 @@
         <item name="icdStyle">@style/CustomIconDialogStyle</item>
     </style>
 
+    <style name="DefaultCustomSearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:background">@color/primaryColor</item>
+    </style>
+
     <style name="CustomIconDialogStyle" parent="IcdStyle">
         <item name="icdIconColor">@color/primaryTextColor</item>
         <item name="icdSearchIconStyle">@style/CustomIcdSearchIconStyle</item>

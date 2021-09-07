@@ -148,12 +148,28 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
         return baseTaskDao.observeAllBaseTasks()
     }
 
+    fun observeAllBaseTasksSimple(): LiveData<List<SimpleBaseTask>> {
+        return baseTaskDao.observeAllBaseTasksSimple()
+    }
+
     suspend fun getBaseTask(baseTaskId: Int): BaseTask? {
         return baseTaskDao.getBaseTask(baseTaskId)
     }
 
     suspend fun updateBaseTask(baseTask: BaseTask) {
         baseTaskDao.updateBaseTask(baseTask)
+    }
+
+    suspend fun updateSimpleBaseTask(task: Task?, iconId: Int) {
+        if (task == null) return
+
+        val baseTaskId = baseTaskDao.getBaseTaskIdByName(formatString(task.name))
+        if (baseTaskId == null) {
+            baseTaskDao.insertBaseTask(BaseTask.fromTask(task, iconId))
+            return
+        }
+
+        baseTaskDao.updateSimpleBaseTask(baseTaskId, iconId)
     }
 
     suspend fun getBaseTaskIdByName(taskName: String): Int {

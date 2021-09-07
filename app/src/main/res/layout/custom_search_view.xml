@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <merge
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout"
+        android:background="@color/primaryColor"
+        android:paddingVertical="16dp">
+
+        <ImageView
+            android:id="@+id/searchIcon"
+            android:layout_width="@dimen/iconSize"
+            android:layout_height="@dimen/iconSize"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_search_black_24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/secondaryTextColor"/>
+
+        <EditText
+            android:id="@+id/searchField"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="4dp"
+
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/base_item_no_border"
+            android:fontFamily="@string/font_family_bold"
+
+            android:paddingHorizontal="8dp"
+
+            android:paddingVertical="8dp"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/searchIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Template 1" />
+
+        <ImageButton
+            android:id="@+id/clearButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+
+            android:layout_marginEnd="4dp"
+
+            android:src="@drawable/ic_close"
+            app:layout_constraintBottom_toBottomOf="@+id/searchField"
+            app:layout_constraintEnd_toEndOf="@+id/searchField"
+            app:layout_constraintTop_toTopOf="@+id/searchField"
+            app:tint="@color/itemBorderColor"
+            android:background="?attr/selectableItemBackground"/>
+
+    </merge>
+
+</layout>

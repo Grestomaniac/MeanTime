@@ -25,6 +25,8 @@ import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.databinding.FragmentEditTaskBinding
 import com.sillyapps.meantime.setupToolbar
 import com.sillyapps.meantime.ui.TimePickerDialog
+import com.sillyapps.meantime.ui.edittemplatescreen.taskchooser.TaskChooserDialog
+import com.sillyapps.meantime.ui.setIcon
 import com.sillyapps.meantime.utils.convertToMillis
 import com.sillyapps.meantime.utils.showInfoToUser
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,6 +61,7 @@ class EditTaskFragment : Fragment(), IconDialog.Callback {
         binding = FragmentEditTaskBinding.inflate(inflater, container, false)
         binding.task = viewModel.task.value
         binding.fragment = this
+        binding.taskIconResId = viewModel.taskIconResId.value
 
         setupToolbar(binding.toolbar)
 
@@ -69,6 +72,10 @@ class EditTaskFragment : Fragment(), IconDialog.Callback {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = this.viewLifecycleOwner
 
+        viewModel.taskIconResId.observe(viewLifecycleOwner) {
+            binding.taskIcon.setImageDrawable(viewModel.getDrawableForIcon(it))
+        }
+
 //        binding.melody.setOnClickListener { showRingtonePicker() }
     }
 
@@ -76,8 +83,8 @@ class EditTaskFragment : Fragment(), IconDialog.Callback {
         get() = viewModel.iconPack
 
     override fun onIconDialogIconsSelected(dialog: IconDialog, icons: List<Icon>) {
-        viewModel.setTaskIcon(icons.first().srcId)
-        Timber.d("Icon with id ${icons[0].id} selected")
+        Timber.d("Icon with id ${icons.first().id} selected")
+        viewModel.setTaskIcon(icons.first().id)
     }
 
     fun validateData() {
@@ -109,6 +116,11 @@ class EditTaskFragment : Fragment(), IconDialog.Callback {
         val iconDialog = parentFragmentManager.findFragmentByTag(ICON_DIALOG_TAG) as IconDialog?
             ?: IconDialog.newInstance(IconDialogSettings())
         iconDialog.show(childFragmentManager, ICON_DIALOG_TAG)
+    }
+
+    fun openTaskChooserDialog() {
+        val dialog = TaskChooserDialog { viewModel.setBaseTask(it) }
+        dialog.show(childFragmentManager, "TaskChooser")
     }
 
     private fun showRingtonePicker() {
