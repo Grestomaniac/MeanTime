@@ -8,9 +8,6 @@
             name="task"
             type="com.sillyapps.meantime.data.Task"/>
         <variable
-            name="taskIconResId"
-            type="Integer"/>
-        <variable
             name="fragment"
             type="com.sillyapps.meantime.ui.edittemplatescreen.EditTaskFragment"/>
         <import type="android.view.View"/>

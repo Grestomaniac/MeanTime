@@ -61,7 +61,6 @@ class EditTaskFragment : Fragment(), IconDialog.Callback {
         binding = FragmentEditTaskBinding.inflate(inflater, container, false)
         binding.task = viewModel.task.value
         binding.fragment = this
-        binding.taskIconResId = viewModel.taskIconResId.value
 
         setupToolbar(binding.toolbar)
 
@@ -73,7 +72,8 @@ class EditTaskFragment : Fragment(), IconDialog.Callback {
         binding.lifecycleOwner = this.viewLifecycleOwner
 
         viewModel.taskIconResId.observe(viewLifecycleOwner) {
-            binding.taskIcon.setImageDrawable(viewModel.getDrawableForIcon(it))
+            val drawable = viewModel.getDrawableForIcon(it)
+            binding.taskIcon.setImageDrawable(drawable)
         }
 
 //        binding.melody.setOnClickListener { showRingtonePicker() }

@@ -22,7 +22,7 @@ class GoalViewModel @Inject constructor(private val repository: AppRepository): 
     private val _tabSelected: MutableLiveData<Int> = MutableLiveData(0)
     val tabSelected: LiveData<Int> = _tabSelected
 
-    val consolidatedList: MutableLiveData<ArrayList<ListItem>> = MutableLiveData(createConsolidatedList(baseTask.value!!.goals))
+    val consolidatedList: MutableLiveData<ArrayList<ListItem>> = MutableLiveData(createConsolidatedList(baseTask.value!!.tagGroups))
 
     val goal: MutableLiveData<Goal> = MutableLiveData()
     private var goalPos = AppConstants.NOT_ASSIGNED
@@ -40,13 +40,13 @@ class GoalViewModel @Inject constructor(private val repository: AppRepository): 
         goalsChanged()
     }
 
-    private fun createConsolidatedList(goals: HashMap<String, MutableList<Goal>>): ArrayList<ListItem> {
+    private fun createConsolidatedList(tagList: List<Tag>): ArrayList<ListItem> {
         val consolidatedList = ArrayList<ListItem>()
 
-        for (tag in goals.keys) {
-            consolidatedList.add(TagItem(tag))
+        for (tag in tagList) {
+            consolidatedList.add(TagItem(tag.name))
 
-            val groupGoals = goals[tag]!!
+            val groupGoals = tag.contents
             for (i in 0 until groupGoals.size) {
                 consolidatedList.add(GoalItem(groupGoals[i]))
             }
@@ -55,7 +55,7 @@ class GoalViewModel @Inject constructor(private val repository: AppRepository): 
     }
 
     private fun updateConsolidatedList() {
-        consolidatedList.value = createConsolidatedList(baseTask.value!!.goals)
+        consolidatedList.value = createConsolidatedList(baseTask.value!!.tagGroups)
     }
 
     fun createNewGoal() {

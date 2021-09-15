@@ -3,15 +3,12 @@ package com.sillyapps.meantime.data
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.sillyapps.meantime.BR
 import com.sillyapps.meantime.utils.formatString
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 @Entity(tableName = "goal_table")
 class BaseTask(
@@ -21,22 +18,27 @@ class BaseTask(
     val formattedName: String = formatString(name),
     var iconResId: Int = -1,
 
-    val goals: HashMap<String, MutableList<Goal>> = HashMap()
+    val tagGroups: MutableList<Tag> = mutableListOf()
 ): BaseObservable() {
 
     fun removeGoal(goal: Goal) {
-        val group = goals[goal.tag]!!
-        group.remove(goal)
-        if (group.isEmpty()) {
-            goals.remove(goal.tag)
+        val tagGroup = tagGroups.find { predicate -> predicate.name == goal.tag }
+        tagGroup?.apply {
+            contents.remove(goal)
+
+            if (tagGroup.contents.isEmpty()) {
+                tagGroups.remove(tagGroup)
+            }
         }
     }
 
     fun addGoal(goal: Goal) {
-        if (!goals.containsKey(goal.tag)) {
-            goals[goal.tag] = mutableListOf(goal)
+        val tagGroup = tagGroups.find { it.name == goal.tag }
+        if (tagGroup == null) {
+            tagGroups.add(Tag(goal.tag, mutableListOf(goal)))
+            return
         }
-        goals[goal.tag]?.add(goal)
+        tagGroup.contents.add(goal)
     }
 
     companion object{
@@ -118,3 +120,8 @@ class Goal(
         changedDate = goal.changedDate
     }
 }
+
+class Tag(
+    val name: String,
+    val contents: MutableList<Goal>
+)

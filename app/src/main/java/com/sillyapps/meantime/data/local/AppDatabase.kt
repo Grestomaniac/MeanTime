@@ -14,8 +14,9 @@ import com.sillyapps.meantime.data.Template
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
-@Database(entities = [Template::class, Scheme::class, ApplicationPreferences::class, BaseTask::class], version = 2)
+@Database(entities = [Template::class, Scheme::class, ApplicationPreferences::class, BaseTask::class], version = 3)
 @TypeConverters(AppTypeConverter::class)
 abstract class AppDatabase: RoomDatabase() {
 
@@ -83,6 +84,7 @@ abstract class AppDatabase: RoomDatabase() {
         }*/
 
         fun getInstance(context: Context): AppDatabase {
+            Timber.d("Database created")
             synchronized(this) {
                 var instance = INSTANCE
 
@@ -93,8 +95,9 @@ abstract class AppDatabase: RoomDatabase() {
                         "app_database")
                         .addCallback(DatabaseCallback())
                         .addMigrations(MIGRATION_1_2)
-//                        .fallbackToDestructiveMigration()
+                        .fallbackToDestructiveMigration()
                         .build()
+
                     INSTANCE = instance
                 }
 

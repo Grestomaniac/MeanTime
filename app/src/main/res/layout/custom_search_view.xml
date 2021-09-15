@@ -16,10 +16,10 @@
             android:layout_height="@dimen/iconSize"
             android:layout_marginStart="10dp"
             android:src="@drawable/ic_search_black_24dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/searchField"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/secondaryTextColor"/>
+            app:layout_constraintTop_toTopOf="@+id/searchField"
+            app:tint="@color/secondaryTextColor" />
 
         <EditText
             android:id="@+id/searchField"

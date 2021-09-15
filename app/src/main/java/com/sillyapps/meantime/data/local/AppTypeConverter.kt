@@ -1,10 +1,7 @@
 package com.sillyapps.meantime.data.local
 
 import androidx.room.TypeConverter
-import com.sillyapps.meantime.data.Day
-import com.sillyapps.meantime.data.Goal
-import com.sillyapps.meantime.data.SchemeTemplateInfo
-import com.sillyapps.meantime.data.Task
+import com.sillyapps.meantime.data.*
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
@@ -57,7 +54,29 @@ object AppTypeConverter {
 
     @TypeConverter
     @JvmStatic
-    fun convertGoalsMapToJson(map: HashMap<String, List<Goal>>?): String {
+    fun convertStringToTagList(data: String?): List<Tag>? {
+        if (data.isNullOrEmpty()) return mutableListOf()
+        val moshi = Moshi.Builder().build()
+
+        val dataList = Types.newParameterizedType(List::class.java, Tag::class.java)
+        val jsonAdapter: JsonAdapter<List<Tag>> = moshi.adapter(dataList)
+
+        return jsonAdapter.fromJson(data)
+    }
+
+    @TypeConverter
+    @JvmStatic
+    fun convertTagListToJson(list: List<Tag>?): String {
+        val moshi = Moshi.Builder().build()
+        val dataList = Types.newParameterizedType(List::class.java, Tag::class.java)
+        val jsonAdapter: JsonAdapter<List<Tag>> = moshi.adapter(dataList)
+
+        return jsonAdapter.toJson(list)
+    }
+
+    @TypeConverter
+    @JvmStatic
+    fun convertGoalsMapToJson(map: Map<String, List<Goal>>?): String {
         val moshi = Moshi.Builder().build()
         val dataList = Types.newParameterizedType(Map::class.java, String::class.java, List::class.java)
         val jsonAdapter: JsonAdapter<Map<String, List<Goal>>> = moshi.adapter(dataList)
@@ -67,12 +86,12 @@ object AppTypeConverter {
 
     @TypeConverter
     @JvmStatic
-    fun convertJsonToGoalsMap(data: String?): HashMap<String, List<Goal>>? {
+    fun convertJsonToGoalsMap(data: String?): Map<String, List<Goal>>? {
         if (data == null) return hashMapOf()
         val moshi = Moshi.Builder().build()
 
         val dataList = Types.newParameterizedType(Map::class.java, String::class.java, List::class.java)
-        val jsonAdapter: JsonAdapter<HashMap<String, List<Goal>>> = moshi.adapter(dataList)
+        val jsonAdapter: JsonAdapter<Map<String, List<Goal>>> = moshi.adapter(dataList)
 
         return jsonAdapter.fromJson(data)
     }

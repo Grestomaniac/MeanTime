@@ -274,7 +274,7 @@ class Task(
     }
 
     fun copy(): Task {
-        return Task(startTime, name, editableDuration, editableVibrationOn, editableSoundOn,
+        return Task(startTime, name, editableDuration, editableVibrationOn, editableSoundOn, goalsId=goalsId,
             uncertain=uncertain, taskBreak=taskBreak, advancedPopped=advancedPopped)
     }
 

@@ -30,7 +30,6 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
 
-        makeFakeQueryToDatabase()
         createNotificationChannels()
 
         if (BuildConfig.DEBUG) {
@@ -43,9 +42,7 @@ class App: Application() {
     }
 
     // Ensures what database onCreate callback is executed
-    private fun makeFakeQueryToDatabase() {
-        database.query("select 1", null)
-    }
+
 
     private fun createNotificationChannels() {
         createServiceNotificationChannel()

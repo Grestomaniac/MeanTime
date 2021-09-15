@@ -91,7 +91,9 @@ class EditTemplateViewModel @Inject constructor(private val repository: AppRepos
 
         viewModelScope.launch {
             Timber.d("BaseTask id = ${taskCopy.goalsId}")
-            taskIconResId.postValue(repository.getBaseTask(taskCopy.goalsId)?.iconResId)
+            val baseTask = repository.getBaseTask(taskCopy.goalsId)
+            val iconRes = baseTask?.iconResId
+            taskIconResId.postValue(iconRes)
         }
         task.value = taskCopy
     }
