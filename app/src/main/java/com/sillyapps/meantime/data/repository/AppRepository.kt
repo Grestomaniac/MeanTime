@@ -1,11 +1,9 @@
 package com.sillyapps.meantime.data.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.sillyapps.meantime.data.*
-import com.sillyapps.meantime.data.local.ApplicationPreferencesDao
-import com.sillyapps.meantime.data.local.SchemeDao
-import com.sillyapps.meantime.data.local.BaseTaskDao
-import com.sillyapps.meantime.data.local.TemplateDao
+import com.sillyapps.meantime.data.local.*
 import com.sillyapps.meantime.ui.mainscreen.DayManager
 import com.sillyapps.meantime.utils.formatString
 import timber.log.Timber
@@ -132,7 +130,10 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
                 appPrefDao.setCurrentDay(Day.fromTemplate(loadTemplate(false)))
             }
             else -> {
+                Timber.d("Getting day")
                 val day = appPrefDao.getDay()
+
+                Timber.d("Day received")
                 if (day == null) appPrefDao.setCurrentDay(Day.fromTemplate(loadTemplate()))
             }
         }

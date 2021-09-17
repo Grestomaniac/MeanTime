@@ -28,21 +28,17 @@ class App: Application() {
     @Inject lateinit var database: AppDatabase
 
     override fun onCreate() {
+        initializeTimber()
         super.onCreate()
 
+        makeFakeQueryToDatabase()
         createNotificationChannels()
-
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-            HyperLog.initialize(this)
-            HyperLog.setLogLevel(Log.DEBUG)
-            HyperLog.getDeviceLogsInFile(this)
-            FileLogger.initialize(this, true)
-        }
     }
 
     // Ensures what database onCreate callback is executed
-
+    private fun makeFakeQueryToDatabase() {
+        database.query("select 1", null)
+    }
 
     private fun createNotificationChannels() {
         createServiceNotificationChannel()
@@ -60,6 +56,16 @@ class App: Application() {
             // or other notification behaviors after this
             val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(mChannel)
+        }
+    }
+
+    private fun initializeTimber() {
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+            HyperLog.initialize(this)
+            HyperLog.setLogLevel(Log.DEBUG)
+            HyperLog.getDeviceLogsInFile(this)
+            FileLogger.initialize(this, true)
         }
     }
 }

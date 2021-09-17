@@ -84,7 +84,6 @@ abstract class AppDatabase: RoomDatabase() {
         }*/
 
         fun getInstance(context: Context): AppDatabase {
-            Timber.d("Database created")
             synchronized(this) {
                 var instance = INSTANCE
 
@@ -109,6 +108,7 @@ abstract class AppDatabase: RoomDatabase() {
     private class DatabaseCallback(): RoomDatabase.Callback() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
+            Timber.d("Creating database")
             INSTANCE?.let { appDatabase ->
                 CoroutineScope(Dispatchers.Main).launch {
                     appDatabase.appPrefDao.insert(ApplicationPreferences())
@@ -116,6 +116,5 @@ abstract class AppDatabase: RoomDatabase() {
                 }
             }
         }
-
     }
 }
