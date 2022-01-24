@@ -1,15 +1,19 @@
 package com.sillyapps.meantime.ui.edittemplatescreen.recyclerview
 
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.maltaisn.icondialog.pack.IconPack
 import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.databinding.ItemEditorTaskBinding
 import com.sillyapps.meantime.ui.ItemTouchHelperAdapter
 import com.sillyapps.meantime.ui.edittemplatescreen.EditTemplateViewModel
 import com.sillyapps.meantime.ui.ItemClickListener
+import timber.log.Timber
+import javax.inject.Inject
 
 class TemplateEditorAdapter(private val viewModel: EditTemplateViewModel, private val onClickListener: ItemClickListener): ListAdapter<Task, TemplateEditorAdapter.ViewHolder>(
     TasksDiffCallback()
@@ -21,7 +25,12 @@ class TemplateEditorAdapter(private val viewModel: EditTemplateViewModel, privat
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item, onClickListener)
+
+        Timber.d("baseTasks is null = ${viewModel.tasksBaseTasks.value == null}")
+        val iconId = viewModel.tasksBaseTasks.value?.get(position)?.iconResId
+        Timber.d("Icon id == $iconId")
+        val iconDrawable = viewModel.getDrawableForIcon(iconId)
+        holder.bind(item, onClickListener, iconDrawable)
     }
 
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
@@ -53,8 +62,9 @@ class TemplateEditorAdapter(private val viewModel: EditTemplateViewModel, privat
 
     class ViewHolder private constructor(private val binding: ItemEditorTaskBinding): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Task, onClickListener: ItemClickListener) {
+        fun bind(item: Task, onClickListener: ItemClickListener, iconDrawable: Drawable?) {
             binding.task = item
+            binding.taskIcon.setImageDrawable(iconDrawable)
             binding.root.setOnClickListener { onClickListener.onClickItem(bindingAdapterPosition) }
         }
 

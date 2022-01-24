@@ -5,16 +5,17 @@ import androidx.lifecycle.*
 import com.maltaisn.icondialog.pack.IconPack
 import com.sillyapps.meantime.AppConstants
 import com.sillyapps.meantime.R
-import com.sillyapps.meantime.utils.convertToMillis
-import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.data.BaseTask
 import com.sillyapps.meantime.data.SimpleBaseTask
+import com.sillyapps.meantime.data.Task
 import com.sillyapps.meantime.data.Template
 import com.sillyapps.meantime.data.repository.AppRepository
 import com.sillyapps.meantime.ui.Result
+import com.sillyapps.meantime.utils.convertToMillis
 import com.sillyapps.meantime.utils.removeExtraSpaces
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -22,7 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class EditTemplateViewModel @Inject constructor(private val repository: AppRepository,
                                                 private val savedStateHandle: SavedStateHandle,
-                                                val iconPack: IconPack?): ViewModel() {
+                                                val iconPack: IconPack): ViewModel() {
 
     var templateId = savedStateHandle.get<Int>("templateId")!!
     val templateName: MutableLiveData<String> = MutableLiveData("")
@@ -31,7 +32,17 @@ class EditTemplateViewModel @Inject constructor(private val repository: AppRepos
     private val goalTasks: LiveData<List<BaseTask>> = repository.observeAllBaseTasks()
     val goalTasksNames: LiveData<List<String>> = goalTasks.map { it.map { goal -> goal.name } }
 
+    val tasksBaseTasks: LiveData<List<BaseTask?>> = MediatorLiveData<List<BaseTask?>>().apply {
+        addSource(tasks) {
+            Timber.d("tasks changed")
+            value = tasks.value?.map { task -> goalTasks.value?.find { it.id == task.goalsId } } }
+        addSource(goalTasks) {
+            Timber.d("GoalTasks changed")
+            value = tasks.value?.map { task -> goalTasks.value?.find { it.id == task.goalsId } } }
+    }
+
     val task: MutableLiveData<Task> = MutableLiveData()
+
     val taskIconResId: MutableLiveData<Int?> = MutableLiveData()
     val baseTaskData: MutableLiveData<BaseTask> = MutableLiveData()
 
@@ -82,6 +93,7 @@ class EditTemplateViewModel @Inject constructor(private val repository: AppRepos
         viewModelScope.launch {
             task.value?.goalsId = repository.getBaseTaskIdByName(task.value!!.name)
             repository.updateSimpleBaseTask(task.value, taskIconResId.value ?: -1)
+            taskIconResId.value = null
         }
     }
 
@@ -136,7 +148,7 @@ class EditTemplateViewModel @Inject constructor(private val repository: AppRepos
 
         viewModelScope.launch {
             for (task in tasks.value!!) {
-                if (task.goalsId == 0) {
+                if (task.goalsId == 0L) {
                     task.goalsId = repository.getBaseTaskIdByName(task.name)
                 }
             }
@@ -191,6 +203,6 @@ class EditTemplateViewModel @Inject constructor(private val repository: AppRepos
     fun getDrawableForIcon(iconId: Int?): Drawable? {
         if (iconId == null) return null
 
-        return iconPack?.getIcon(iconId)?.drawable
+        return iconPack.getIcon(iconId)?.drawable
     }
 }

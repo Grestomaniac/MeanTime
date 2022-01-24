@@ -153,7 +153,7 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
         return baseTaskDao.observeAllBaseTasksSimple()
     }
 
-    suspend fun getBaseTask(baseTaskId: Int): BaseTask? {
+    suspend fun getBaseTask(baseTaskId: Long): BaseTask? {
         return baseTaskDao.getBaseTask(baseTaskId)
     }
 
@@ -173,10 +173,10 @@ class AppRepository @Inject constructor(private val templateDao: TemplateDao,
         baseTaskDao.updateSimpleBaseTask(baseTaskId, iconId)
     }
 
-    suspend fun getBaseTaskIdByName(taskName: String): Int {
+    suspend fun getBaseTaskIdByName(taskName: String): Long {
         var baseTaskId = baseTaskDao.getBaseTaskIdByName(formatString(taskName))
         if (baseTaskId == null) {
-            baseTaskId = baseTaskDao.insertBaseTask(BaseTask(0, taskName)).toInt()
+            baseTaskId = baseTaskDao.insertBaseTask(BaseTask(0, taskName))
         }
 
         return baseTaskId

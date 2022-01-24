@@ -60,16 +60,14 @@ class AlarmActivity: AppCompatActivity() {
     }
 
     private fun setRingtone(currentTask: Task) {
-        if (currentTask.editableSoundOn) {
-            val soundUri =
-                if (currentTask.sound == AppConstants.DEFAULT_RINGTONE)
-                    RingtoneManager.getActualDefaultRingtoneUri(applicationContext, RingtoneManager.TYPE_ALARM)
-                else Uri.parse(currentTask.sound)
+        val soundUri =
+            if (currentTask.sound == AppConstants.DEFAULT_RINGTONE)
+                RingtoneManager.getActualDefaultRingtoneUri(applicationContext, RingtoneManager.TYPE_ALARM)
+            else Uri.parse(currentTask.sound)
 
-            ringtone = RingtoneManager.getRingtone(applicationContext, soundUri)
+        ringtone = RingtoneManager.getRingtone(applicationContext, soundUri)
 
-            ringtone?.play()
-        }
+        ringtone?.play()
     }
 
     private fun setVibrator() {

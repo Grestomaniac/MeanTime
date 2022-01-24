@@ -83,6 +83,8 @@ class EditTemplateFragment : Fragment() {
         viewModel.tasks.observe(viewLifecycleOwner, {
             templateEditorAdapter.submitList(it)
         })
+
+        viewModel.tasksBaseTasks.observe(viewLifecycleOwner, {})
     }
 
     private fun onAddTaskButtonClick() {

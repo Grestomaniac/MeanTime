@@ -7,16 +7,13 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.sillyapps.meantime.data.ApplicationPreferences
-import com.sillyapps.meantime.data.Scheme
-import com.sillyapps.meantime.data.BaseTask
-import com.sillyapps.meantime.data.Template
+import com.sillyapps.meantime.data.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-@Database(entities = [Template::class, Scheme::class, ApplicationPreferences::class, BaseTask::class], version = 3)
+@Database(entities = [Template::class, Scheme::class, ApplicationPreferences::class, BaseTask::class, Goals::class], version = 3)
 @TypeConverters(AppTypeConverter::class)
 abstract class AppDatabase: RoomDatabase() {
 
@@ -27,6 +24,8 @@ abstract class AppDatabase: RoomDatabase() {
     abstract val appPrefDao: ApplicationPreferencesDao
 
     abstract val baseTaskDao: BaseTaskDao
+
+    abstract val goalsDao: GoalsDao
 
     companion object {
         @Volatile
